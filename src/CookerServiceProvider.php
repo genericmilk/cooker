@@ -4,7 +4,7 @@
 
 
 
-    class CookerServiceProvider extends ServiceProvider {
+    class CookServiceProvider extends ServiceProvider {
 
 
 

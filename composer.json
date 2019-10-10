@@ -20,7 +20,7 @@
     "extra": {
         "laravel": {
             "providers": [
-                "\\Genericmilk\\Cooker\\CookerServiceProvider"
+                "\\Genericmilk\\Cooker\\CookServiceProvider"
             ],
             "aliases": {
                 "Cooker": "Genericmilk\\Cooker\\Facades\\Cooker"
