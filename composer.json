@@ -1,6 +1,7 @@
 {
     "name": "genericmilk/cooker",
     "description": "Plugin to the Cooker Engine! Easy site building by Genericmilk",
+    "version": "v1.0",
     "require": {
         "oyejorge/less.php": "v1.7.0.14"
     },
