@@ -1,0 +1,29 @@
+{
+    "name": "genericmilk/cooker",
+    "description": "Plugin to the Cooker Engine! Easy site building by Genericmilk",
+    "require": {
+        "oyejorge/less.php": "v1.7.0.14"
+    },
+    "authors": [
+        {
+            "name": "Peter Day",
+            "email": "peterday.main@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "App\\": "app/",
+            "Genericmilk\\Cooker\\": "packages/genericmilk/cooker/src"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Genericmilk\\Cooker\\CookerServiceProvider"
+            ],
+            "aliases": {
+                "Cooker": "Genericmilk\\Cooker\\Facades\\Cooker"
+            }
+        }
+    }
+}
