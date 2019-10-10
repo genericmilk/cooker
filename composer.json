@@ -13,8 +13,7 @@
     ],
     "autoload": {
         "psr-4": {
-            "App\\": "app/",
-            "Genericmilk\\Cooker\\": "packages/genericmilk/cooker/src"
+            "Genericmilk\\Cooker\\": "src/"
         }
     },
     "extra": {
