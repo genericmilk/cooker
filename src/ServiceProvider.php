@@ -1,10 +1,7 @@
 <?php
     namespace Genericmilk\Cooker;
-    use Illuminate\Support\ServiceProvider;
 
-
-
-    class CookServiceProvider extends ServiceProvider {
+    class ServiceProvider extends \Illuminate\Support\ServiceProvider{
 
 
 
