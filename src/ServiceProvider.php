@@ -31,13 +31,19 @@
 
         protected function setupConfig(){
 
-            $source = realpath($raw = __DIR__.'/../config/cooker.php') ?: $raw;
-            if ($this->app instanceof LaravelApplication && $this->app->runningInConsole()) {
-                $this->publishes([$source => config_path('cooker.php')]);
-            } elseif ($this->app instanceof LumenApplication) {
-                $this->app->configure('cooker');
-            }
-            $this->mergeConfigFrom($source, 'cooker');
+            $configPath = __DIR__ . '/../config/cooker.php';
+            $this->publishes([$configPath => $this->getConfigPath()], 'config');
+    
+        }
+
+        protected function getConfigPath()
+        {
+            return config_path('debugbar.php');
+        }
+
+        protected function publishConfig($configPath)
+        {
+            $this->publishes([$configPath => config_path('cooker.php')], 'config');
         }
 
 
