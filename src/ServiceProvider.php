@@ -38,7 +38,7 @@
 
         protected function getConfigPath()
         {
-            return config_path('debugbar.php');
+            return config_path('cooker.php');
         }
 
         protected function publishConfig($configPath)
