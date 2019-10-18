@@ -90,7 +90,7 @@ class Build extends Command
             return;
         }
 
-        $this->info('🍔 Cooking App.js');
+        $this->info('🍔 Cooking '.config('cooker.namespace').'.js');
         
 		$JsObject = json_decode(file_get_contents(base_path().'/resources/js/build.json'));
 		$rJS = '';
@@ -98,7 +98,7 @@ class Build extends Command
         foreach($JsObject as $File){
             $rJS .= file_get_contents(base_path().'/resources/js/'.$File);
         }
-		$rJS .= 'App.Boot();'; // Boot the script        
+		$rJS .= config('cooker.namespace').'.Boot();'; // Boot the script        
 		
 		if(!env('APP_DEBUG')){
 			$rJS = preg_replace('/(?:(?:\/\*(?:[^*]|(?:\*+[^*\/]))*\*+\/)|(?:(?<!\:|\\\|\')\/\/.*))/', '', $rJS); // remove js comments
@@ -106,12 +106,12 @@ class Build extends Command
 		}
 
 
-        if(!is_dir(base_path().'/resources/js/Libraries')){
-            mkdir(base_path().'/resources/js/Libraries');
+        if(!is_dir(base_path().'/resources/js/libraries')){
+            mkdir(base_path().'/resources/js/libraries');
         }
 
 		// Scan libs
-		$LibFolder = scandir(base_path().'/resources/js/Libraries');
+		$LibFolder = scandir(base_path().'/resources/js/libraries');
 		unset($LibFolder[0]);
 		unset($LibFolder[1]);
 		if (($key = array_search('.DS_Store', $LibFolder)) !== false) {
@@ -120,7 +120,7 @@ class Build extends Command
 		$LibFolder = array_values($LibFolder);
 		$Libs = '';
 		foreach($LibFolder as $Lib){
-			$Libs .= file_get_contents(base_path().'/resources/js/Libraries/'.$Lib); // Insert jQuery
+			$Libs .= file_get_contents(base_path().'/resources/js/libraries/'.$Lib); // Insert jQuery
 		}
 
 		$rJS = $Libs . $rJS;

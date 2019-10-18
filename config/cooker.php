@@ -9,10 +9,11 @@
  */
 return [
 
-    'api' => 'https://element-api.nullstack.co.uk/v1/',
-    'site' => [
-        'public_token' => null,
-        'secret_token' => null
-    ]
+    /*
+        The namespace to use in the javascript. By default the namespace is "App" and
+        subsequently App.Boot(); will run on the cooked javascript on document ready
+    */
+    
+    'namespace' => 'App',
     
 ];
