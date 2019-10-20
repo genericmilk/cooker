@@ -66,7 +66,7 @@ Then in a text editor change the value to which ever you'd prefer.
 When you next run `php artisan build:res` it will instruct the `Boot()` function to run from the namespace of your chosing
 
 #### Javascript Libraries
-If you have custom libraries such as a slideshow plugin or jQuery, You can include them in the `resources/javascript/libraries` folder. Any scripts in this folder will be loaded in an alphabetical order, so if you'd prefer scripts to load before others, it's a good idea to name them accordingly. Scripts in the libraries folder will be added to the cooked javascript file without any compression changes before any app javascript code.
+If you have custom libraries such as a slideshow plugin or jQuery, You can include them in the `resources/js/libraries` folder. Any scripts in this folder will be loaded in an alphabetical order, so if you'd prefer scripts to load before others, it's a good idea to name them accordingly. Scripts in the libraries folder will be added to the cooked javascript file without any compression changes before any app javascript code.
 
 ### Setting up LESS for cooking
 Place a new `app.less` in `resources/less` with the following structure
