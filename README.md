@@ -84,3 +84,4 @@ If you have custom style libraries such as a slideshow or base styling from a th
 If your Laravel application is running in `APP_DEBUG=true` mode, any cooked files will retain their original formatting. If you are running in `APP_DEBUG=false` mode then all scripts except for javascript and css libraries will be minified to reduce load times
 
 ### Roadmap for the future
+I'm looking to improve this for more people to use in the future! Including `build.json` mitigation in favour of automatic script detection and external libraries! If you have issues, please do hit me up on this repo, I hope you really love using this! It's my first laravel composer package and I'm super thrilled so far 🥰
