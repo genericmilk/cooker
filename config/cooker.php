@@ -15,5 +15,12 @@ return [
     */
     
     'namespace' => 'App',
+
+    'less' => [
+        'app.less' => 'app.css'
+    ],
+    'js' => [
+        'build.json' => 'app.js'
+    ]
     
 ];

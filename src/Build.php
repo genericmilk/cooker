@@ -40,95 +40,122 @@ class Build extends Command
     public function handle()
     {
 
-
-
+		$this->info('👨‍🍳 Cooker by genericmilk (v2.0.0)');
         $parser = new Less_Parser();
         
         if(!is_dir(base_path()."/public/build")){
 			mkdir(base_path()."/public/build");
+			$this->info('📂 Created new build folder');
 		}
 
+		if(file_exists(base_path().'/.gitignore')){
+			$giF = file_get_contents(base_path().'/.gitignore');
+			if (!strpos($giF, '/public/build') !== false) {
+				$gi = fopen(base_path().'/.gitignore', 'a');
+				$data = PHP_EOL.'/public/build'.PHP_EOL;
+				fwrite($gi, $data);
+				$this->info('⛓ Added public folder to gitignore');
+			}
+		}
 
-		$this->info('🍽 Cooking Less');
+		if(!is_dir(base_path().'/resources/less')){
+			// Create libraries folder if not exist
+            mkdir(base_path().'/resources/less');
+		}
 
-        if(!file_exists(base_path().'/resources/less/app.less')){
-            $this->error('app.less not found. Ensure your less index is setup in resources/less');
-            return;
-        }
+		if(!is_dir(base_path().'/resources/js')){
+			// Create libraries folder if not exist
+            mkdir(base_path().'/resources/js');
+		}
 
+		
 
-        if(!is_dir(base_path().'/resources/less/libraries')){
+		if(!is_dir(base_path().'/resources/less/libraries')){
+			// Create libraries folder if not exist
             mkdir(base_path().'/resources/less/libraries');
+		}
+
+		if(!is_dir(base_path().'/resources/js/libraries')){
+			mkdir(base_path().'/resources/js/libraries');
+		}
+
+		if(!file_exists(base_path().'/resources/js/build.json')){
+			$b = fopen(base_path().'/resources/js/build.json', 'w');
+			$data = '["boot.js"]';
+			fwrite($b, $data);
+			if(!file_exists(base_path().'/resources/js/boot.js')){
+				$b = fopen(base_path().'/resources/js/boot.js', 'w');
+				$data = 'var '.config('cooker.namespace').' = {'.PHP_EOL;
+				$data .= '	Boot: function(){'.PHP_EOL;
+				$data .= '		console.log("👨‍🍳 Welcome to Cooker!");'.PHP_EOL;
+				$data .= '	}'.PHP_EOL;
+				$data .= '};';
+				fwrite($b, $data);
+			}
         }
-        
-
-		$parser->parseFile(base_path().'/resources/less/app.less');
-        $css = $this->minify_css($parser->getCss());
 		
-		$LibFolder = scandir(base_path().'/resources/less/libraries');
-		unset($LibFolder[0]);
-		unset($LibFolder[1]);
-		if (($key = array_search('.DS_Store', $LibFolder)) !== false) {
-			unset($LibFolder[$key]);
-		}
-		$LibFolder = array_values($LibFolder);
-		$Libs = '';
-		foreach($LibFolder as $Lib){
-			$Libs .= file_get_contents(base_path().'/resources/less/libraries/'.$Lib);
+		$LessLibs = $this->LessLibs();
+
+
+
+		$this->info('🍽 Cooking less files...');
+		foreach(config('cooker.less') as $input => $output){
+			if(!file_exists(base_path().'/resources/less/'.$input)){
+				$b = fopen(base_path().'/resources/less/'.$input, 'w');
+				$data = '// 👨‍🍳 Import your other less files here!';
+				fwrite($b, $data);
+			}
+			$parser->parseFile(base_path().'/resources/less/'.$input);
+			$css = $this->minify_css($parser->getCss());
+			$css = $LessLibs . $css; // add the libs to this file
+			file_put_contents(base_path()."/public/build/".$output,$css);
+			$this->info('✅ Cooked '.$input.' 👉 '.$output);			
 		}
 
-		$css = $Libs . $css;
-
+    
 		
-		file_put_contents(base_path()."/public/build/app.css",$css);
-		$this->info('✅ Successfully generated app.less 👉 app.css');
-        
         // Now do js        
 
-        if(!file_exists(base_path().'/resources/js/build.json')){
-            $this->error('build.json not found. Ensure your js index is setup in resources/js');
-            return;
-        }
-
-        $this->info('🍔 Cooking '.config('cooker.namespace').'.js');
         
-		$JsObject = json_decode(file_get_contents(base_path().'/resources/js/build.json'));
-		$rJS = '';
-		
-        foreach($JsObject as $File){
-            $rJS .= file_get_contents(base_path().'/resources/js/'.$File);
-        }
-		$rJS .= config('cooker.namespace').'.Boot();'; // Boot the script        
-		
-		if(!env('APP_DEBUG')){
-			$rJS = preg_replace('/(?:(?:\/\*(?:[^*]|(?:\*+[^*\/]))*\*+\/)|(?:(?<!\:|\\\|\')\/\/.*))/', '', $rJS); // remove js comments
-			$rJS = $this->minify_js($rJS); // minify
+
+        $this->info('🍔 Cooking javascript files...');
+		foreach(config('cooker.js') as $input => $output){
+			if(!file_exists(base_path().'/resources/js/'.$input)){
+				$this->error($input.' not found. Ensure this is a valid build json and is setup in resources/js');
+				return;
+			}
+			$JsObject = json_decode(file_get_contents(base_path().'/resources/js/'.$input));
+			$rJS = '';
+			foreach($JsObject as $File){
+				$rJS .= file_get_contents(base_path().'/resources/js/'.$File);
+			}
+			$rJS .= config('cooker.namespace').'.Boot();'; // Boot the script        
+			if(!env('APP_DEBUG')){
+				$rJS = preg_replace('/(?:(?:\/\*(?:[^*]|(?:\*+[^*\/]))*\*+\/)|(?:(?<!\:|\\\|\')\/\/.*))/', '', $rJS); // remove js comments
+				$rJS = $this->minify_js($rJS); // minify
+			}
+
+			$LibFolder = scandir(base_path().'/resources/js/libraries');
+			unset($LibFolder[0]);
+			unset($LibFolder[1]);
+			if (($key = array_search('.DS_Store', $LibFolder)) !== false) {
+				unset($LibFolder[$key]);
+			}
+			$LibFolder = array_values($LibFolder);
+			$Libs = '';
+			foreach($LibFolder as $Lib){
+				$Libs .= file_get_contents(base_path().'/resources/js/libraries/'.$Lib); // Insert jQuery
+			}
+	
+			$rJS = $Libs . $rJS;
+	
+			file_put_contents(base_path()."/public/build/".$output,$rJS);
+
+
+			$this->info('✅ Cooked '.$input.' 👉 '.$output);
 		}
 
-
-        if(!is_dir(base_path().'/resources/js/libraries')){
-            mkdir(base_path().'/resources/js/libraries');
-        }
-
-		// Scan libs
-		$LibFolder = scandir(base_path().'/resources/js/libraries');
-		unset($LibFolder[0]);
-		unset($LibFolder[1]);
-		if (($key = array_search('.DS_Store', $LibFolder)) !== false) {
-			unset($LibFolder[$key]);
-		}
-		$LibFolder = array_values($LibFolder);
-		$Libs = '';
-		foreach($LibFolder as $Lib){
-			$Libs .= file_get_contents(base_path().'/resources/js/libraries/'.$Lib); // Insert jQuery
-		}
-
-		$rJS = $Libs . $rJS;
-
-		file_put_contents(base_path()."/public/build/app.js",$rJS);
-		$this->info('✅ Successfully generated app.js 👉 app.js');		
-
-        $this->info('🙌 Done!');
+        $this->info("⭐️ Cooked! Don't forget to star cooker on Github if you found it useful! https://github.com/genericmilk/cooker");
 
     }
     private function minify_css($input) {
@@ -195,5 +222,19 @@ class Build extends Command
 	            '$1.$3'
 	        ),
 	    $input);
+	}
+	private function LessLibs(){
+		$LibFolder = scandir(base_path().'/resources/less/libraries');
+		unset($LibFolder[0]);
+		unset($LibFolder[1]);
+		if (($key = array_search('.DS_Store', $LibFolder)) !== false) {
+			unset($LibFolder[$key]);
+		}
+		$LibFolder = array_values($LibFolder);
+		$Libs = '';
+		foreach($LibFolder as $Lib){
+			$Libs .= file_get_contents(base_path().'/resources/less/libraries/'.$Lib);
+		}
+		return $Libs;
 	}
 }
