@@ -13,12 +13,20 @@ $ composer require genericmilk/cooker
 ```
 This will install the requirements and it will publish the artisan command `build:res`.
 
+Before you get started you will need to also publish the configuration file. This will publiscise your cooking rules such as input and output files.
+```
+$ php artisan vendor:publish --provider="Genericmilk\Cooker\ServiceProvider"
+```
+If you're using laravel the best practise is to remove the `resources/sass` folder and the `resources/js` folder as these will be re-created with new elements on your first run of cooker.
+
 ### To cook resources
 To cook, simply run the following command
 ```
 $ php artisan build:res
 ```
-This will compile any less and javascript files into `/public/build`. It's a good idea to add this folder to your `.gitignore` file. If a `/public/build` file does not exist it will be created when you run `build:res`
+This will compile any less and javascript files into `/public/build`. It's a good idea to add this folder to your `.gitignore` file.
+
+If this is your first time cooking, all nessecary folders and gitignore changes will be made for you so it's a good idea to run this command once before you start working as it'll create the nessecary files and folders
 
 ### Setting up javascript for cooking
 Place a new `build.json` in `resources/js` with the following structure
@@ -55,11 +63,7 @@ var App = {
 };
 ```
 #### Changing the Javascript Namespace
-By default, Cooker will attempt to run the `App.Boot();` function on document ready. If you'd prefer to use a custom name, Use the following command to publish the configuration file:
-```
-$ php artisan vendor:publish --provider="Genericmilk\Cooker\ServiceProvider"
-```
-Then in a text editor change the value to which ever you'd prefer.
+By default, Cooker will attempt to run the `App.Boot();` function on document ready. If you'd prefer to use a custom name, Open the `config/cooker.php` file in a text editor and change the `namespace` value to which ever you'd prefer.
 ```
 'namespace' => 'App'
 ```
