@@ -55,8 +55,8 @@ class Build extends Command
 
 			// Looks to be first run
 			if ($this->confirm('It looks like you are running cooker for the first time! Do you want to tidy the default js and sass folders?')) {
-				rmdir(base_path().'/resources/js');
-				rmdir(base_path().'/resources/sass');				
+				$this->removeDirectory(base_path().'/resources/js');
+				$this->removeDirectory(base_path().'/resources/sass');					
 			}
 
 			mkdir(base_path()."/public/build");
@@ -221,5 +221,16 @@ class Build extends Command
 			$Libs .= file_get_contents(base_path().'/resources/less/libraries/'.$Lib);
 		}
 		return $Libs;
+	}
+	private function removeDirectory($path) {
+	    // The preg_replace is necessary in order to traverse certain types of folder paths (such as /dir/[[dir2]]/dir3.abc#/)
+	    // The {,.}* with GLOB_BRACE is necessary to pull all hidden files (have to remove or get "Directory not empty" errors)
+	    $files = glob(preg_replace('/(\*|\?|\[)/', '[$1]', $path).'/{,.}*', GLOB_BRACE);
+	    foreach ($files as $file) {
+		if ($file == $path.'/.' || $file == $path.'/..') { continue; } // skip special dir entries
+		is_dir($file) ? removeDirectory($file) : unlink($file);
+	    }
+	    rmdir($path);
+	    return;
 	}
 }
