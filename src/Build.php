@@ -49,8 +49,7 @@ class Build extends Command
 
 		
 
-        $parser = new Less_Parser();
-        
+       
         if(!is_dir(base_path()."/public/build")){
 
 			// Looks to be first run
@@ -120,6 +119,8 @@ class Build extends Command
 				$data = '// 👨‍🍳 Import your other less files here!';
 				fwrite($b, $data);
 			}
+			$parser = new Less_Parser();
+        
 			$parser->parseFile(base_path().'/resources/less/'.$input);
 			$css = $this->minify_css($parser->getCss());
 			//$css = $parser->getCss();
@@ -228,7 +229,7 @@ class Build extends Command
 	    $files = glob(preg_replace('/(\*|\?|\[)/', '[$1]', $path).'/{,.}*', GLOB_BRACE);
 	    foreach ($files as $file) {
 		if ($file == $path.'/.' || $file == $path.'/..') { continue; } // skip special dir entries
-		is_dir($file) ? removeDirectory($file) : unlink($file);
+		is_dir($file) ? $this->removeDirectory($file) : unlink($file);
 	    }
 	    rmdir($path);
 	    return;
