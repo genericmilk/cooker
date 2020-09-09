@@ -8,12 +8,10 @@
         public function boot()
         {
             $this->setupConfig(); // Load config
-            $this->loadRoutesFrom(__DIR__.'/routes/web.php'); // Import routes
 
             $this->commands([
                 Build::class
             ]);
-
 
             if ($this->app->runningInConsole()) {
                 $this->commands([
@@ -24,7 +22,6 @@
         public function register()
         {
             // Import controllers
-            $this->app->make('Genericmilk\Cooker\Cooker');
             $this->app->make('Genericmilk\Cooker\Build');
             
         }
