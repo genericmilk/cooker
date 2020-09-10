@@ -31,6 +31,6 @@
         }
     },
     "require-dev": {
-        "laravel/framework": "^7.0.x"
+        "laravel/framework": "^7.0.0"
     }
 }
