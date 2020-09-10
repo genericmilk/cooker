@@ -1,6 +1,6 @@
 <?php
 /*
- * Resource Cooker
+ * Cooker 3
  *
  * (c) Peter Day (genericmilk) <peterday.main@gmail.com>
  *
@@ -10,22 +10,51 @@
 return [
 
     /*
-        The namespace to use in the javascript. By default the namespace is "App" and
-        subsequently App.Boot(); will run on the cooked javascript on document ready
+        The namespace to use in the javascript. By default the namespace is "app" and
+        subsequently app.boot(); will run on the cooked javascript on document ready
     */
-    
-    'namespace' => 'App',
 
+    'namespace' => 'q',
+
+    /*
+        Choose whether or not to include a built at timestamp at the top of scripts
+    */
     'build_stamps' => [
         'css' => true,
         'js' => true
     ],
 
+    /*
+        Select libraries that are pre-processed and specify input files here too.
+        Specify the output filename so cooker knows what to call it on save.
+        Extend the array to build multiple less packages
+    */
     'less' => [
-        'app.less' => 'app.css'
+        [
+            'libraries' => [
+                /* ... */
+            ],
+            'input' => [
+                'app.less'
+            ],
+            'output' => 'app.css'
+        ]
     ],
+     /*
+        Select libraries that are pre-processed and specify input files here too.
+        Specify the output filename so cooker knows what to call it on save.
+        Extend the array to build multiple js packages
+    */
     'js' => [
-        'build.json' => 'app.js'
+        [
+            'libraries' => [
+                /* ... */
+            ],
+            'input' => [
+                'app.js'
+            ],
+            'output' => 'app.js'
+        ]
     ]
     
 ];
