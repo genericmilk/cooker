@@ -31,7 +31,7 @@ return [
         For a full list check out Cooker on github
     */
     'frameworks' => [
-        'vuejs'
+        'vue'
     ],
 
     /*
@@ -70,7 +70,7 @@ return [
     /*
         If set to true, Cooker will only output errors to the console
     */
-    'silent' => true
+    'silent' => false
 
     
 ];

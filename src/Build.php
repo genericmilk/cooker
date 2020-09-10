@@ -112,8 +112,8 @@ class Build extends Command
 
 		// Js
 		foreach(config('cooker.js') as $job){
-			$o .= $this->obtainFrameworks('js');
-			$o = $this->js_libr();
+			$o = $this->obtainFrameworks('js');
+			$o .= $this->js_libr();
 			foreach($job['libraries'] as $loclib){
 				$o .= file_get_contents(resource_path('js/'.$loclib));
 			}
@@ -225,7 +225,14 @@ class Build extends Command
 						Cache::put($cache_name, $download, Carbon::today()->addMonths(1));
 						$o .= $download;
 					}
-					$this->bar->advance();
+					if(!config('cooker.silent')){
+						try{
+							$this->bar->advance();
+						}catch(\Exception $e){
+							// Bar not defined
+						}
+
+					}
 				}
 			}
 		}
