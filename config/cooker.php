@@ -25,6 +25,16 @@ return [
     ],
 
     /*
+        Specify packages to be added to the appropriate builds
+        before any libraries local to the project are built.
+        Frameworks will be stored in the application cache and updated monthly.
+        For a full list check out Cooker on github
+    */
+    'frameworks' => [
+        'vuejs'
+    ],
+
+    /*
         Select libraries that are pre-processed and specify input files here too.
         Specify the output filename so cooker knows what to call it on save.
         Extend the array to build multiple less packages
@@ -55,6 +65,12 @@ return [
             ],
             'output' => 'app.js'
         ]
-    ]
+    ],
+
+    /*
+        If set to true, Cooker will only output errors to the console
+    */
+    'silent' => true
+
     
 ];
