@@ -1,7 +1,7 @@
 # 👨‍🍳 Cooker
 ## By Genericmilk
 
-Cooker is a lightweight framework that allows you to quickly build LESS and Javascript files into a Laravel App. 
+Cooker is a lightweight framework that allows you to quickly build LESS and Javascript files into a Laravel app. 
 
 Resources that are built will be placed in the `/public/build` folder as `app.js` and `app.css` respectively. If the app is running in production mode the resources will be compressed and minified too! As if by magic.
 
@@ -13,10 +13,6 @@ $ composer require genericmilk/cooker
 ```
 This will install the requirements and it will publish the artisan command `build:res`.
 
-Before you get started you will need to also publish the configuration file. This will publiscise your cooking rules such as input and output files.
-```
-$ php artisan vendor:publish --provider="Genericmilk\Cooker\ServiceProvider"
-```
 If you're using laravel the best practise is to remove the `resources/sass` folder and the `resources/js` folder as these will be re-created with new elements on your first run of cooker.
 
 ### To cook resources
@@ -39,16 +35,16 @@ Place a new `build.json` in `resources/js` with the following structure
 ```
 It's ideal to reference app.js first. This file should contain the following example to get started
 ```
-var App = {
-  Greeting: 'Hello world',
+var app = {
+  hey: 'Hello world',
   Boot: function(){
-    alert(App.Greeting);
+    alert(app.hey);
   }
 };
 ```
-The `App.Boot();` function will run on document ready and using the example an alert will show with the text; "Hello world". You can extend the `App` model in other scripts referenced in `build.json` by specifying them as such:
+The `app.Boot();` function will run on document ready and using the example an alert will show with the text; "Hello world". You can extend the `app` model in other scripts referenced in `build.json` by specifying them as such:
 ```
-App.ExampleName = {
+app.ExampleName = {
   Boot: function(){
     alert('Hello from other file');
   }
@@ -56,16 +52,16 @@ App.ExampleName = {
 ```
 You can then call this script from the main `app.js` file as such;
 ```
-var App = {
+var app = {
   Boot: function(){
-    App.ExampleName.Boot();
+    app.ExampleName.Boot();
   }
 };
 ```
 #### Changing the Javascript Namespace
-By default, Cooker will attempt to run the `App.Boot();` function on document ready. If you'd prefer to use a custom name, Open the `config/cooker.php` file in a text editor and change the `namespace` value to which ever you'd prefer.
+By default, Cooker will attempt to run the `app.Boot();` function on document ready. If you'd prefer to use a custom name, Open the `config/cooker.php` file in a text editor and change the `namespace` value to which ever you'd prefer.
 ```
-'namespace' => 'App'
+'namespace' => 'app'
 ```
 When you next run `php artisan build:res` it will instruct the `Boot()` function to run from the namespace of your chosing
 
