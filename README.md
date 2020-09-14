@@ -69,7 +69,8 @@ Here are the frameworks we support:
 * `vue` (Installs Vue.js into all js files)
 * `jquery` (Installs jQuery into all js files)
 * `swal2` (Installs Sweetalert2 into all js files)
-* `bootstrapcss` (Installs Bootstrap into all css files)
+* `bootstrap-css` (Installs Bootstrap into all css files)
+* `bootstrap-js` (Installs Bootstrap into all js files)
 * `tailwind` (Installs Tailwind into all css files)
 
 Frameworks are downloaded and stored in the laravel application's cache for 1 month. These files will get redownloaded at the end of this period or when you use the `php artisan cache:clear` command and next cook.
@@ -142,6 +143,8 @@ The first thing to do is to trash and reinstall your configuration file as the b
 php artisan vendor:publish --provider="Genericmilk\Cooker\ServiceProvider"
 ```
 Next, head to the new configuration file and create jobs as needed following the examples and the documentation to convert your application.
+
+You will also need to convert all instances of the `Boot()` function to use the new lowercase `boot()` variant as scripts will call the new lowercase instead.
 
 Finally, you can verify all has worked by running
 `php artisan build:res`
