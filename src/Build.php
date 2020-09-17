@@ -79,7 +79,7 @@ class Build extends Command
 				mkdir(resource_path('js/libraries'));
 				if(!file_exists(resource_path('js/app.js'))){
 					$b = fopen(resource_path('js/app.js'), 'w');
-					$data = 'var '.is_null(config('cooker.namespace')) ? 'app' : config('cooker.namespace').' = {'.PHP_EOL;
+					$data = 'var app = {'.PHP_EOL;
 					$data .= '	boot: function(){'.PHP_EOL;
 					$data .= '		alert("Cooker is ready and rocking!");'.PHP_EOL;
 					$data .= '	}'.PHP_EOL;
