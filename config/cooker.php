@@ -14,7 +14,7 @@ return [
         subsequently app.boot(); will run on the cooked javascript on document ready
     */
 
-    'namespace' => 'q',
+    'namespace' => 'app',
 
     /*
         Choose whether or not to include a built at timestamp at the top of scripts

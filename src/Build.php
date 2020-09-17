@@ -53,35 +53,43 @@ class Build extends Command
 				$this->call('vendor:publish', [
 					'--provider' => 'Genericmilk\Cooker\ServiceProvider'
 				]);
-				$this->removeDirectory(base_path().'/resources/js');
-				$this->removeDirectory(base_path().'/resources/sass');					
-				mkdir(base_path()."/public/build");
-				if(file_exists(base_path().'/.gitignore')){
-					$giF = file_get_contents(base_path().'/.gitignore');
+				$this->removeDirectory(resource_path('js'));
+				$this->removeDirectory(resource_path('sass'));
+				$this->removeDirectory(resource_path('css'));	
+				try{
+					mkdir(public_path('build'));
+				}catch(\Exception $e){
+					$this->error('✋ Could not create build folder. Assuming already exists?');
+				}
+
+				if(file_exists(base_path('.gitignore'))){
+					$giF = file_get_contents(base_path('.gitignore'));
 					if (!strpos($giF, '/public/build') !== false) {
 						$gi = fopen(base_path().'/.gitignore', 'a');
 						$data = PHP_EOL.'/public/build'.PHP_EOL;
 						fwrite($gi, $data);
-						$this->info('⛓ Added public folder to gitignore');
+						$this->info('⛓ Added cooked targets to .gitignore');
 					}
 				}
-				mkdir(base_path().'/resources/less');
-				mkdir(base_path().'/resources/js');
-				mkdir(base_path().'/resources/less/libraries');
-				mkdir(base_path().'/resources/js/libraries');
-
-				$b = fopen(base_path().'/resources/js/build.json', 'w');
-				$data = '["boot.js"]';
-				fwrite($b, $data);
-				if(!file_exists(base_path().'/resources/js/boot.js')){
-					$b = fopen(base_path().'/resources/js/boot.js', 'w');
-					$data = 'var '.config('cooker.namespace').' = {'.PHP_EOL;
-					$data .= '	Boot: function(){'.PHP_EOL;
-					$data .= '		console.log("👨‍🍳 Welcome to Cooker!");'.PHP_EOL;
+				mkdir(resource_path('less'));
+				mkdir(resource_path('less/libraries'));
+				mkdir(resource_path('js'));
+				mkdir(resource_path('js/libraries'));
+				if(!file_exists(resource_path('js/app.js'))){
+					$b = fopen(resource_path('js/app.js'), 'w');
+					$data = 'var '.is_null(config('cooker.namespace')) ? 'app' : config('cooker.namespace').' = {'.PHP_EOL;
+					$data .= '	boot: function(){'.PHP_EOL;
+					$data .= '		alert("Cooker is ready and rocking!");'.PHP_EOL;
 					$data .= '	}'.PHP_EOL;
 					$data .= '};';
 					fwrite($b, $data);
-				}				
+				}	
+				if(!file_exists(resource_path('less/app.less'))){
+					$b = fopen(resource_path('less/app.less'), 'w');
+					$data = '// Write your less here or extend it using config.cooker!';
+					fwrite($b, $data);
+				}	
+				
 				$this->info('💚 Installed! Enjoy using cooker');
 			}else{
 				$this->error('😵 Setup aborted');
@@ -90,8 +98,14 @@ class Build extends Command
 		}
 
 		if(!config('cooker.silent')){
-			$this->bar = $this->output->createProgressBar(count(config('cooker.less')) + count(config('cooker.js')) + count(config('cooker.frameworks')));
-			$this->bar->start();
+			try{
+				$this->bar = $this->output->createProgressBar(count(config('cooker.less')) + count(config('cooker.js')) + count(config('cooker.frameworks')));
+				$this->bar->start();
+			}catch(\Exception $e){
+				$this->error('Looks like your configuration is invalid. Please check and try cooking again');
+				$this->line($e->getTraceAsString());
+			}
+
 		}
 		
 		// Less		
@@ -104,9 +118,14 @@ class Build extends Command
 			}
 			$p = new Less_Parser();   
 			foreach($job['input'] as $input){
-				$p->parseFile(resource_path('less/'.$input));
+				if(file_exists(resource_path('less/'.$input))){
+					$p->parseFile(resource_path('less/'.$input));
+				}else{
+					$this->error(resource_path('less/'.$input).' missing. Unable to mix in this cook session');
+				}
+
 			}
-			$o .= $this->dev ? $this->minify_css($p->getCss()) : $p->getCss();
+			$o .= !$this->dev ? $this->minify_css($p->getCss()) : $p->getCss();
 
 			file_put_contents(public_path('build/'.$job['output']),$o); // write o
 			!config('cooker.silent') ? $this->bar->advance() : '';
@@ -120,15 +139,21 @@ class Build extends Command
 				$o .= file_get_contents(resource_path('js/'.$loclib));
 			}
 			foreach($job['input'] as $input){
-				$j = file_get_contents(resource_path('js/'.$input));
-				if(!$this->dev){
-					$j = preg_replace('/(?:(?:\/\*(?:[^*]|(?:\*+[^*\/]))*\*+\/)|(?:(?<!\:|\\\|\')\/\/.*))/', '', $j); // remove js comments
-					$j = $this->minify_js($j); // minify
-					$j = $this->lastLineFormat($j);
+				if(file_exists(resource_path('js/'.$input))){
+					$j = file_get_contents(resource_path('js/'.$input));
+					if(!$this->dev){
+						$j = preg_replace('/(?:(?:\/\*(?:[^*]|(?:\*+[^*\/]))*\*+\/)|(?:(?<!\:|\\\|\')\/\/.*))/', '', $j); // remove js comments
+						$j = $this->minify_js($j); // minify
+						$j = $this->lastLineFormat($j);
+					}
+					$o .= $j;
+				}else{
+					$this->error(resource_path('js/'.$input).' missing. Unable to mix in this cook session');
 				}
-				$o .= $j;
 			}
-			$o .= config('cooker.namespace').'.boot();';
+
+			$o .= is_null(config('cooker.namespace')) ? 'app' : config('cooker.namespace');
+			$o .= '.boot();';
 
 			$comment = config('cooker.build_stamps.js') ? "/* ".$job['output']." Generated by Cooker v3.0.0 by Genericmilk - Last build at ".Carbon::now()." */" : "";
 			$o = $comment . $o;
