@@ -92,8 +92,7 @@ class Build extends Command
 					fwrite($b, $data);
 				}	
 				
-				$this->info('💚 Installed! Enjoy using cooker');
-				$this->call('build:res');
+				$this->info('💚 Installed! Enjoy using cooker! To get started, run php artisan build:res again');
 				return; // Die here
 			}else{
 				$this->error('😵 Setup aborted');
