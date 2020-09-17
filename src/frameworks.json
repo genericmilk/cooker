@@ -12,6 +12,12 @@
         "type": "js"
     },
     {
+        "name": "wakenbake",
+        "url": "https://raw.githubusercontent.com/genericmilk/wakenbake/master/wakenbake.nojq.js",
+        "urlDev": "https://raw.githubusercontent.com/genericmilk/wakenbake/master/wakenbake.nojq.js",
+        "type": "js"
+    },    
+    {
         "name": "swal2",
         "url": "https://cdn.jsdelivr.net/npm/sweetalert2@10",
         "urlDev": "https://cdn.jsdelivr.net/npm/sweetalert2@10.0.2/dist/sweetalert2.all.js",        

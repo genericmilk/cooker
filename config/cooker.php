@@ -31,7 +31,8 @@ return [
         For a full list check out Cooker on github
     */
     'frameworks' => [
-        'vue'
+        'vue',
+        'tailwind'
     ],
 
     /*
