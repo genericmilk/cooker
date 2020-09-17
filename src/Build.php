@@ -70,18 +70,21 @@ class Build extends Command
 				mkdir(base_path().'/resources/less/libraries');
 				mkdir(base_path().'/resources/js/libraries');
 
-				$b = fopen(base_path().'/resources/js/build.json', 'w');
-				$data = '["boot.js"]';
-				fwrite($b, $data);
-				if(!file_exists(base_path().'/resources/js/boot.js')){
-					$b = fopen(base_path().'/resources/js/boot.js', 'w');
+				if(!file_exists(base_path().'/resources/js/app.js')){
+					$b = fopen(base_path().'/resources/js/app.js', 'w');
 					$data = 'var '.config('cooker.namespace').' = {'.PHP_EOL;
-					$data .= '	Boot: function(){'.PHP_EOL;
-					$data .= '		console.log("👨‍🍳 Welcome to Cooker!");'.PHP_EOL;
+					$data .= '	boot: function(){'.PHP_EOL;
+					$data .= '		alert("Cooker is ready and rocking!");'.PHP_EOL;
 					$data .= '	}'.PHP_EOL;
 					$data .= '};';
 					fwrite($b, $data);
-				}				
+				}	
+				if(!file_exists(base_path().'/resources/less/app.less')){
+					$b = fopen(base_path().'/resources/js/app.less', 'w');
+					$data = '// Write your less here or extend it using config.cooker!';
+					fwrite($b, $data);
+				}	
+				
 				$this->info('💚 Installed! Enjoy using cooker');
 			}else{
 				$this->error('😵 Setup aborted');
