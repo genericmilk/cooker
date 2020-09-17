@@ -91,6 +91,8 @@ class Build extends Command
 				}	
 				
 				$this->info('💚 Installed! Enjoy using cooker');
+				$this->call('build:res');
+				return; // Die here
 			}else{
 				$this->error('😵 Setup aborted');
 				return;
@@ -102,8 +104,7 @@ class Build extends Command
 				$this->bar = $this->output->createProgressBar(count(config('cooker.less')) + count(config('cooker.js')) + count(config('cooker.frameworks')));
 				$this->bar->start();
 			}catch(\Exception $e){
-				$this->error('Looks like your configuration is invalid. Please check and try cooking again');
-				$this->line($e->getTraceAsString());
+
 			}
 
 		}
