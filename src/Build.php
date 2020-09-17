@@ -211,6 +211,7 @@ class Build extends Command
 		}
 	}
 	private function removeDirectory($path) {
+		try{
 	    // The preg_replace is necessary in order to traverse certain types of folder paths (such as /dir/[[dir2]]/dir3.abc#/)
 	    // The {,.}* with GLOB_BRACE is necessary to pull all hidden files (have to remove or get "Directory not empty" errors)
 	    $files = glob(preg_replace('/(\*|\?|\[)/', '[$1]', $path).'/{,.}*', GLOB_BRACE);
@@ -219,7 +220,9 @@ class Build extends Command
 		is_dir($file) ? $this->removeDirectory($file) : unlink($file);
 	    }
 	    rmdir($path);
-	    return;
+		return;
+		}catch(\Exception $e){
+		}
 	}
 	private function obtainFrameworks($platform){
 		$frameworkList = json_decode(file_get_contents(__DIR__.'/frameworks.json'));
