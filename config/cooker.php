@@ -24,6 +24,7 @@ return [
         'js' => true
     ],
 
+
     /*
         Specify packages to be added to the appropriate builds
         before any libraries local to the project are built.
@@ -35,13 +36,9 @@ return [
         'tailwind'
     ],
 
-    /*
-        Select libraries that are pre-processed and specify input files here too.
-        Specify the output filename so cooker knows what to call it on save.
-        Extend the array to build multiple less packages
-    */
-    'less' => [
+    'cookers' => [
         [
+            'cooker' => 'Genericmilk\Cookers\Less',
             'libraries' => [
                 /* ... */
             ],
@@ -49,15 +46,9 @@ return [
                 'app.less'
             ],
             'output' => 'app.css'
-        ]
-    ],
-     /*
-        Select libraries that are pre-processed and specify input files here too.
-        Specify the output filename so cooker knows what to call it on save.
-        Extend the array to build multiple js packages
-    */
-    'js' => [
+        ],
         [
+            'cooker' => 'Genericmilk\Cookers\Js',
             'libraries' => [
                 /* ... */
             ],

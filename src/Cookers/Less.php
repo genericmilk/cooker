@@ -8,8 +8,8 @@ use App\Http\Controllers\Controller;
 
 class Less extends Controller
 {
-    protected $version;
-
+	private $format = 'css';
+    
     public static function cook($job,$dev){
         $this->version = json_decode(file_get_contents(__DIR__.'/../composer.json'))->version;
         
@@ -31,42 +31,6 @@ class Less extends Controller
         $o .= !$this->dev ? $this->minify_css($p->getCss()) : $p->getCss();
 
         file_put_contents(public_path('build/'.$job['output']),$o); // write o
-    }
-    private function minify_css($css) {
-	    $css = preg_replace('/\/\*((?!\*\/).)*\*\//','',$css); // negative look ahead
-		$css = preg_replace('/\s{2,}/',' ',$css);
-		$css = preg_replace('/\s*([:;{}])\s*/','$1',$css);
-		$css = preg_replace('/;}/','}',$css);
-		return $css;
-    }	
-    private function obtainFrameworks($platform){
-		$frameworkList = json_decode(file_get_contents(__DIR__.'/frameworks.json'));
-		$o = '';
-		foreach(config('cooker.frameworks') as $f){
-			foreach($frameworkList as $frameworkOnList){
-				$frameworkOnList = (object)$frameworkOnList;
-				if($frameworkOnList->type==$platform && $frameworkOnList->name==$f){
-					// Matched a valid framework. Check the cache and retrieve that version or grab url
-					$cache_name = 'cooker3'.$frameworkOnList->type.$frameworkOnList->name;
-					if (Cache::has($cache_name)) {						
-						$o .= Cache::get($cache_name);
-					}else{
-						$download = $this->lastLineFormat(file_get_contents($this->dev ? $frameworkOnList->urlDev : $frameworkOnList->url));
-						Cache::put($cache_name, $download, Carbon::today()->addMonths(1));
-						$o .= $download;
-					}
-					if(!config('cooker.silent')){
-						try{
-							$this->bar->advance();
-						}catch(\Exception $e){
-							// Bar not defined
-						}
-
-					}
-				}
-			}
-		}
-		return $o;
     }
     private function less_libr(){
 		// Global less libs (All common everywhere)

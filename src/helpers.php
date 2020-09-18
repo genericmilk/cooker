@@ -1,10 +1,10 @@
 <?php
 
-function helper($file){
+function cooker_resource($file){
     $hash = config('app.debug') ? time() : md5(file_get_contents(public_path('build/'.$file)));
     return '/build/'.$file.'?build=' . $hash;
 }
-function minify_js($input) {
+function cooker_min_js($input) {
     if(trim($input) === "") return $input;
     return preg_replace(
         array(
@@ -27,4 +27,11 @@ function minify_js($input) {
             '$1.$3'
         ),
     $input);
+}
+function cooker_min_less($input) {
+    $input = preg_replace('/\/\*((?!\*\/).)*\*\//','',$input); // negative look ahead
+    $input = preg_replace('/\s{2,}/',' ',$input);
+    $input = preg_replace('/\s*([:;{}])\s*/','$1',$input);
+    $input = preg_replace('/;}/','}',$input);
+    return $input;
 }
