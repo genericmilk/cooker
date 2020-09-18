@@ -39,55 +39,10 @@ class Build extends Command
 		$this->dev = $this->setupEnv();
 		!config('cooker.silent') ? $this->info('👨‍🍳 Cooker '.$this->version.' ('.$this->env.')'.PHP_EOL) : '';
 
-		// Setup
+		// Setup requirement
 		if(is_null(config('cooker.namespace'))){
-			if ($this->confirm('Thanks for installing Cooker! Running setup will remove the /resources/js and /resources/sass folders in order to initialise. Ready to begin the setup?')) {
-				$this->call('vendor:publish', [
-					'--provider' => 'Genericmilk\Cooker\ServiceProvider'
-				]);
-				$this->removeDirectory(resource_path('js'));
-				$this->removeDirectory(resource_path('sass'));
-				$this->removeDirectory(resource_path('css'));	
-				try{
-					mkdir(public_path('build'));
-				}catch(\Exception $e){
-					$this->error('✋ Could not create build folder. Assuming already exists?');
-				}
-
-				if(file_exists(base_path('.gitignore'))){
-					$giF = file_get_contents(base_path('.gitignore'));
-					if (!strpos($giF, '/public/build') !== false) {
-						$gi = fopen(base_path().'/.gitignore', 'a');
-						$data = PHP_EOL.'/public/build'.PHP_EOL;
-						fwrite($gi, $data);
-						$this->info('⛓ Added cooked targets to .gitignore');
-					}
-				}
-				mkdir(resource_path('less'));
-				mkdir(resource_path('less/libraries'));
-				mkdir(resource_path('js'));
-				mkdir(resource_path('js/libraries'));
-				if(!file_exists(resource_path('js/app.js'))){
-					$b = fopen(resource_path('js/app.js'), 'w');
-					$data = 'var app = {'.PHP_EOL;
-					$data .= '	boot: function(){'.PHP_EOL;
-					$data .= '		alert("Cooker is ready and rocking!");'.PHP_EOL;
-					$data .= '	}'.PHP_EOL;
-					$data .= '};';
-					fwrite($b, $data);
-				}	
-				if(!file_exists(resource_path('less/app.less'))){
-					$b = fopen(resource_path('less/app.less'), 'w');
-					$data = '// Write your less here or extend it using config.cooker!';
-					fwrite($b, $data);
-				}	
-				
-				$this->info('💚 Installed! Enjoy using cooker! To get started, run php artisan build:res again');
-				return; // Die here
-			}else{
-				$this->error('😵 Setup aborted');
-				return;
-			}
+			$this->call('cooker:setup');
+			return;
 		}
 
 		// Run jobs
