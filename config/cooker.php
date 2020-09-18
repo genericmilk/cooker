@@ -1,6 +1,6 @@
 <?php
 /*
- * Cooker 3
+ * Cooker 4
  *
  * (c) Peter Day (genericmilk) <peterday.main@gmail.com>
  *
@@ -8,25 +8,15 @@
  * file that was distributed with this source code.
  */
 return [
-    /*
-        The namespace to use in the javascript. By default the namespace is "app" and
-        subsequently app.boot(); will run on the cooked javascript on document ready
-    */
-    'namespace' => 'app',
-    /*
-        Specify packages to be added to the appropriate builds
-        before any libraries local to the project are built.
-        Frameworks will be stored in the application cache and updated monthly.
-        For a full list check out Cooker on github
-    */
-    'frameworks' => [
-        'vue',
-        'tailwind'
-    ],
 
-    'cookers' => [
+    'silent' => false,
+    
+    'jobs' => [
         [
             'cooker' => 'Genericmilk\Cookers\Less',
+            'frameworks' => [
+                'tailwind'
+            ],
             'libraries' => [
                 /* ... */
             ],
@@ -38,21 +28,18 @@ return [
         ],
         [
             'cooker' => 'Genericmilk\Cookers\Js',
+            'frameworks' => [
+                'vue'
+            ],
             'libraries' => [
                 /* ... */
             ],
             'input' => [
                 'app.js'
             ],
+            'namespace' => 'app',
             'output' => 'app.js',
             'stamped' => true
         ]
-    ],
-
-    /*
-        If set to true, Cooker will only output errors to the console
-    */
-    'silent' => false
-
-    
+    ]    
 ];
