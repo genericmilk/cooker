@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 
 class Js extends Controller
 {
-    private $format = 'js';
+    public $format = 'js';
     
     public static function cook($job){
         $p = '';   

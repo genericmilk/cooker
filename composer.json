@@ -34,6 +34,7 @@
         }
     },
     "require-dev": {
-        "laravel/framework": "^8.0.0"
+        "laravel/framework": "^8.0.0",
+        "genericmilk/telephone": "^1.5.0"
     }
 }

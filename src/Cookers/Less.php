@@ -7,7 +7,7 @@ use Less_Parser;
 
 class Less extends Controller
 {
-	private $format = 'css';
+	public $format = 'css';
     
     public static function cook($job){
         $p = new Less_Parser();   

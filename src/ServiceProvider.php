@@ -10,16 +10,16 @@
             $this->setupConfig(); // Load config
             if ($this->app->runningInConsole()) {
                 $this->commands([
-                    Build::class,
-                    Setup::class
+                    Commands\Build::class,
+                    Commands\Setup::class
                 ]);
             }
         }
         public function register()
         {
             // Commands
-            $this->app->make('Genericmilk\Cooker\Cookers\Build');
-            $this->app->make('Genericmilk\Cooker\Cookers\Setup');
+            $this->app->make('Genericmilk\Cooker\Commands\Build');
+            $this->app->make('Genericmilk\Cooker\Commands\Setup');
 
             // Cookers
             $this->app->make('Genericmilk\Cooker\Cookers\Js');

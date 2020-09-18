@@ -13,9 +13,9 @@ return [
     
     'jobs' => [
         [
-            'cooker' => 'Genericmilk\Cookers\Less',
+            'cooker' => 'Genericmilk\Cooker\Cookers\Less',
             'frameworks' => [
-                'tailwind'
+                'tailwindcss'
             ],
             'libraries' => [
                 /* ... */
@@ -27,7 +27,7 @@ return [
             'stamped' => true
         ],
         [
-            'cooker' => 'Genericmilk\Cookers\Js',
+            'cooker' => 'Genericmilk\Cooker\Cookers\Js',
             'frameworks' => [
                 'vue'
             ],

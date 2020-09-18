@@ -8,7 +8,7 @@ use ScssPhp\ScssPhp\Compiler;
 
 class Scss extends Controller
 {
-    private $format = 'css';
+    public $format = 'css';
     
     public static function cook($job){
         $scss = new Compiler();
