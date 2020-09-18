@@ -18,7 +18,8 @@
     "autoload": {
         "psr-4": {
             "Genericmilk\\Cooker\\": "src/"
-        }
+        },
+        "files": ["src/helpers.php"]
     },
     "minimum-stability": "dev",
     "prefer-stable": true,

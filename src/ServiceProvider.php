@@ -21,9 +21,15 @@
         }
         public function register()
         {
-            // Import controllers
+            // Commands
             $this->app->make('Genericmilk\Cooker\Build');
-            
+            $this->app->make('Genericmilk\Cooker\Setup');
+
+            // Cookers
+            $this->app->make('Genericmilk\Cooker\Cookers\Js');
+            $this->app->make('Genericmilk\Cooker\Cookers\Less');
+            $this->app->make('Genericmilk\Cooker\Cookers\Scss');
+            $this->app->make('Genericmilk\Cooker\Cookers\Styl');            
         }
 
         protected function setupConfig(){
