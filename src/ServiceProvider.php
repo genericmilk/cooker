@@ -22,8 +22,8 @@
         public function register()
         {
             // Commands
-            $this->app->make('Genericmilk\Cooker\Build');
-            $this->app->make('Genericmilk\Cooker\Setup');
+            $this->app->make('Genericmilk\Cooker\Cookers\Build');
+            $this->app->make('Genericmilk\Cooker\Cookers\Setup');
 
             // Cookers
             $this->app->make('Genericmilk\Cooker\Cookers\Js');

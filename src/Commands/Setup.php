@@ -12,9 +12,7 @@ class Setup extends Command
 {
 
     protected $signature = 'cooker:setup';
-
 	protected $version;
-
     protected $description = 'The cooker installer/uninstaller';
 
     public function __construct(){
