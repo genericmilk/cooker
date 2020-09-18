@@ -1,4 +1,4 @@
-# 👨‍🍳 Cooker 3
+# 👨‍🍳 Cooker 4
 ## By Genericmilk
 
 Cooker is a lightweight framework that allows you to quickly build Less and Javascript files for a Laravel 7/8 Application
