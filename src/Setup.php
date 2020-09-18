@@ -70,11 +70,17 @@ class Setup extends Command
 				}	
 				
 				$this->info('💚 Installed! Enjoy using cooker! To get started, run php artisan build:res again');
-				return; // Die here
 			}
 		}else{
-            if ($this->confirm('Cooker is already installed. Do you need to uninstall it?')) {
-
+            if ($this->confirm('Cooker is already installed. Do you need to uninstall it? This will remove all folders and resources that have been built and will return your application to a pre-cooker state')) {
+				unlink(config_path('cooker.php'));
+				$this->removeDirectory(resource_path('js'));
+				$this->removeDirectory(resource_path('sass'));
+				$this->removeDirectory(resource_path('css'));	
+				$this->removeDirectory(resource_path('less'));	
+				$this->removeDirectory(public_path('build'));	
+				// Remove from .gitignore				
+				$this->info('💙 Cooker has removed all files installed. You can now run composer remove genericmilk/cooker if you want to uninstall it now!');
             }
         }
     }

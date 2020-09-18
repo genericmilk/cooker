@@ -23,7 +23,6 @@ class Build extends Command
      * @var string
      */
 	protected $signature = 'cooker:cook {--dev} {--prod}';
-	protected $bar;
 	protected $dev;
 
 	protected $version;
@@ -53,6 +52,7 @@ class Build extends Command
     public function handle(){
         $this->version = json_decode(file_get_contents(__DIR__.'/../composer.json'))->version;
 		$this->dev = $this->setupEnv();
+
 		$env = $this->dev ? 'Dev' : 'Prod';
 		!config('cooker.silent') ? $this->info('👨‍🍳 Cooker '.$this->version.' ('.$env.')'.PHP_EOL) : '';
 
@@ -107,20 +107,10 @@ class Build extends Command
 			}
 		}
 
-		if(!config('cooker.silent')){
-			try{
-				$this->bar = $this->output->createProgressBar(count(config('cooker.less')) + count(config('cooker.js')) + count(config('cooker.frameworks')));
-				$this->bar->start();
-			}catch(\Exception $e){
-
-			}
-
-		}
-		
+			
 		// Less		
 		foreach(config('cooker.less') as $job){
 			Less::cook($job);
-			!config('cooker.silent') ? $this->bar->advance() : '';
 		}
 
 		// Js
@@ -135,7 +125,7 @@ class Build extends Command
 					$j = file_get_contents(resource_path('js/'.$input));
 					if(!$this->dev){
 						$j = preg_replace('/(?:(?:\/\*(?:[^*]|(?:\*+[^*\/]))*\*+\/)|(?:(?<!\:|\\\|\')\/\/.*))/', '', $j); // remove js comments
-						$j = $this->minify_js($j); // minify
+						$j = minify_js($j); // minify
 						$j = $this->lastLineFormat($j);
 					}
 					$o .= $j;
@@ -153,36 +143,10 @@ class Build extends Command
 			!config('cooker.silent') ? $this->bar->advance() : '';
 		}
 		if(!config('cooker.silent')){
-			$this->bar->finish();
 			$this->line(PHP_EOL.PHP_EOL."🚀 All done!");
 			$this->line("🌟 Show your support at https://github.com/genericmilk/cooker");
 		}
     }
-
-	private function minify_js($input) {
-	    if(trim($input) === "") return $input;
-	    return preg_replace(
-	        array(
-	            // Remove comment(s)
-	            '#\s*("(?:[^"\\\]++|\\\.)*+"|\'(?:[^\'\\\\]++|\\\.)*+\')\s*|\s*\/\*(?!\!|@cc_on)(?>[\s\S]*?\*\/)\s*|\s*(?<![\:\=])\/\/.*(?=[\n\r]|$)|^\s*|\s*$#',
-	            // Remove white-space(s) outside the string and regex
-	            '#("(?:[^"\\\]++|\\\.)*+"|\'(?:[^\'\\\\]++|\\\.)*+\'|\/\*(?>.*?\*\/)|\/(?!\/)[^\n\r]*?\/(?=[\s.,;]|[gimuy]|$))|\s*([!%&*\(\)\-=+\[\]\{\}|;:,.<>?\/])\s*#s',
-	            // Remove the last semicolon
-	            '#;+\}#',
-	            // Minify object attribute(s) except JSON attribute(s). From `{'foo':'bar'}` to `{foo:'bar'}`
-	            '#([\{,])([\'])(\d+|[a-z_][a-z0-9_]*)\2(?=\:)#i',
-	            // --ibid. From `foo['bar']` to `foo.bar`
-	            '#([a-z0-9_\)\]])\[([\'"])([a-z_][a-z0-9_]*)\2\]#i'
-	        ),
-	        array(
-	            '$1',
-	            '$1$2',
-	            '}',
-	            '$1$3',
-	            '$1.$3'
-	        ),
-	    $input);
-	}
 
 	private function js_libr(){
 		try{
@@ -217,7 +181,6 @@ class Build extends Command
 		}catch(\Exception $e){
 		}
 	}
-
 	private function setupEnv(){
 		$dev = config('app.debug');
 		if($this->option('dev')){
