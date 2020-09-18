@@ -1,21 +1,17 @@
 <?php
     namespace Genericmilk\Cooker;
 
-    class ServiceProvider extends \Illuminate\Support\ServiceProvider{
+    class ServiceProvider extends \Illuminate\Support\ServiceProvider {
 
 
 
         public function boot()
         {
             $this->setupConfig(); // Load config
-
-            $this->commands([
-                Build::class
-            ]);
-
             if ($this->app->runningInConsole()) {
                 $this->commands([
-                    Build::class
+                    Build::class,
+                    Setup::class
                 ]);
             }
         }
