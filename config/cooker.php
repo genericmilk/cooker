@@ -8,23 +8,11 @@
  * file that was distributed with this source code.
  */
 return [
-
     /*
         The namespace to use in the javascript. By default the namespace is "app" and
         subsequently app.boot(); will run on the cooked javascript on document ready
     */
-
     'namespace' => 'app',
-
-    /*
-        Choose whether or not to include a built at timestamp at the top of scripts
-    */
-    'build_stamps' => [
-        'css' => true,
-        'js' => true
-    ],
-
-
     /*
         Specify packages to be added to the appropriate builds
         before any libraries local to the project are built.
@@ -45,7 +33,8 @@ return [
             'input' => [
                 'app.less'
             ],
-            'output' => 'app.css'
+            'output' => 'app.css',
+            'stamped' => true
         ],
         [
             'cooker' => 'Genericmilk\Cookers\Js',
@@ -55,7 +44,8 @@ return [
             'input' => [
                 'app.js'
             ],
-            'output' => 'app.js'
+            'output' => 'app.js',
+            'stamped' => true
         ]
     ],
 

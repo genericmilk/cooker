@@ -1,6 +1,6 @@
 <?php
 
-namespace Genericmilk\Cooker;
+namespace Genericmilk\Cooker\Commands;
 
 use Illuminate\Console\Command;
 
