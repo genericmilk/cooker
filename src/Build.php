@@ -15,18 +15,18 @@ class Build extends Command
      *
      * @var string
      */
-	protected $signature = 'build:res {--dev} {--prod}';
+	protected $signature = 'cooker:cook {--dev} {--prod}';
 	protected $bar;
 	protected $dev;
 
-	protected $version = '3.2.2';
+	protected $version = '4.0.0';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = '👨‍🍳 Cooker by Genericmilk. Run this to cook resources';
+    protected $description = 'Run all defined cookers';
 
     /**
      * Create a new command instance.
