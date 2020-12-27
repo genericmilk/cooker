@@ -71,7 +71,14 @@ return [
     /*
         If set to true, Cooker will only output errors to the console
     */
-    'silent' => false
+    'silent' => false,
+    
+    /*
+        If set to true, Cooker will append semicolons to the end of files
+    */
+    'formatLastLines' => true,
+    
+    
 
     
 ];
