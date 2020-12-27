@@ -292,7 +292,7 @@ class Build extends Command
 	}
 	private function lastLineFormat($input){
 		if(substr($input, -1)!=';'){
-			$input = $input.';';
+			$input = $input . config('cooker.formatLastLines') ? ';' : '';
 		}
 		return $input;
 	}
