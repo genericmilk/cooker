@@ -13,7 +13,8 @@
     "require": {
         "php": ">=7.3",
         "wikimedia/less.php": "^1.8",
-        "scssphp/scssphp": "^1.2"
+        "scssphp/scssphp": "^1.2",
+        "nunomaduro/laravel-desktop-notifier": "^2.5"
     },
     "autoload": {
         "psr-4": {

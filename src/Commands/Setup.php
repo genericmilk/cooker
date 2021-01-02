@@ -25,10 +25,9 @@ class Setup extends Command
         $this->dev = $this->setupEnv();
         $this->version = json_decode(file_get_contents(__DIR__.'/../../composer.json'))->version;
 
-		$env = $this->dev ? 'Dev' : 'Prod';
-		!config('cooker.silent') ? $this->info('👨‍🍳 Cooker Installer '.$this->version.' ('.$env.')'.PHP_EOL) : '';
+		!config('cooker.silent') ? $this->info('👨‍🍳 Cooker '.$this->version.PHP_EOL) : '';
 		if(is_null(config('cooker.silent'))){
-			if ($this->confirm('Thanks for installing Cooker! Running setup will remove the /resources/js and /resources/sass folders in order to initialise. Ready to begin the setup?')) {
+			if ($this->confirm('Remove the /resources/js and /resources/sass folders in order to initialise?')) {
 				$this->call('vendor:publish', [
 					'--provider' => 'Genericmilk\Cooker\ServiceProvider'
 				]);
@@ -45,7 +44,7 @@ class Setup extends Command
 						$gi = fopen(base_path().'/.gitignore', 'a');
 						$data = PHP_EOL.'/public/build'.PHP_EOL;
 						fwrite($gi, $data);
-						$this->info('⛓ Added cooked targets to .gitignore');
+						$this->line('✅ Added cooked targets to .gitignore');
 					}
 
 					$giF = file_get_contents(base_path('.gitignore'));
@@ -53,7 +52,7 @@ class Setup extends Command
 						$gi = fopen(base_path().'/.gitignore', 'a');
 						$data = PHP_EOL.'/storage/app/cooker_frameworks_cache'.PHP_EOL;
 						fwrite($gi, $data);
-						$this->info('⛓ Added framework cache to .gitignore');
+						$this->line('✅ Added framework cache to .gitignore');
 					}
 					
 				}
@@ -74,16 +73,17 @@ class Setup extends Command
 					$data .= '	}'.PHP_EOL;
 					$data .= '};';
 					fwrite($b, $data);
-					$this->info('📝 Created app.js');
+					$this->line('✅ Created app.js');
 				}	
 				if(!file_exists(resource_path('less/app.less'))){
 					$b = fopen(resource_path('less/app.less'), 'w');
 					$data = '// Write your less here or extend it using config.cooker!';
 					fwrite($b, $data);
-					$this->info('📝 Created app.less');
+					$this->line('✅ Created app.less');
 				}	
 				
-				$this->info('💚 Installed! Enjoy using cooker! To get started, run php artisan build:res again');
+				$this->info('💚 Cooker Installed OK');
+
 			}
 		}else{
             if ($this->confirm('Cooker is already installed. Do you need to uninstall it? This will remove all folders and resources that have been built and will return your application to a pre-cooker state')) {
@@ -96,7 +96,7 @@ class Setup extends Command
 				$this->removeDirectory(resource_path('less'));	
 				$this->removeDirectory(public_path('build'));	
 				// Remove from .gitignore				
-				$this->info('💙 Cooker has removed all files installed. You can now run composer remove genericmilk/cooker if you want to uninstall it now!');
+				$this->info('💙 Cooker Uninstalled OK');
             }
         }
     }
@@ -110,7 +110,7 @@ class Setup extends Command
 			is_dir($file) ? $this->removeDirectory($file) : unlink($file);
 			}
 			rmdir($path);
-			$this->info('🗑 Removed '.$path);
+			$this->line('🗑 Removed '.$path);
 			return;
 		}catch(\Exception $e){
 			if(!$silent){
@@ -121,7 +121,7 @@ class Setup extends Command
 	private function makeDirectory($f) {
 		try{
 			mkdir($f);
-			$this->info('📁 Created '.$f);
+			$this->line('📁 Created '.$f);
 		}catch(\Exception $e){
 			$this->error('✋ Could not create '.$f);
 		}
