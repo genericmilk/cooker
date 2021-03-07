@@ -21,7 +21,7 @@
             "Genericmilk\\Cooker\\": "src/"
         },
         "files": [
-			"src/helpers.php"
+			"helpers.php"
 		]
     },
     "minimum-stability": "dev",
