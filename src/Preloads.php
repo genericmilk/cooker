@@ -14,7 +14,7 @@ class Preloads extends Controller
     public static function obtain($preloads,$oven){
         $o = '';
         foreach($preloads as $preload){
-            $o .= Preloads::validatePreload($preload,$oven->format);
+            $o .= Preloads::lastLineFormat(Preloads::validatePreload($preload,$oven->format));
         }
         return $o;
     }
@@ -65,5 +65,11 @@ class Preloads extends Controller
         }
         
         return $o;
+    }
+    public static function lastLineFormat($input){
+        if(substr($input, -1)!=';'){
+			$input = $input.';';
+		}
+		return $input;
     }
 }
