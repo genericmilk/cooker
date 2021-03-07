@@ -5,9 +5,21 @@ Cooker is a lightweight composer package that allows you to quickly build resour
 
 Resources that are cooked will be placed in the `/public/build` folder where all resources will be rendered. If the app is running in production mode the resources will be compressed and minified too! As if by magic.
 
+### So why Cooker? Why not NPM, Webpack? Laravel Mix?
+
+Simple really! Trust me when I say I've tried all of them and the issue that can come from a rammed `node_modules` folder and issues with weird syntax and deploys can really raise the bar for entry. I set out to make a compilation system for my Laravel projects that was super approachable and integrated far more tightly with Laravel itself. The resulting package was Cooker. Cooker does everything you can want it to do and more by offering prebuilt renderers but allowing it to be extended with your own formats super easily.
+
+Even if Cooker runs into an issue it'll show you what's specifically gone wrong in an easy to address format, it won't spew hot code messes over the screen and it's engineered to not kill the run if you have multiple jobs to do, allowing you to identify and fix issues.
+
+Plus all code sent via cooker is automatically compressed and minified when running in `app.debug=false`!
+
+Sounds good? Please do give it a try and offer feedback! I want to create the NPM that's lightyears more friendly for developers (Tall ask I know but hey!)
+
+Cooker is used actively on https://quuu.co as well as https://socialchief.com and https://revively.co and we at Quuu trust it with our lives and livelyhoods (Our app is the reason we're in business!)
+
 ### Installing cooker
 
-To install Cooker, run at the root of your Laravel Project
+To install Cooker, run at the root of your Laravel Project the following
 ```
 composer require genericmilk/cooker
 php artisan cooker:setup
@@ -22,69 +34,61 @@ When you installed cooker it added a new configuration file called `cooker.php` 
 
 It is within this gile that you can specify cooker's _ovens_ and how they should work to cook your build files.
 
-#### Ovens
 Cooker works by defining ovens to process the files. Ovens can have multiple ingredients but only one output. For example you may have a script for billing and a script for a dropdown menu. You would want to combine these scripts to both be available on the output. 
 
 Each oven processes the output files by doing the following
-* Downloads and attaches any files specified. This is specified in the `preload` array in the configuration and can be a direct url or a full path to the resource file. Preloads are not compressed on build and as such minified versions are reccomended so that they are also production ready.
-* Looks for any global libraries automatically and in filename order from the `resources/<oven>/libraries` or `resources/<oven>/libraries` folder. Libraries are the same as frameworks but are stored locally. Just like frameworks these libraries are not compressed on build so it is a good idea to ensure that minified production assets are added to this folder
-* Loads any build specific library from the job `libraries` array. These are the exact same as global libraries but can be specified from another build target per cook job. (For example you may want Wakenbake; another Genericmilk plugin only on the javascript file which is cooked for users who are logged out etc)
-* Input files are then loaded in specified order from the job `input` array. These files are parsed using the less / javascript parser and are minified in production automatically.
+* Adds a timestamp to the head of the file for quick identification of when the last job ran. You can switch this off by setting `stamped` to `false` in the config file
+* Cooker will then look for any global *libraries* automatically and in filename order from the `resources/<ovenDir>/libraries` folder where `<ovenDir>` is defined by the oven running. If you're using a built in oven supplied by Cooker this will be the lowercase of the oven name. If you are using your own consult *Building your own Oven* below. Libraries are loaded before anything else so it's a great idea to put frameworks in here such as jQuery or Vue etc. This is because the browser will need these loaded first and foremost before any app code is processed. Libraries are not compressed on build and as such minified versions are reccomended so that they are also production ready.
+* Cooker will then download and attach any *preloads* specified. Preloads are the same as *libraries* but do not have to exist within one location and can be either a remote or local uri. Preloads are specified in the `preload` array in the configuration and can be a direct url or a full path to the resource file. Preloads are not compressed on build and as such minified versions are reccomended so that they are also production ready.
+
+* Input files are then loaded in specified order from the job `input` array. These files are parsed using the oven loaded and are minified in production automatically. For example if you were using the `Genericmilk\Cooker\Ovens\Less` oven, you could reference files like below so colours and fonts load first. The base directory for reference is that which is supplied by the oven (eg: /resources/less/*)
+```
+  'input' => [
+      'colors.less',
+      'fonts.less',
+      'home.less',
+      'about.less',
+      ...
+  ],
+```
 * The cooked file is published to the `public/build` folder under the name specified in the jobs' `output` string. (Default app.css or app.js etc)
- 
-The first port of call is to configure Cooker as you transition to using it or before you start your project. That way things are in a great position for you to escalate and build upon cooker tasks (aka Cooker *jobs*) as you go. 
-
-Here are the parameters and what they accept!
-
-*namespace* is the first parameter which accepts a string. This tells cooker where to initialise your Cooker object-oriented javascript which you can learn about below. It's a good idea to pick a one-word namespace and stick with it as changing it will stop your javascript files from initialising. So for example if the app I was building was a game, I could call the namespace `coolgame` and subsequently every function and string would stem from `coolgame` e.g. `coolgame.boot();, coolgame.object.player.name;` etc
-
-*build_stamps* contains an array with 2 values inside, one for css and one for javascript. When you build files, cooker will place a build notice at the top of the rendered file indicating when the file was last built etc. You can switch this off for each type of file if you do not want this by setting the flag to `false`
-
-*frameworks* contains a simple array of frameworks you want cooker to download and use. You can get the list of these and more information about frameworks below.
-
-*less/js* these are where the cooking magic happens! these contain arrays seperated by commas which you can specify things you want cooker to build. So if you need more than one css or javascript file, simply copy and paste the example provided and seperate with a comma between the square brackets of the array.
-
-Inside of these job arrays you can specify the following:
-
-*libraries* are files you do not want to be parsed/processed and included before main application code. File paths start in the `resources/<type>/` folder and each file referenced will be loaded and inserted.
-
-*input* contains the files in order you wish to be processed by the parser. For less builds this will parse less syntax into css and javascript will utilise the Cooker object-oriented javascript system. Both arrays will be compressed after processing when running in production so it is a good idea for your application code to live in here.
-
-*output* is a string of the name of the file that is going to be built for example `app.css`, `app.js` or even something custom such as `mygame.js`
-
-*silent* is by default set to false. This will result in cooker progress being outputted to the command-line. If you would prefer cooker to only display error messages and nothing else, switch this to `true`.
-
-
-### Frameworks
-Frameworks are a fantastic way of getting common frameworks such as vue.js, jQuery or Tailwind into your application super quickly and compressed into the same build file. Right now this is super limited but we'll be rolling out way more options down the line for valid frameworks!
-
-Right now you can specify the following frameworks in the `frameworks` array within the cooker configuration in order to add them to your build files. Cooker knows which type of files to add them to and they are included globally (Specifying `bootstrapcss` will add Bootstrap 4 to all css files built using cooker)
-
-Here are the frameworks we support:
-* `vue` (Installs Vue.js into all js files)
-* `jquery` (Installs jQuery into all js files)
-* `swal2` (Installs Sweetalert2 into all js files)
-* `bootstrap-css` (Installs Bootstrap into all css files)
-* `bootstrap-js` (Installs Bootstrap into all js files)
-* `tailwind` (Installs Tailwind into all css files)
-
-Frameworks are downloaded and stored in the laravel application's cache for 1 month. These files will get redownloaded at the end of this period or when you use the `php artisan cache:clear` command and next cook.
 
 ### The Cooker helper
-Cooker comes with a great controller function you can use in blade files or in controllers! It will return a string pointing the browser to the path of the cooked file along with a string to help the browser with the cache. When the application is running in `APP_DEBUG=false` a unix timestamp will be added to the end of the url that is requested. When the opposite is in effect a MD5 hash of the built file will be specified instead.
+Cooker comes with a great controller function you can use in blade files or in controllers! It will return a HTML element pointing the browser to the path of the cooked file along with a string to help the browser with the cache. When the application is running in `app.debug=false` a unix timestamp will be added to the end of the url that is requested. When the opposite is in effect a MD5 hash of the built file will be specified instead.
 
 To use the helper simply include it like so:
 ```
-<link href="{{Genericmilk\Cooker\Cooker::helper('app.css')}}" rel="stylesheet">
-<script src="{{Genericmilk\Cooker\Cooker::helper('app.js')}}"></script>
+{{cooker_resource('app.css')}}
+{{cooker_resource('app.js')}}
 ```
 You can substitute `app.css` and `app.js` for the cooked filename.
 
-If you need to use it in a controller, simply do the following:
-```
-use Genericmilk\Cooker;
+### Building your own Oven
+Starting with Cooker 4, You can extend Cooker to process any input you give it! It could be something to meet your own needs more than the default Less or Scss compiler offers, Or if you want to do something that isn't supported out of the box, maybe something such as Styl etc you can do that by creating your own ovens. 
 
-return Cooker::helper('app.js');
+Ovens are simply controllers that process the given input files from the job array handed to it. Simply create a controller with a `public static function` of `cook` which accepts a `$job` parameter to get started.
+
+You will also need to define what `$format` cooker is outputting to (This is either `css` or `js`) and what `$directory` cooker should look in for files to load.
+
+Then all you need to do is `foreach` round each `$job['input']` and process them, that's literally it! Go nuts!
+
+Follow this example to get going!
+
+```
+class Styl extends Controller
+{
+	public $format = 'css';
+  public $directory = 'styl';
+    
+    public static function cook($job){
+        $p = new fancyParser(); // Could be anything you want or use here!   
+        foreach($job['input'] as $input){
+            $p->parseFile(resource_path($this->directory.'/'.$input)); // process this specific input file
+        }
+        return $p->getCss(); // return the rendered content
+    }
+
+}
 ```
 
 ### Cooker object-oriented javascript
@@ -128,7 +132,7 @@ var app = {
 This'll fire an alert with `Hello from other file` as the function is executed inside `app.anotherObject.boot()`
 
 ### Cooked file compression
-If your Laravel application is running in `APP_DEBUG=true` mode, any cooked files will retain their original formatting. If you are running in `APP_DEBUG=false` mode then all scripts except for javascript and css libraries will be minified to reduce load times
+If your Laravel application is running in `config.debug=true` mode, any cooked files will retain their original formatting. If you are running in `config.debug=false` mode then all scripts except for javascript and css libraries will be minified to reduce load times
 
 ### Upgrading from Cooker 3.x.x
 
@@ -145,11 +149,11 @@ Next, head to the new configuration file and create jobs as needed following the
 You will also need to convert all instances of the `Boot()` function to use the new lowercase `boot()` variant as scripts will call the new lowercase instead.
 
 Finally, you can verify all has worked by running
-`php artisan build:res`
+`php artisan cooker:cook`
 
 ### Requirements for using Cooker
 Cooker is happiest on:
-* Laravel 7/8
+* Laravel 8
 * PHP >=7.3.0
 
 ### That's just the beginnin', folkes!
