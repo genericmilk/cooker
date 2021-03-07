@@ -18,7 +18,6 @@ use Genericmilk\Cooker\Ovens\Scss;
 
 class Build extends Command
 {
-     * @var string
 	protected $signature = 'cooker:cook {--dev} {--prod} {--skipsetup}';
 
 	protected $dev;
