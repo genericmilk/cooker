@@ -58,8 +58,8 @@ Cooker comes with a great controller function you can use in blade files or in c
 
 To use the helper simply include it like so:
 ```
-{{cooker_resource('app.css')}}
-{{cooker_resource('app.js')}}
+{!! cooker_resource('app.css') !!}
+{!! cooker_resource('app.js') !!}
 ```
 You can substitute `app.css` and `app.js` for the cooked filename.
 
