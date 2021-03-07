@@ -24,8 +24,7 @@
             // Cookers
             $this->app->make('Genericmilk\Cooker\Cookers\Js');
             $this->app->make('Genericmilk\Cooker\Cookers\Less');
-            $this->app->make('Genericmilk\Cooker\Cookers\Scss');
-            $this->app->make('Genericmilk\Cooker\Cookers\Styl');            
+            $this->app->make('Genericmilk\Cooker\Cookers\Scss');  
         }
 
         protected function setupConfig(){

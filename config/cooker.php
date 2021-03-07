@@ -14,11 +14,8 @@ return [
     'jobs' => [
         [
             'cooker' => 'Genericmilk\Cooker\Cookers\Less',
-            'frameworks' => [
+            'preload' => [
                 'tailwindcss'
-            ],
-            'libraries' => [
-                /* ... */
             ],
             'input' => [
                 'app.less'
@@ -28,11 +25,8 @@ return [
         ],
         [
             'cooker' => 'Genericmilk\Cooker\Cookers\Js',
-            'frameworks' => [
+            'preload' => [
                 'vue'
-            ],
-            'libraries' => [
-                /* ... */
             ],
             'input' => [
                 'app.js'
