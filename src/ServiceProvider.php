@@ -1,7 +1,7 @@
 <?php
     namespace Genericmilk\Cooker;
 
-    require_once __DIR__.'/helpers.php';
+    require_once __DIR__.'/src/helpers.php';
 
 
     class ServiceProvider extends \Illuminate\Support\ServiceProvider {
