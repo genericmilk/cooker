@@ -1,6 +1,6 @@
 <?php
 /*
- * Cooker 3
+ * Cooker 4
  *
  * (c) Peter Day (genericmilk) <peterday.main@gmail.com>
  *
@@ -9,76 +9,31 @@
  */
 return [
 
-    /*
-        The namespace to use in the javascript. By default the namespace is "app" and
-        subsequently app.boot(); will run on the cooked javascript on document ready
-    */
-
-    'namespace' => 'app',
-
-    /*
-        Choose whether or not to include a built at timestamp at the top of scripts
-    */
-    'build_stamps' => [
-        'css' => true,
-        'js' => true
-    ],
-
-    /*
-        Specify packages to be added to the appropriate builds
-        before any libraries local to the project are built.
-        Frameworks will be stored in the application cache and updated monthly.
-        For a full list check out Cooker on github
-    */
-    'frameworks' => [
-        'vue',
-        'tailwind'
-    ],
-
-    /*
-        Select libraries that are pre-processed and specify input files here too.
-        Specify the output filename so cooker knows what to call it on save.
-        Extend the array to build multiple less packages
-    */
-    'less' => [
+    'silent' => false,
+    
+    'ovens' => [
         [
-            'libraries' => [
-                /* ... */
+            'cooker' => 'Genericmilk\Cooker\Ovens\Less',
+            'preload' => [
+                'https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css'
             ],
             'input' => [
                 'app.less'
             ],
-            'output' => 'app.css'
-        ]
-    ],
-     /*
-        Select libraries that are pre-processed and specify input files here too.
-        Specify the output filename so cooker knows what to call it on save.
-        Extend the array to build multiple js packages
-    */
-    'js' => [
+            'output' => 'app.css',
+            'stamped' => true
+        ],
         [
-            'libraries' => [
-                /* ... */
+            'cooker' => 'Genericmilk\Cooker\Ovens\Js',
+            'preload' => [
+                'https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js'
             ],
             'input' => [
                 'app.js'
             ],
-            'output' => 'app.js'
+            'namespace' => 'app',
+            'output' => 'app.js',
+            'stamped' => true
         ]
-    ],
-
-    /*
-        If set to true, Cooker will only output errors to the console
-    */
-    'silent' => false,
-    
-    /*
-        If set to true, Cooker will append semicolons to the end of files
-    */
-    'formatLastLines' => true,
-    
-    
-
-    
+    ]    
 ];

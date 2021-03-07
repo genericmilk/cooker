@@ -1,29 +1,29 @@
 <?php
     namespace Genericmilk\Cooker;
 
-    class ServiceProvider extends \Illuminate\Support\ServiceProvider{
+    require_once __DIR__.'/helpers.php';
+
+
+    class ServiceProvider extends \Illuminate\Support\ServiceProvider {
 
 
 
         public function boot()
         {
             $this->setupConfig(); // Load config
-
-            $this->commands([
-                Build::class
-            ]);
-
             if ($this->app->runningInConsole()) {
                 $this->commands([
-                    Build::class
+                    Commands\Build::class,
+                    Commands\Setup::class
                 ]);
             }
         }
         public function register()
-        {
-            // Import controllers
-            $this->app->make('Genericmilk\Cooker\Build');
-            
+        {            
+            // Default Cookers
+            $this->app->make('Genericmilk\Cooker\Ovens\Js');
+            $this->app->make('Genericmilk\Cooker\Ovens\Less');
+            $this->app->make('Genericmilk\Cooker\Ovens\Scss');  
         }
 
         protected function setupConfig(){
