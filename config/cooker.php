@@ -13,9 +13,9 @@ return [
     
     'ovens' => [
         [
-            'cooker' => 'Genericmilk\Cooker\Cookers\Less',
+            'cooker' => 'Genericmilk\Cooker\Ovens\Less',
             'preload' => [
-                'tailwindcss'
+                'https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css'
             ],
             'input' => [
                 'app.less'
@@ -24,9 +24,9 @@ return [
             'stamped' => true
         ],
         [
-            'cooker' => 'Genericmilk\Cooker\Cookers\Js',
+            'cooker' => 'Genericmilk\Cooker\Ovens\Js',
             'preload' => [
-                'vue'
+                'https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js'
             ],
             'input' => [
                 'app.js'

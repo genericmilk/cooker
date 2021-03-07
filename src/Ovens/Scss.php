@@ -1,6 +1,6 @@
 <?php
 
-namespace Genericmilk\Cooker\Cookers;
+namespace Genericmilk\Cooker\Ovens;
 use App\Http\Controllers\Controller;
 
 use ScssPhp\ScssPhp\Compiler;
@@ -9,6 +9,7 @@ use ScssPhp\ScssPhp\Compiler;
 class Scss extends Controller
 {
     public $format = 'css';
+    public $directory = 'scss';
     
     public static function cook($job){
         $scss = new Compiler();

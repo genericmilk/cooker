@@ -21,9 +21,9 @@
         public function register()
         {            
             // Default Cookers
-            $this->app->make('Genericmilk\Cooker\Cookers\Js');
-            $this->app->make('Genericmilk\Cooker\Cookers\Less');
-            $this->app->make('Genericmilk\Cooker\Cookers\Scss');  
+            $this->app->make('Genericmilk\Cooker\Ovens\Js');
+            $this->app->make('Genericmilk\Cooker\Ovens\Less');
+            $this->app->make('Genericmilk\Cooker\Ovens\Scss');  
         }
 
         protected function setupConfig(){

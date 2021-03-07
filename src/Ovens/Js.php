@@ -1,12 +1,13 @@
 <?php
 
-namespace Genericmilk\Cooker\Cookers;
+namespace Genericmilk\Cooker\Ovens;
 
 use App\Http\Controllers\Controller;
 
 class Js extends Controller
 {
     public $format = 'js';
+    public $directory = 'js';
     
     public static function cook($job){
         $p = '';   

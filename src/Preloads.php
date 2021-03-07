@@ -5,12 +5,18 @@ use App\Http\Controllers\Controller;
 
 use Genericmilk\Telephone\Telephone;
 use Storage;
-
+use Exception;
+use Cache;
 
 class Preloads extends Controller
 {
-    public static function obtain($frameworks,$type,$dev){
+    public static function obtain($preloads,$oven){
+        foreach($preloads as $preload){
+            Preloads::validatePreload($preload,$oven->format);
+
+        }
         $o = '';
+        dd($preloads,$oven);
         foreach($frameworks as $f){
             if ( !file_exists( storage_path('app/cooker_frameworks_cache/'.$f) ) && !is_dir( storage_path('app/cooker_frameworks_cache/'.$f) ) ) {
                 // Need to download
@@ -51,7 +57,19 @@ class Preloads extends Controller
         }
         return $o;
     }
-    private  function delete_files($target) {
+    public static function validatePreload($p,$t){
+        if (strpos($p, '://') !== false) {
+            // Remote url
+            if (strpos($p, 'http') === false) {
+                throw new Exception('Cooker: Remote url provided for preload but no protocol provided. Please provide at least http or https. '.$p.' did not pass validation');
+            }
+            $ext = pathinfo($p, PATHINFO_EXTENSION);
+            if($ext!=$t){
+                throw new Exception('Cooker: Mismatching type of file for oven format on preload. '.$p.' did not pass validation');
+            }
+        }
+    }
+    private function delete_files($target) {
         if(is_dir($target)){
             $files = glob( $target . '*', GLOB_MARK ); //GLOB_MARK adds a slash to directories returned
             foreach( $files as $file ){
