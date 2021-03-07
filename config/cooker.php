@@ -11,7 +11,7 @@ return [
 
     'silent' => false,
     
-    'jobs' => [
+    'ovens' => [
         [
             'cooker' => 'Genericmilk\Cooker\Cookers\Less',
             'preload' => [

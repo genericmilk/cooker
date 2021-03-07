@@ -1,38 +1,33 @@
 # 👨‍🍳 Cooker 4
 ## By Genericmilk
 
-Cooker is a lightweight framework that allows you to quickly build Less and Javascript files for a Laravel 7/8 Application
+Cooker is a lightweight composer package that allows you to quickly build resources for the frontend of your application from languages that need to be parsed to whether you want to build your application using a bunch of smaller files. We call this parsing and combination effort "Cooking". 
 
-Resources that are built will be placed in the `/public/build` folder where all resources will be rendered. If the app is running in production mode the resources will be compressed and minified too! As if by magic.
+Resources that are cooked will be placed in the `/public/build` folder where all resources will be rendered. If the app is running in production mode the resources will be compressed and minified too! As if by magic.
 
 ### Installing cooker
 
 To install Cooker, run at the root of your Laravel Project
 ```
-$ composer require genericmilk/cooker
+composer require genericmilk/cooker
+php artisan cooker:setup
 ```
-This will install the required supporting packages as well as cooker itself and it will also publish the artisan command `build:res`.
 
-When you use cooker for the first time it will overwrite the `sass` and `js` folders and everything that is inside them. So make sure you save any work back first because things will get deleted!
+This will install the required supporting packages as well as cooker itself and it will also publish the artisan command `cooker:cook`.
 
-### Running cooker (and installing if it is your first bake!)
-
-The best way to get started with cooker is to run the cook command which will automatically do everything involved for setup as well as creating dummy files for getting up and running fast as well as publishing the configuration needed for telling Cooker what to do.
-
-To run cooker simply run the following artisan command from your project root.
-```
-php artisan build:res
-```
-This will build all configured files into their counterpart "cooked" files within `/public/build/` as well as updating any frameworks that are out of date.
+*Please note that installing will overwrite the `sass` and `js` folders and everything that is inside them. So make sure you save any work back first because things will get deleted!*
 
 ### Configuring cooker
-When you run cooker for the first time it'll add a new configuration file called `cooker.php` to your laravel application's `config` directory.
+When you installed cooker it added a new configuration file called `cooker.php` to your laravel application's `config` directory.
 
-It is within this folder that you can specify how cooker should work to create your build files.
+It is within this gile that you can specify cooker's _ovens_ and how they should work to cook your build files.
 
-Cooker works in the following order on both Less files and Javascript files.
-* Downloads and attaches any "framework" specified. This is specified in the `frameworks` array in the configuration, a full list of which frameworks can be included below. Framework that are loaded from frameworks array are not compressed on build and as such minified versions will be downloaded.
-* Looks for any global libraries automatically and in filename order from the `resources/less/libraries` or `resources/less/libraries` folder. Libraries are the same as frameworks but are stored locally. Just like frameworks these libraries are not compressed on build so it is a good idea to ensure that minified production assets are added to this folder
+#### Ovens
+Cooker works by defining ovens to process the files. Ovens can have multiple ingredients but only one output. For example you may have a script for billing and a script for a dropdown menu. You would want to combine these scripts to both be available on the output. 
+
+Each oven processes the output files by doing the following
+* Downloads and attaches any files specified. This is specified in the `preload` array in the configuration and can be a direct url or a full path to the resource file. Preloads are not compressed on build and as such minified versions are reccomended so that they are also production ready.
+* Looks for any global libraries automatically and in filename order from the `resources/<oven>/libraries` or `resources/<oven>/libraries` folder. Libraries are the same as frameworks but are stored locally. Just like frameworks these libraries are not compressed on build so it is a good idea to ensure that minified production assets are added to this folder
 * Loads any build specific library from the job `libraries` array. These are the exact same as global libraries but can be specified from another build target per cook job. (For example you may want Wakenbake; another Genericmilk plugin only on the javascript file which is cooked for users who are logged out etc)
 * Input files are then loaded in specified order from the job `input` array. These files are parsed using the less / javascript parser and are minified in production automatically.
 * The cooked file is published to the `public/build` folder under the name specified in the jobs' `output` string. (Default app.css or app.js etc)
@@ -134,6 +129,9 @@ This'll fire an alert with `Hello from other file` as the function is executed i
 
 ### Cooked file compression
 If your Laravel application is running in `APP_DEBUG=true` mode, any cooked files will retain their original formatting. If you are running in `APP_DEBUG=false` mode then all scripts except for javascript and css libraries will be minified to reduce load times
+
+### Upgrading from Cooker 3.x.x
+
 
 ### Upgrading from Cooker 2.x.x or 1.x.x
 Boy howdy what an upgrade I have for you folkes coming from an older build of Cooker! Unfortunately there is some work involved to get started.
