@@ -135,7 +135,9 @@ This'll fire an alert with `Hello from other file` as the function is executed i
 If your Laravel application is running in `config.debug=true` mode, any cooked files will retain their original formatting. If you are running in `config.debug=false` mode then all scripts except for javascript and css libraries will be minified to reduce load times
 
 ### Upgrading from Cooker 3.x.x
+There are a few things you need to do to upgrade. Most of the work is done in the config file. It's most likely the best idea to backup your `cooker.php` file and translate over your custom changes as the newer version of the config file references ovens rather than pre-labeled jobs.
 
+It's also worth noting that `frameworks` has been deprecated in replacement to `preloads`
 
 ### Upgrading from Cooker 2.x.x or 1.x.x
 Boy howdy what an upgrade I have for you folkes coming from an older build of Cooker! Unfortunately there is some work involved to get started.
