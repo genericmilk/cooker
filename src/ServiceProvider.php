@@ -1,6 +1,9 @@
 <?php
     namespace Genericmilk\Cooker;
 
+    require_once __DIR__.'/helpers.php';
+
+
     class ServiceProvider extends \Illuminate\Support\ServiceProvider {
 
 
@@ -16,12 +19,8 @@
             }
         }
         public function register()
-        {
-            // Commands
-            $this->app->make('Genericmilk\Cooker\Commands\Build');
-            $this->app->make('Genericmilk\Cooker\Commands\Setup');
-
-            // Cookers
+        {            
+            // Default Cookers
             $this->app->make('Genericmilk\Cooker\Cookers\Js');
             $this->app->make('Genericmilk\Cooker\Cookers\Less');
             $this->app->make('Genericmilk\Cooker\Cookers\Scss');  

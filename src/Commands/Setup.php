@@ -65,24 +65,7 @@ class Setup extends Command
 				$this->makeDirectory(resource_path('js'));
 				$this->makeDirectory(resource_path('js/libraries'));
 
-				if(!file_exists(resource_path('js/app.js'))){
-					$b = fopen(resource_path('js/app.js'), 'w');
-					$data = 'var app = {'.PHP_EOL;
-					$data .= '	boot: function(){'.PHP_EOL;
-					$data .= '		alert("Cooker is ready and rocking!");'.PHP_EOL;
-					$data .= '	}'.PHP_EOL;
-					$data .= '};';
-					fwrite($b, $data);
-					$this->line('✅ Created app.js');
-				}	
-				if(!file_exists(resource_path('less/app.less'))){
-					$b = fopen(resource_path('less/app.less'), 'w');
-					$data = '// Write your less here or extend it using config.cooker!';
-					fwrite($b, $data);
-					$this->line('✅ Created app.less');
-				}	
-				
-				$this->info('💚 Cooker Installed OK');
+				$this->info('💚 Cooker Installed OK! Start your first cook job by running cooker:cook');
 
 			}
 		}else{

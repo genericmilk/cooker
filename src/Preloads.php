@@ -7,7 +7,7 @@ use Genericmilk\Telephone\Telephone;
 use Storage;
 
 
-class Frameworks extends Controller
+class Preloads extends Controller
 {
     public static function obtain($frameworks,$type,$dev){
         $o = '';
@@ -22,7 +22,7 @@ class Frameworks extends Controller
                 $p->extractTo(storage_path('app/cooker_frameworks_cache/'.$f.'_download'));
                 unlink(storage_path('app/cooker_frameworks_cache/'.$f.'.tgz'));
                 rename(storage_path('app/cooker_frameworks_cache/'.$f.'_download/package/dist'),storage_path('app/cooker_frameworks_cache/'.$f));
-                Frameworks::delete_files(storage_path('app/cooker_frameworks_cache/'.$f.'_download'));
+                $this->delete_files(storage_path('app/cooker_frameworks_cache/'.$f.'_download'));
             }
  
             
@@ -51,11 +51,11 @@ class Frameworks extends Controller
         }
         return $o;
     }
-    public static function delete_files($target) {
+    private  function delete_files($target) {
         if(is_dir($target)){
             $files = glob( $target . '*', GLOB_MARK ); //GLOB_MARK adds a slash to directories returned
             foreach( $files as $file ){
-                Frameworks::delete_files( $file );      
+                $this->delete_files( $file );      
             }
             try{
                 rmdir( $target );
