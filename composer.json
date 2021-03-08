@@ -2,7 +2,7 @@
     "name": "genericmilk/cooker",
     "description": "Plugin to the Cooker Engine! Easy site building by Genericmilk",
     "keywords": ["laravel", "cooker", "resources", "less", "javascript"],
-    "version": "4.0.0",
+    "version": "4.0.6",
     "license": "MIT",
     "authors": [
         {
