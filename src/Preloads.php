@@ -45,6 +45,7 @@ class Preloads extends Controller
             }
 
         }else{
+	    $p = resource_path($ext.'/'.$p);
             if(!file_exists($p)){
                 throw new Exception('Cooker: Local preload file could not be found. '.$p.' did not pass validation');
             }
