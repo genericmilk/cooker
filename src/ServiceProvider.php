@@ -14,7 +14,8 @@
             if ($this->app->runningInConsole()) {
                 $this->commands([
                     Commands\Build::class,
-                    Commands\Setup::class
+                    Commands\Setup::class,
+                    Commands\Watch::class
                 ]);
             }
         }
