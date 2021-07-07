@@ -62,6 +62,11 @@ class Build extends Command
 				
 
 				$o = $stamp . $preloads . $libraries . $appcode;
+				
+				if (!file_exists(public_path('build'))) {
+				    mkdir(public_path('build'), 0777, true);
+				}
+				
 				file_put_contents(public_path('build/'.$job['output']),$o); // write o
 
 				$t_ok[] = [
