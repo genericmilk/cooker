@@ -30,12 +30,12 @@ class Preloads extends Controller
                 throw new Exception('Cooker: Remote url provided for preload but no protocol provided. Please provide at least http or https. '.$p.' did not pass validation');
             }
             
-
             $cache_name = 'cooker-'.md5($p);
+
             if (!Cache::has($cache_name)){
                 try{
                     $data = file_get_contents($p);
-                }catch(\Exception $e){
+                }catch(Exception $e){
                     throw new Exception('Cooker: Could not download remote file. '.$p.' did not pass validation');
                 }
                 Cache::forever($cache_name, $data);
@@ -45,7 +45,7 @@ class Preloads extends Controller
             }
 
         }else{
-	    $p = resource_path($ext.'/'.$p);
+	        $p = resource_path($ext.'/'.$p);
             if(!file_exists($p)){
                 throw new Exception('Cooker: Local preload file could not be found. '.$p.' did not pass validation');
             }
@@ -65,7 +65,7 @@ class Preloads extends Controller
             }
         }
         
-        return $o;
+        return $o.PHP_EOL;
     }
     public static function lastLineFormat($input){
         if(substr($input, -1)!=';'){
