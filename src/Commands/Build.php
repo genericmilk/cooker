@@ -117,7 +117,7 @@ class Build extends Command
 			$dir = array_values($dir);
 			$libs = '';
 			foreach($dir as $lib){
-				$libs .= $this->lastLineFormat(file_get_contents(resource_path($oven->directory.'/libraries/'.$lib)));
+				$libs .= $this->lastLineFormat(file_get_contents(resource_path($oven->directory.'/libraries/'.$lib)),$oven->format);
 			}
 			return $libs;
 		}catch(\Exception $e){
@@ -159,9 +159,9 @@ class Build extends Command
 					'$1.$3'
 				),
 			$input);
-			$input = $this->lastLineFormat($input);
 		}
 
+		$input = $this->lastLineFormat($input,$type);
 		return $input;
 	}
 	private function setupEnv(){
@@ -175,12 +175,12 @@ class Build extends Command
 		$this->env = $dev ? 'dev' : 'prod';
 		return $dev;
 	}
-	private function lastLineFormat($input){
+	private function lastLineFormat($input,$type){
 		/*
 			Fixes file concatanation by ensuring last charachter is a ; so that differentiation
 			between scripts is met
 		*/
-		if(substr($input, -1)!=';'){
+		if(substr($input, -1)!=';' && $type=='js'){
 			$input = $input.';';
 		}
 		return $input;
