@@ -32,13 +32,16 @@ class Build extends Command
     public function handle(){
         $this->version = json_decode(file_get_contents(__DIR__.'/../../composer.json'))->version;
 		$this->dev = $this->setupEnv();
-		// Setup requirement
+		
+		// Check if we have run setup
 		if(is_null(config('cooker.silent'))){
 			if(!$this->option('skipsetup')){
 				$this->call('cooker:setup');
 				return;
 			}
 		}
+
+
 		$start = microtime(true);
 
 		!config('cooker.silent') ? $this->info('👨‍🍳 Cooker '.$this->version.' ('.ucfirst($this->env).')'.PHP_EOL) : '';
@@ -53,7 +56,25 @@ class Build extends Command
 
 				$preloads = Preloads::obtain($job['preload'],$oven); // get the cook job's preloads								
 				$libraries = $this->libraries($oven); // Get the preloads from the directory of the job (Pre uniqs)
-				$appcode = $oven::cook($job); // cook the job's inputted filtes
+
+				$appcode = ''; // start a new string
+
+				// Add toolbelt if the job allows it
+				if($oven->format=='js'){
+					if($job['toolbelt']){
+						// User wants toolbelt
+						$toolbelt = file_get_contents(__DIR__.'/../toolbelt.js');
+	
+						// Configure the toolbelt
+						$toolbelt = str_replace('__isProd__',($this->env=='prod' ? 'true' : 'false'),$toolbelt);
+						$toolbelt = str_replace('__cookerVersion__',($this->version),$toolbelt);
+	
+						$appcode .= $toolbelt;
+					}
+				}
+
+
+				$appcode .= $oven::cook($job); // cook the job's inputted filtes
 				$appcode .= $oven->format=='js' ? $job['namespace'].'.boot();' : ''; // if javascript finish by booting the script
 
 				if($this->env=='prod'){
