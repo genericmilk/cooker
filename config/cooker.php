@@ -10,7 +10,9 @@
 return [
 
     'silent' => false,
+    'notifications' => true,
     'canSpeedyCook' => true,
+
     
     'ovens' => [
         [
@@ -24,6 +26,7 @@ return [
                 'app.less'
             ],
             'output' => 'app.css',
+            'name' => 'Example Css',
             'stamped' => true
         ],
         [
@@ -39,6 +42,7 @@ return [
             ],
             'namespace' => 'app',
             'output' => 'app.js',
+            'name' => 'Example Javascript',
             'stamped' => true,
             'toolbelt' => true
         ]
