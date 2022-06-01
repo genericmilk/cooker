@@ -159,8 +159,9 @@ class Build extends Command
 					'$1.$3'
 				),
 			$input);
+			$input = $this->lastLineFormat($input);
 		}
-		$input = $this->lastLineFormat($input);
+
 		return $input;
 	}
 	private function setupEnv(){
