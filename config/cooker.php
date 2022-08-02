@@ -9,8 +9,36 @@
  */
 return [
 
+    /*
+    |--------------------------------------------------------------------------
+    | Silent
+    |--------------------------------------------------------------------------
+    |
+    | Only output to the console if there has been an error during cooking
+    |
+    */
     'silent' => false,
+
+    /*
+    |--------------------------------------------------------------------------
+    | Notifications
+    |--------------------------------------------------------------------------
+    |
+    | Fire a desktop notification after Cooker completes
+    |
+    */
     'notifications' => true,
+
+    /*
+    |--------------------------------------------------------------------------
+    | Can Speedy Cook
+    |--------------------------------------------------------------------------
+    |
+    | Whether or not Cooker can cook in Speedy mode. Speedy mode allows Cooker
+    | to cook faster by only compiling the files that have changed rather than
+    | compiling everything. This is useful for development but not for production.
+    |
+    */
     'canSpeedyCook' => true,
 
     
@@ -46,5 +74,5 @@ return [
             'stamped' => true,
             'toolbelt' => true
         ]
-    ]    
+    ]   
 ];

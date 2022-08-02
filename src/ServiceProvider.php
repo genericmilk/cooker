@@ -15,7 +15,8 @@
                 $this->commands([
                     Commands\Build::class,
                     Commands\Setup::class,
-                    Commands\Watch::class
+                    Commands\Watch::class,
+                    Commands\Shortcut::class
                 ]);
             }
         }

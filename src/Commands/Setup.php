@@ -65,8 +65,16 @@ class Setup extends Command
 				$this->makeDirectory(resource_path('js'));
 				$this->makeDirectory(resource_path('js/libraries'));
 
-				$this->info('💚 Cooker Installed OK! Start your first cook job by running cooker:cook');
 
+
+				$file = fopen(resource_path('less/app.less'),'w');
+				fwrite($file,file_get_contents(__DIR__.'/../example.less'));
+				fclose($file);
+
+				$file = fopen(resource_path('js/app.js'),'w');
+				fwrite($file,file_get_contents(__DIR__.'/../example.js'));
+				fclose($file);
+				$this->info('💚 Cooker Installed OK!');
 			}
 		}else{
             if ($this->confirm('Cooker is already installed. Do you need to uninstall it? This will remove all folders and resources that have been built and will return your application to a pre-cooker state')) {
