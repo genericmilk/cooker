@@ -139,20 +139,6 @@ There are a few things you need to do to upgrade. Most of the work is done in th
 
 It's also worth noting that `frameworks` has been deprecated in replacement to `preloads`
 
-### Upgrading from Cooker 2.x.x or 1.x.x
-Boy howdy what an upgrade I have for you folkes coming from an older build of Cooker! Unfortunately there is some work involved to get started.
-
-The first thing to do is to trash and reinstall your configuration file as the build scripts have changed for this version.
-```
-php artisan vendor:publish --provider="Genericmilk\Cooker\ServiceProvider"
-```
-Next, head to the new configuration file and create jobs as needed following the examples and the documentation to convert your application.
-
-You will also need to convert all instances of the `Boot()` function to use the new lowercase `boot()` variant as scripts will call the new lowercase instead.
-
-Finally, you can verify all has worked by running
-`php artisan cooker:cook`
-
 ### Requirements for using Cooker
 Cooker is happiest on:
 * Laravel 8
