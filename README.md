@@ -1,9 +1,47 @@
-# 👨‍🍳 Cooker 4
+# 👨‍🍳 Cooker 5
 ## By Genericmilk
 
-Cooker is a lightweight composer package that allows you to quickly build resources for the frontend of your application from languages that need to be parsed to whether you want to build your application using a bunch of smaller files. We call this parsing and combination effort "Cooking". 
+Cooker is a lightweight composer package aimed at sitting tightly within Laravel applications that allows you to quickly build resources for the frontend of your application from languages that need to be parsed to whether you want to build your application using a bunch of smaller files. We call this parsing and combination effort "Cooking". 
 
 Resources that are cooked will be placed in the `/public/build` folder where all resources will be rendered. If the app is running in production mode the resources will be compressed and minified too! As if by magic.
+
+### Installing Cooker in a new project
+
+To install Cooker, run at the root of your Laravel Project the following
+```
+composer require genericmilk/cooker
+php artisan cooker:setup
+```
+
+This will install the required supporting packages as well as cooker itself and it will also publish the artisan command `cooker:cook`.
+
+*Please note that installing will overwrite the `sass` and `js` folders and everything that is inside them. So make sure you save any work back first because things will get deleted!*
+
+### Upgrading from Cooker 4 to Cooker 5
+
+If you've been using Cooker 4 in your projects you will need to make some changes to your `/config/cooker.php` file in order to benefit from the new changes.
+
+First, You will need to change the `silent` option at the top of your cooker config to this:
+```
+'silent' => false,
+'notifications' => true,
+'canSpeedyCook' => true,
+```
+This adds the new `notifications` option which denotes if you want to recieve desktop notifications based on the outcome of your cook, The new `canSpeedyCook` option which denotes if Cooker can quickly build your files based on what has changed as well as the normal `silent` option which skips output to the terminal and desktop notifications.
+
+Next, You will need to add the following to each oven you have in your config file:
+```
+'name' => 'Example File',
+```
+The field `Example File` can be altered as nessecary and is used to refer in plain english to what the job means to you. For example, Frontend resources, Admin Javascript etc.
+
+Finally add the following boolean to any oven running the `Genericmilk\Cooker\Ovens\Js` oven:
+```
+'toolbelt' => true
+```
+This denotes whether Cooker should import the new toolkit of tools into your generated javascript files giving you a quick overview of if the job ran in production etc.
+
+When these have been carried out, You can run `php artisan cook` to verify that the upgrade has worked correctly. New `.speedy` index files will be created in the `/public/build` folder after upgrade which are used in the Speedy Cook process.
 
 ### So why Cooker? Why not NPM, Webpack? Laravel Mix?
 
@@ -17,17 +55,7 @@ Sounds good? Please do give it a try and offer feedback! I want to create the NP
 
 Cooker is used actively on https://quuu.co as well as https://socialchief.com and https://revively.co and we at Quuu trust it with our lives and livelyhoods (Our app is the reason we're in business!)
 
-### Installing cooker
 
-To install Cooker, run at the root of your Laravel Project the following
-```
-composer require genericmilk/cooker
-php artisan cooker:setup
-```
-
-This will install the required supporting packages as well as cooker itself and it will also publish the artisan command `cooker:cook`.
-
-*Please note that installing will overwrite the `sass` and `js` folders and everything that is inside them. So make sure you save any work back first because things will get deleted!*
 
 ### Configuring cooker
 When you installed cooker it added a new configuration file called `cooker.php` to your laravel application's `config` directory.
