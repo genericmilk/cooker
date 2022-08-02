@@ -17,32 +17,6 @@ This will install the required supporting packages as well as cooker itself and 
 
 *Please note that installing will overwrite the `sass` and `js` folders and everything that is inside them. So make sure you save any work back first because things will get deleted!*
 
-### Upgrading from Cooker 4 to Cooker 5
-
-If you've been using Cooker 4 in your projects you will need to make some changes to your `/config/cooker.php` file in order to benefit from the new changes.
-
-First, You will need to change the `silent` option at the top of your cooker config to this:
-```
-'silent' => false,
-'notifications' => true,
-'canSpeedyCook' => true,
-```
-This adds the new `notifications` option which denotes if you want to recieve desktop notifications based on the outcome of your cook, The new `canSpeedyCook` option which denotes if Cooker can quickly build your files based on what has changed as well as the normal `silent` option which skips output to the terminal and desktop notifications.
-
-Next, You will need to add the following to each oven you have in your config file:
-```
-'name' => 'Example File',
-```
-The field `Example File` can be altered as nessecary and is used to refer in plain english to what the job means to you. For example, Frontend resources, Admin Javascript etc.
-
-Finally add the following boolean to any oven running the `Genericmilk\Cooker\Ovens\Js` oven:
-```
-'toolbelt' => true
-```
-This denotes whether Cooker should import the new toolkit of tools into your generated javascript files giving you a quick overview of if the job ran in production etc.
-
-When these have been carried out, You can run `php artisan cook` to verify that the upgrade has worked correctly. New `.speedy` index files will be created in the `/public/build` folder after upgrade which are used in the Speedy Cook process.
-
 ### So why Cooker? Why not NPM, Webpack? Laravel Mix?
 
 Simple really! Trust me when I say I've tried all of them and the issue that can come from a rammed `node_modules` folder and issues with weird syntax and deploys can really raise the bar for entry. I set out to make a compilation system for my Laravel projects that was super approachable and integrated far more tightly with Laravel itself. The resulting package was Cooker. Cooker does everything you can want it to do and more by offering prebuilt renderers but allowing it to be extended with your own formats super easily.
