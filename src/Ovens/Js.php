@@ -10,7 +10,7 @@ class Js extends Controller
     public $directory = 'js';
     
     public static function cook($job){
-        $p = '';   
+        $p = ''; 
         foreach($job['input'] as $input){
             $p .= Js::lastLineFormat(file_get_contents(resource_path('js/'.$input)));
         }

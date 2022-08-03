@@ -1,9 +1,21 @@
-# 👨‍🍳 Cooker 4
+# 👨‍🍳 Cooker 5
 ## By Genericmilk
 
-Cooker is a lightweight composer package that allows you to quickly build resources for the frontend of your application from languages that need to be parsed to whether you want to build your application using a bunch of smaller files. We call this parsing and combination effort "Cooking". 
+Cooker is a lightweight composer package aimed at sitting tightly within Laravel applications that allows you to quickly build resources for the frontend of your application from languages that need to be parsed to whether you want to build your application using a bunch of smaller files. We call this parsing and combination effort "Cooking". 
 
 Resources that are cooked will be placed in the `/public/build` folder where all resources will be rendered. If the app is running in production mode the resources will be compressed and minified too! As if by magic.
+
+### Installing Cooker in a new project
+
+To install Cooker, run at the root of your Laravel Project the following
+```
+composer require genericmilk/cooker
+php artisan cooker:setup
+```
+
+This will install the required supporting packages as well as cooker itself and it will also publish the artisan command `cooker:cook`.
+
+*Please note that installing will overwrite the `sass` and `js` folders and everything that is inside them. So make sure you save any work back first because things will get deleted!*
 
 ### So why Cooker? Why not NPM, Webpack? Laravel Mix?
 
@@ -15,19 +27,7 @@ Plus all code sent via cooker is automatically compressed and minified when runn
 
 Sounds good? Please do give it a try and offer feedback! I want to create the NPM that's lightyears more friendly for developers (Tall ask I know but hey!)
 
-Cooker is used actively on https://quuu.co as well as https://socialchief.com and https://revively.co and we at Quuu trust it with our lives and livelyhoods (Our app is the reason we're in business!)
-
-### Installing cooker
-
-To install Cooker, run at the root of your Laravel Project the following
-```
-composer require genericmilk/cooker
-php artisan cooker:setup
-```
-
-This will install the required supporting packages as well as cooker itself and it will also publish the artisan command `cooker:cook`.
-
-*Please note that installing will overwrite the `sass` and `js` folders and everything that is inside them. So make sure you save any work back first because things will get deleted!*
+Cooker is used actively on https://quuu.co as well as https://socialchief.com and https://rasdio.co.uk and we at Quuu trust it with our lives and livelyhoods (Our app is the reason we're in business!)
 
 ### Configuring cooker
 When you installed cooker it added a new configuration file called `cooker.php` to your laravel application's `config` directory.
@@ -63,6 +63,16 @@ To use the helper simply include it like so:
 ```
 You can substitute `app.css` and `app.js` for the cooked filename.
 
+### The Cooker Toolbelt
+Starting with Cooker 5, Cooker by default includes a small Javascript file that is loaded and locked on page boot. The object is located at `window.cookerToolbelt` and contains the following tools at this point in time:
+* `cookerToolbelt.version` returns the current toolbelt version
+* `cookerToolbelt.isProd` returns a boolean of if the javascript file was built using Production mode
+* `cookerToolbelt.cookerVersion` returns the current cooker version
+More options are coming soon to this toolbelt to aide development.
+
+### Speedy Cook
+Starting with Cooker 5, Cooker can now quickly build large libraries based on what needs to be changed. For example if you have 10 ovens but only made changes to a file in Oven 4, Oven 4 will be built whilst the others are skipped. We call this process Speedy Cooking. You can turn it off if you'd like to by heading to `config/cooker.php` and setting the `canSpeedyCook` boolean to `false`
+
 ### Building your own Oven
 Starting with Cooker 4, You can extend Cooker to process any input you give it! It could be something to meet your own needs more than the default Less or Scss compiler offers, Or if you want to do something that isn't supported out of the box, maybe something such as Styl etc you can do that by creating your own ovens. 
 
@@ -78,16 +88,15 @@ Follow this example to get going!
 class Styl extends Controller
 {
 	public $format = 'css';
-  public $directory = 'styl';
+	public $directory = 'styl';
     
-    public static function cook($job){
-        $p = new fancyParser(); // Could be anything you want or use here!   
-        foreach($job['input'] as $input){
-            $p->parseFile(resource_path($this->directory.'/'.$input)); // process this specific input file
-        }
-        return $p->getCss(); // return the rendered content
-    }
-
+	public static function cook($job){
+	        $p = new fancyParser(); // Could be anything you want or use here!   
+        	foreach($job['input'] as $input){
+	            $p->parseFile(resource_path($this->directory.'/'.$input)); // process this specific input file
+        	}
+	        return $p->getCss(); // return the rendered content
+    	}
 }
 ```
 
@@ -105,7 +114,7 @@ Your base object should contain at least one `boot()` function. This will be cal
 var app = {
   hey: 'Hello world',
   boot: function(){
-    alert(app.hey);
+    alert(this.hey);
   }
 };
 ```
@@ -134,15 +143,7 @@ This'll fire an alert with `Hello from other file` as the function is executed i
 ### Cooked file compression
 If your Laravel application is running in `config.debug=true` mode, any cooked files will retain their original formatting. If you are running in `config.debug=false` mode then all scripts except for javascript and css libraries will be minified to reduce load times
 
-### Upgrading from Cooker 3.x.x
-There are a few things you need to do to upgrade. Most of the work is done in the config file. It's most likely the best idea to backup your `cooker.php` file and translate over your custom changes as the newer version of the config file references ovens rather than pre-labeled jobs.
-
-It's also worth noting that `frameworks` has been deprecated in replacement to `preloads`
-
 ### Requirements for using Cooker
 Cooker is happiest on:
-* Laravel 8
-* PHP >=7.3.0
-
-### That's just the beginnin', folkes!
-I am so so happy that so many of you are using Cooker and love it. Cooker recently got selected for GitHub's Arctic Code Vault project and it makes me so happy that Cooker will be there for the next 1,000 years! I am always improving things though, Got more neat feaures to help you cook even better files with greater control. Thanks for your support and reach out if you have a suggestion or need help!
+* Laravel 9
+* PHP >=8.0.0
