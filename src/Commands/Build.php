@@ -18,7 +18,7 @@ use Genericmilk\Cooker\Ovens\Scss;
 
 class Build extends Command
 {
-	protected $signature = 'cooker:cook {--dev} {--prod} {--skipsetup} {--test}';
+	protected $signature = 'cooker:cook {--dev} {--prod} {--skipsetup} {--force}';
 
 	protected $dev;
 	protected $version;
@@ -65,6 +65,9 @@ class Build extends Command
 					$hasDiffs = true; // default to true if speedycook is off
 				}
 
+				if(!$this->option('force')){
+					$hasDiffs = true;
+				}
 
 
 				$oven = new $job['cooker'](); // Boot the cooker
