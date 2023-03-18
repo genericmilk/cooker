@@ -3,8 +3,8 @@
 namespace Genericmilk\Cooker\Commands;
 
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Http;
 
-use Cache;
 use Exception;
 
 // Cooker subsystems
@@ -27,12 +27,60 @@ class Install extends Command
         parent::__construct();
     }
     public function handle(){
-        dd(123);
         $this->version = json_decode(file_get_contents(__DIR__.'/../../composer.json'))->version;
 		$this->dev = $this->setupEnv();
 		
 		!config('cooker.silent') ? $this->info('👨‍🍳 Cooker '.$this->version.' ('.ucfirst($this->env).')'.PHP_EOL) : '';
         
+        $this->line('Searching repository...');
+
+        $response = Http::get('https://registry.npmjs.org/'.$this->argument('package'));
+        if($response->failed()){
+            $this->error('Package not found');
+            return;
+        }
+        $response = $response->object();
+
+        // Convert response to an array (helps with some key names having - in them)
+        $responseArray = json_decode(json_encode($response), true);
+
+        // Get the latest version
+        $latestVersion = $responseArray['dist-tags']['latest'];
+        $targetVersion = $latestVersion; // temp
+
+        $this->line('✨ Found '.$response->name.'@'.$targetVersion.' - '.$response->description);
+
+        // Now grab the script
+        $this->line('Installing to '.config('app.name').'...');
+
+        // Grab the script using unpkg
+        $script = Http::get('https://unpkg.com/'.$this->argument('package').'@'.$targetVersion);
+        if($script->failed()){
+            $this->error('Failed to download package');
+            return;
+        }
+
+        // If the cooker_resources folder doesn't exist, create it
+        if (!file_exists(config('cooker.packageManager.packagesPath'))) {
+            $this->makeDirectory(config('cooker.packageManager.packagesPath'));
+        }
+
+
+        // Make the package directory
+        if (!file_exists(config('cooker.packageManager.packagesPath')).'/'.$this->argument('package')) {
+            $this->makeDirectory(config('cooker.packageManager.packagesPath').'/'.$this->argument('package'));
+        }
+
+        // Download the script to the package directory
+        $this->line('👩‍🔧 Parsing script...');
+        $script = $this->compress($script->body(), 'js');
+        
+        $this->line('📦 Wrapping up...');
+        file_put_contents(config('cooker.packageManager.packagesPath').'/'.$this->argument('package').'/'.$targetVersion.'.js', $script);
+        
+        $this->info('✅ Installed '.$this->argument('package').'@'.$targetVersion.' to '.config('app.name'));
+        
+
     }
 
 	// Helpers
@@ -70,7 +118,7 @@ class Install extends Command
 		$input = $this->lastLineFormat($input,$type);
 		return $input;
 	}
-	private function lastLineFormat($input,$type){
+    private function lastLineFormat($input,$type){
 		/*
 			Fixes file concatanation by ensuring last charachter is a ; so that differentiation
 			between scripts is met
@@ -81,14 +129,16 @@ class Install extends Command
 		return $input;
 	}
     private function setupEnv(){
-		$dev = config('app.debug');
-		if($this->option('dev')){
-			$dev = true;
-		}
-		if($this->option('prod')){
-			$dev = false;
-		}
+		$dev = config('app.debug');		
 		$this->env = $dev ? 'dev' : 'prod';
 		return $dev;
+	}
+    private function makeDirectory($f) {
+		try{
+			mkdir($f);
+			$this->line('📁 Created '.$f);
+		}catch(\Exception $e){
+			$this->error('✋ Could not create '.$f);
+		}
 	}
 }
