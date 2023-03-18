@@ -16,7 +16,8 @@
                     Commands\Build::class,
                     Commands\Setup::class,
                     Commands\Watch::class,
-                    Commands\Shortcut::class
+                    Commands\Shortcut::class,
+                    Commands\Install::class
                 ]);
             }
         }

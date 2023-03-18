@@ -11,7 +11,7 @@ use Cache;
 class Setup extends Command
 {
 
-    protected $signature = 'cooker:setup';
+    protected $signature = 'cooker:init';
     protected $description = 'The cooker installer/uninstaller';
 
 	protected $dev;

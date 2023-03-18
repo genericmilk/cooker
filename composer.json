@@ -11,7 +11,7 @@
         }
     ],
     "require": {
-        "php": ">=8.0",
+        "php": ">=8.2",
         "wikimedia/less.php": "^3.1.0",
         "scssphp/scssphp": "^1.2",
         "nunomaduro/laravel-desktop-notifier": "^2.5"

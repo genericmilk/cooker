@@ -16,7 +16,7 @@ use Genericmilk\Cooker\Ovens\Less;
 use Genericmilk\Cooker\Ovens\Scss;
 
 
-class Intstall extends Command
+class Install extends Command
 {
 	protected $signature = 'cooker:install {package}';	
     protected $description = 'Installs a Javascript package into your project using NPM';
@@ -27,6 +27,7 @@ class Intstall extends Command
         parent::__construct();
     }
     public function handle(){
+        dd(123);
         $this->version = json_decode(file_get_contents(__DIR__.'/../../composer.json'))->version;
 		$this->dev = $this->setupEnv();
 		
@@ -79,5 +80,15 @@ class Intstall extends Command
 		}
 		return $input;
 	}
-	
+    private function setupEnv(){
+		$dev = config('app.debug');
+		if($this->option('dev')){
+			$dev = true;
+		}
+		if($this->option('prod')){
+			$dev = false;
+		}
+		$this->env = $dev ? 'dev' : 'prod';
+		return $dev;
+	}
 }

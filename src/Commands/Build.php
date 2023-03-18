@@ -39,7 +39,7 @@ class Build extends Command
 		// Check if we have run setup and launch it if we need to
 		if(is_null(config('cooker.silent'))){
 			if(!$this->option('skipsetup')){
-				$this->call('cooker:setup');
+				$this->call('cooker:init');
 				return;
 			}
 		}
