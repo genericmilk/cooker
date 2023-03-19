@@ -73,7 +73,8 @@ class Install extends Command
 
         // Download the script to the package directory
         $this->line('👩‍🔧 Parsing script...');
-        $script = $this->compress($script->body(), 'js');
+        $script = Js::compress($script->body());
+        
         
         $this->line('📦 Wrapping up...');
         file_put_contents(config('cooker.packageManager.packagesPath').'/'.$this->argument('package').'/'.$targetVersion.'.js', $script);
