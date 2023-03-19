@@ -67,8 +67,9 @@ class Install extends Command
 
 
         // Make the package directory
-        if (!file_exists(config('cooker.packageManager.packagesPath')).'/'.$this->argument('package')) {
-            $this->makeDirectory(config('cooker.packageManager.packagesPath').'/'.$this->argument('package'));
+        $scriptDir = config('cooker.packageManager.packagesPath').'/'.$this->argument('package');
+        if (!file_exists($scriptDir)) {
+            $this->makeDirectory($scriptDir);
         }
 
         // Download the script to the package directory
