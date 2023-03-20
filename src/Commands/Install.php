@@ -18,7 +18,7 @@ use Genericmilk\Cooker\Ovens\Scss;
 
 class Install extends Command
 {
-	protected $signature = 'cooker:install {package}';	
+	protected $signature = 'cooker:install {package?} {version?}';	
     protected $description = 'Installs a Javascript package into your project using NPM';
 
     protected $version;
@@ -32,29 +32,55 @@ class Install extends Command
 		
 		!config('cooker.silent') ? $this->info('👨‍🍳 Cooker '.$this->version.' ('.ucfirst($this->env).')'.PHP_EOL) : '';
         
-        $this->line('Searching repository...');
+        $packages = [];
 
-        $response = Http::get('https://registry.npmjs.org/'.$this->argument('package'));
+        if($this->argument('package')){
+            $packages[] = $this->argument('package');
+        } else {
+            // Get all packages from the cooker.json file
+        }
+
+
+        foreach($packages as $package){
+            $this->installPackage($package);
+        }
+
+    }
+
+    private function installPackage($package,$version = 'latest'){
+        $this->line('Searching repository...');
+        $response = Http::get('https://registry.npmjs.org/'.$package);
         if($response->failed()){
-            $this->error('Package not found');
+            $this->error('Package not found. Please check and try again.');
             return;
         }
         $response = $response->object();
 
-        // Convert response to an array (helps with some key names having - in them)
         $responseArray = json_decode(json_encode($response), true);
+
+        // Convert response to an array (helps with some key names having - in them)
+        if(!$this->validatePackageJson()){
+            $this->error('Your package json file is invalid. Please check and try again.');
+            return;
+        }
+        
 
         // Get the latest version
         $latestVersion = $responseArray['dist-tags']['latest'];
+
         $targetVersion = $latestVersion; // temp
 
         $this->line('✨ Found '.$response->name.'@'.$targetVersion.' - '.$response->description);
 
+        // Is this installed in the cooker.json file?
+        $cookerJson = json_decode(file_get_contents(config('cooker.packageManager.packagesList')));
+        
+
         // Now grab the script
-        $this->line('Installing to '.config('app.name').'...');
+        $this->line('Installing to '.$response->name.'@'.$targetVersion.' '.config('app.name').'...');
 
         // Grab the script using unpkg
-        $script = Http::get('https://unpkg.com/'.$this->argument('package').'@'.$targetVersion);
+        $script = Http::get('https://unpkg.com/'.$package.'@'.$targetVersion);
         if($script->failed()){
             $this->error('Failed to download package');
             return;
@@ -67,7 +93,7 @@ class Install extends Command
 
 
         // Make the package directory
-        $scriptDir = config('cooker.packageManager.packagesPath').'/'.$this->argument('package');
+        $scriptDir = config('cooker.packageManager.packagesPath').'/'.$package;
         if (!file_exists($scriptDir)) {
             $this->makeDirectory($scriptDir);
         }
@@ -78,11 +104,10 @@ class Install extends Command
         
         
         $this->line('📦 Wrapping up...');
-        file_put_contents(config('cooker.packageManager.packagesPath').'/'.$this->argument('package').'/'.$targetVersion.'.js', $script);
+        file_put_contents(config('cooker.packageManager.packagesPath').'/'.$package.'/'.$targetVersion.'.js', $script);
         
-        $this->info('✅ Installed '.$this->argument('package').'@'.$targetVersion.' to '.config('app.name'));
+        $this->info('✅ Installed '.$package.'@'.$targetVersion.' to '.config('app.name'));
         
-
     }
 
 	// Helpers
@@ -143,4 +168,17 @@ class Install extends Command
 			$this->error('✋ Could not create '.$f);
 		}
 	}
+    private function validatePackageJson(){
+        try{
+            $cookerJson = json_decode(file_get_contents(config('cooker.packageManager.packagesList')));
+            if(isset($cookerJson->packages)){
+                return true;
+            }else{
+                return false;
+            }
+        }catch(Throwable $e){
+            return false;
+        }
+        
+    }
 }
