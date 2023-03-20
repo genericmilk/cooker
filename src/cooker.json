@@ -1,6 +1,5 @@
 {
     "packages": {
-        "jquery": "latest",
-        "vue": "latest"
+        "jquery": "latest"
     }
 }

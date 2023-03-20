@@ -17,5 +17,7 @@ class Less extends Controller
         }
         return $p->getCss();
     }
-
+    public static function compress($input){
+        
+    }
 }
