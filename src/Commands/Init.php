@@ -12,7 +12,7 @@ class Init extends Command
 {
 
     protected $signature = 'cooker:init';
-    protected $description = 'The cooker installer/uninstaller';
+    protected $description = 'Initialises Cooker for your project. Allows the install and uninstall of essential files for cooker to run';
 
 	protected $dev;
 	protected $version;
@@ -27,7 +27,8 @@ class Init extends Command
 
 		!config('cooker.silent') ? $this->info('👨‍🍳 Cooker '.$this->version.PHP_EOL) : '';
 		if(is_null(config('cooker.silent'))){
-			if ($this->confirm('Remove the /resources/js and /resources/sass folders in order to initialise?')) {
+
+			if ($this->confirm('🔴 Cooker is NOT INSTALLED.'.PHP_EOL.PHP_EOL.'Are you sure you want to install Cooker? This will remove your existing /resources/js and /resources/sass folders and replace them with Cooker\'s own.')) {				
 				$this->call('vendor:publish', [
 					'--provider' => 'Genericmilk\Cooker\ServiceProvider'
 				]);
@@ -97,25 +98,25 @@ class Init extends Command
 				$this->info('💚 Cooker Installed OK!');
 			}
 		}else{
-            if ($this->confirm('Cooker is already installed. Do you need to uninstall it? This will remove all folders and resources that have been built and will return your application to a pre-cooker state')) {
+            if ($this->confirm('🟢 Cooker is INSTALLED.'.PHP_EOL.PHP_EOL.'Are you sure you want to remove cooker?'.PHP_EOL.'This will remove any files in resources and public/build amongst other files created for cooker to run.')) {
 				unlink(config_path('cooker.php'));
 				unlink(base_path('cooker.json'));
 				$this->line('🧨 Removed cooker config');
-				$this->removeDirectory(resource_path('js'));
-				$this->removeDirectory(resource_path('scss'));
-				$this->removeDirectory(resource_path('sass'));
-				$this->removeDirectory(storage_path('app/cooker_frameworks_cache'));
-				$this->removeDirectory(resource_path('css'));	
-				$this->removeDirectory(resource_path('less'));	
-				$this->removeDirectory(public_path('build'));
-				$this->removeDirectory(base_path('cooker_packages'));
+				$this->removeDirectory(resource_path('js'),false,true);
+				$this->removeDirectory(resource_path('scss'),false,true);
+				$this->removeDirectory(resource_path('sass'),false,true);
+				$this->removeDirectory(storage_path('app/cooker_frameworks_cache'),false,true);
+				$this->removeDirectory(resource_path('css'),false,true);	
+				$this->removeDirectory(resource_path('less'),false,true);	
+				$this->removeDirectory(public_path('build'),false,true);
+				$this->removeDirectory(base_path('cooker_packages'),false,true);
 				
 				// Remove from .gitignore				
 				$this->info('💙 Cooker Uninstalled OK');
             }
         }
     }
-	private function removeDirectory($path,$silent = false) {
+	private function removeDirectory($path,$silent = false,$silentErrors = false) {
 		try{
 			// The preg_replace is necessary in order to traverse certain types of folder paths (such as /dir/[[dir2]]/dir3.abc#/)
 			// The {,.}* with GLOB_BRACE is necessary to pull all hidden files (have to remove or get "Directory not empty" errors)
@@ -128,7 +129,7 @@ class Init extends Command
 			$this->line('🗑 Removed '.$path);
 			return;
 		}catch(\Exception $e){
-			if(!$silent){
+			if(!$silent && !$silentErrors){
 				$this->error('✋ Could not remove '.$path);
 			}
 		}
