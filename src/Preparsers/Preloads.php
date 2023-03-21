@@ -1,12 +1,12 @@
 <?php
 
-namespace Genericmilk\Cooker;
+namespace Genericmilk\Cooker\Preparsers;
 use App\Http\Controllers\Controller;
 
-use Genericmilk\Telephone\Telephone;
 use Storage;
 use Exception;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Http;
 
 
 class Preloads extends Controller
@@ -27,16 +27,16 @@ class Preloads extends Controller
         if (strpos($p, '://') !== false) {
             // Remote url
             if (strpos($p, 'http') === false) {
-                throw new Exception('Cooker: Remote url provided for preload but no protocol provided. Please provide at least http or https. '.$p.' did not pass validation');
+                throw new Exception('Cooker: Remote url provided for preload but no protocol provided. Please provide at least http or https: '.$p);
             }
             
             $cache_name = 'cooker-'.md5($p);
 
             if (!Cache::has($cache_name)){
                 try{
-                    $data = file_get_contents($p);
+                    $data = Http::get($p)->body();
                 }catch(Exception $e){
-                    throw new Exception('Cooker: Could not download remote file. '.$p.' did not pass validation');
+                    throw new Exception('Cooker: Could not download remote file: '.$p);
                 }
                 Cache::forever($cache_name, $data);
                 $o = $data;   
@@ -47,7 +47,7 @@ class Preloads extends Controller
         }else{
 	        $p = resource_path($ext.'/'.$p);
             if(!file_exists($p)){
-                throw new Exception('Cooker: Local preload file could not be found. '.$p.' did not pass validation');
+                throw new Exception('Cooker: Local preload file could not be found: '.$p);
             }
 
             $cache_name = 'cooker-'.md5($p);

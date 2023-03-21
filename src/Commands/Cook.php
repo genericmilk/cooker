@@ -7,8 +7,9 @@ use Illuminate\Console\Command;
 use Cache;
 use Exception;
 
-// Cooker subsystems
-use Genericmilk\Cooker\Preloads;
+// Cooker preparsers
+use Genericmilk\Cooker\Preparsers\Preloads;
+use Genericmilk\Cooker\Preparsers\Libraries;
 
 // Cooker engines
 use Genericmilk\Cooker\Ovens\Js;
@@ -138,10 +139,7 @@ class Cook extends Command
 						'No changes'
 					];
 				}
-				
-				
-
-				
+								
 
 			}catch(Exception $e){
 				if($this->option('test')){
@@ -160,12 +158,15 @@ class Cook extends Command
 			}
 		}
 
+		// All jobs finished! Stop the timer and print the table
 		$time_elapsed_secs = round(microtime(true) - $start,2);
 
-		// If cooker is not silent or if it is and it has failed, print the table
+		// Only show the table if cooker is not silent OR if cooker has failed
 		if(!config('cooker.silent') || $this->hasFailed){
 			$this->table(['','Job', 'Status'],$table);
 			$this->line(PHP_EOL."⏰ Took ".$time_elapsed_secs."s   ⌚️ Finished ".now()->format('H:i:s').PHP_EOL."✨ Share the love: https://github.com/genericmilk/cooker");
+
+			// Show a notification if enabled
 			if(config('cooker.notifications')){
 				if($this->allHasSkipped){
 					$this->notify('🟠 Cook Skipped' ,'Took '.$time_elapsed_secs.'s',__DIR__.'/../../cooker.png');
@@ -173,6 +174,7 @@ class Cook extends Command
 					$this->notify(($this->hasFailed ? '🔴 Cook Failed' : '🟢 Cooked OK') ,'Took '.$time_elapsed_secs.'s',__DIR__.'/../../cooker.png');
 				}
 			}
+
 		}
     }
 
