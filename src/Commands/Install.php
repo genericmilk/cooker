@@ -41,6 +41,12 @@ class Install extends Command
             $packages[] = $this->argument('package');
         } else {
             // Get all packages from the cooker.json file
+            $cookerJson = json_decode(file_get_contents(config('cooker.packageManager.packagesList')));
+            if(isset($cookerJson->packages)){
+                foreach($cookerJson->packages as $package => $version){
+                    $packages[] = $package;
+                }
+            }
         }
 
 
