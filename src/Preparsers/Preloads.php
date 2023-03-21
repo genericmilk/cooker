@@ -11,15 +11,34 @@ use Illuminate\Support\Facades\Http;
 
 class Preloads extends Controller
 {
-    public static function obtain($preloads,$oven){
-        $o = '';
+    /* 
+    *   Take the preloads array and import the files into the oven
+    *   This may involve downloading or opening local files
+    *   We do not parse these apart from enforcing js valid syntax
+    */
+
+    public static function obtain($preloads,$oven,$isDev){
+        $o = ''; // make an output buffer
         foreach($preloads as $preload){
-            $o .= Preloads::lastLineFormat(Preloads::validatePreload($preload));
+            $o .= Preloads::lastLineFormat(Preloads::validatePreload($preload,$isDev));
         }
         return $o;
     }
+
     public static function validatePreload($p){
         
+        // First check if this is a string or an array. If array we need to pick the right version
+        if(is_array($p)){
+
+            // Quickly validate the array here
+            if(!isset($p['prod']) || !isset($p['dev'])){
+                throw new Exception('Cooker: Preload array provided but both prod and dev key need to be present');
+            }
+
+            // Now pick the right version
+            $p = $p[$isDev ? 'dev' : 'prod'];
+        }
+
         if (strpos($p, '://') !== false) {
             // Remote url
             if (strpos($p, 'http') === false) {
@@ -41,6 +60,7 @@ class Preloads extends Controller
             }
 
         }else{
+            // Local file
 	        $p = resource_path($ext.'/'.$p);
             if(!file_exists($p)){
                 throw new Exception('Cooker: Local preload file could not be found: '.$p);

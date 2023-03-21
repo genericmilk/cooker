@@ -80,7 +80,7 @@ class Cook extends Command
 					// Step 1: Get the packages
 
 					// Step 2: Get the preloads
-					$preloads = Preloads::obtain($job['preload'],$oven); // get the cook job's preloads								
+					$preloads = Preloads::obtain($job['preload'],$oven,$this->dev); // get the cook job's preloads								
 
 					// Step 3: Get the libraries
 					$libraries = Libraries::obtain($oven);
