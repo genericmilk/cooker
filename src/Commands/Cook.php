@@ -99,16 +99,19 @@ class Cook extends Command
 					$appcode .= $oven->format=='js' ? $job['namespace'].'.boot();' : ''; // if javascript finish by booting the script
 	
 					if($this->env=='prod'){
-						$appcode = $this->compress($appcode,$oven->format);
+						$appcode = $oven::compress($appcode);
 					}
 					
-	
+
+					// Final output
 					$o = $stamp . $preloads . $libraries . $appcode;
 					
+					// make the build directory if it doesn't exist
 					if (!file_exists(public_path('build'))) {
 						mkdir(public_path('build'), 0777, true);
 					}
-	
+					
+					// Write the output
 					file_put_contents(public_path('build/'.$job['output']),$o); // write o
 					$this->allHasSkipped = false;
 					$table[] = [
@@ -154,7 +157,7 @@ class Cook extends Command
 		// If cooker is not silent or if it is and it has failed, print the table
 		if(!config('cooker.silent') || $this->hasFailed){
 			$this->table(['','Job', 'Status'],$table);
-			$this->line(PHP_EOL."⏱  ".$time_elapsed_secs."s   ✨ Share the love: https://github.com/genericmilk/cooker");
+			$this->line(PHP_EOL."⏰ Took ".$time_elapsed_secs."s   ⌚️ Finished ".now()->format('H:i:s').PHP_EOL."✨ Share the love: https://github.com/genericmilk/cooker");
 			if(config('cooker.notifications')){
 				if($this->allHasSkipped){
 					$this->notify('🟠 Cook Skipped' ,'Took '.$time_elapsed_secs.'s',__DIR__.'/../../cooker.png');
