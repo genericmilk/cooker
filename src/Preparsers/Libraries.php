@@ -26,14 +26,14 @@ class Libraries extends Controller
             $dir = array_values($dir);
             $libs = '';
             foreach($dir as $lib){
-                $libs .= $this->lastLineFormat(file_get_contents(resource_path($oven->directory.'/libraries/'.$lib)),$oven->format);
+                $libs .= Libraries::lastLineFormat(file_get_contents(resource_path($oven->directory.'/libraries/'.$lib)),$oven->format);
             }
             return $libs;
         }catch(Exception $e){
             return null;
         }
     }
-    private function lastLineFormat($input,$type){
+    public static function lastLineFormat($input,$type){
         if($type=='js'){
             if(substr($input, -1)!=';'){
                 $input = $input.';';

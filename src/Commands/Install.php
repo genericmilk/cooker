@@ -24,6 +24,8 @@ class Install extends Command
 
     protected $version;
 
+    protected $didInstall = false;
+
 	public function __construct(){
         parent::__construct();
     }
@@ -46,8 +48,10 @@ class Install extends Command
             $this->installPackage($package);
         }
 
-        if($this->confirm('Packages were installed. Do you want to run the cooker?')){
-            $this->call('cooker:cook');
+        if($this->didInstall){
+            if($this->confirm('Packages were installed. Do you want to run the cooker?')){
+                $this->call('cooker:cook');
+            }
         }
 
     }
