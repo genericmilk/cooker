@@ -14,15 +14,11 @@ class Preloads extends Controller
     public static function obtain($preloads,$oven){
         $o = '';
         foreach($preloads as $preload){
-            $o .= Preloads::lastLineFormat(Preloads::validatePreload($preload,$oven->format));
+            $o .= Preloads::lastLineFormat(Preloads::validatePreload($preload));
         }
         return $o;
     }
-    public static function validatePreload($p,$t){
-        $ext = pathinfo($p, PATHINFO_EXTENSION);
-        if($ext!=$t){
-            throw new Exception('Cooker: Mismatching type of file for oven format on preload. '.$p.' did not pass validation');
-        }
+    public static function validatePreload($p){
         
         if (strpos($p, '://') !== false) {
             // Remote url

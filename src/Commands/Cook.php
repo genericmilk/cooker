@@ -83,7 +83,7 @@ class Cook extends Command
 					$preloads = Preloads::obtain($job['preload'],$oven); // get the cook job's preloads								
 
 					// Step 3: Get the libraries
-					$libraries = $this->libraries($oven); // Get the preloads from the directory of the job (Pre uniqs)
+					$libraries = Libraries::obtain($oven);
 
 					// Step 4: Make a new output buffer for the appcode
 					$appcode = ''; // start a new output buffer
