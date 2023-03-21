@@ -1,4 +1,4 @@
-# 👨‍🍳 Cooker 5
+# 👨‍🍳 Cooker 6
 ## By Genericmilk
 
 Cooker is a lightweight composer package aimed at sitting tightly within Laravel applications that allows you to quickly build resources for the frontend of your application from languages that need to be parsed to whether you want to build your application using a bunch of smaller files. We call this parsing and combination effort "Cooking". 
@@ -146,4 +146,4 @@ If your Laravel application is running in `config.debug=true` mode, any cooked f
 ### Requirements for using Cooker
 Cooker is happiest on:
 * Laravel 9
-* PHP >=8.0.0
+* PHP >=8.2.0
