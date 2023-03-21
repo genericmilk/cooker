@@ -55,12 +55,6 @@ class Init extends Command
 						$this->line('✅ Added framework cache to .gitignore');
 					}
 
-					if (!strpos($giF, 'cooker.json') !== false) {
-						$gi = fopen(base_path().'/.gitignore', 'a');
-						$data = PHP_EOL.'cooker.json';
-						fwrite($gi, $data);
-						$this->line('✅ Added cooker json to .gitignore');
-					}
 					
 					if (!strpos($giF, 'cooker_packages') !== false) {
 						$gi = fopen(base_path().'/.gitignore', 'a');
