@@ -89,7 +89,8 @@ class Install extends Command
         $this->line('Installing to '.$response->name.'@'.$targetVersion.' '.config('app.name').'...');
 
         // Grab the script using unpkg
-        $script = Http::get('https://unpkg.com/'.$package.'@'.$targetVersion);
+        $repo = 'https://unpkg.com/';
+        $script = Http::get('https://cdn.jsdelivr.net/npm/'.$package.'@'.$targetVersion);
         if($script->failed()){
             $this->error('Failed to download package');
             return;
@@ -114,16 +115,18 @@ class Install extends Command
         $this->line('📄 Writing to cooker.json...');
         // Write the script to the json
         if(!isset($cookerJson->packages->$package)){
-            new stdClass($cookerJson->packages->$package);
+            $cookerJson->packages->$package = new stdClass;
         }
         $cookerJson->packages->$package = $targetVersion;
         file_put_contents(config('cooker.packageManager.packagesList'), json_encode($cookerJson, JSON_PRETTY_PRINT));
 
         $this->line('📦 Wrapping up...');
         file_put_contents(config('cooker.packageManager.packagesPath').'/'.$package.'/'.$targetVersion.'.js', $script);
-        
+    
+        $this->didInstall = true;
         $this->info('✅ Installed '.$package.'@'.$targetVersion.' to '.config('app.name'));
         
+
     }
 
 	// Helpers
