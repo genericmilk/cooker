@@ -25,7 +25,7 @@ class Preloads extends Controller
         return $o;
     }
 
-    public static function validatePreload($p){
+    public static function validatePreload($p,$isDev){
         
         // First check if this is a string or an array. If array we need to pick the right version
         if(is_array($p)){

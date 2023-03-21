@@ -25,6 +25,9 @@ class Js extends Controller
 		return $input;
     }
     public static function compress($input){
-        return Minifier::minify($input,['flaggedComments' => false]);
+        $min = Minifier::minify($input,['flaggedComments' => false]);
+        $min = trim(preg_replace('/\s+/', ' ', $min));
+        $min = Js::lastLineFormat($min);
+        return $min;
     }
 }
