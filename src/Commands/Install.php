@@ -23,6 +23,7 @@ class Install extends Command
     protected $description = 'Installs a Javascript package into your project using NPM';
 
     protected $version;
+    protected $npmPlatform;
 
     protected $didInstall = false;
 
@@ -35,6 +36,22 @@ class Install extends Command
 		
 		!config('cooker.silent') ? $this->info('👨‍🍳 Cooker '.$this->version.' ('.ucfirst($this->env).')'.PHP_EOL) : '';
         
+        if(is_null(config('cooker.packageManager.packageManager'))){
+            $this->error('Please follow the upgrade guide to add the package manager to your config file.');
+            return;
+        }
+
+        if(!in_array(config('cooker.packageManager.packageManager'),['jsdelivr','unpkg'])){
+            $this->error('An invalid package manager was specified. Please check and try again.');
+            return;
+        }
+
+        if(config('cooker.packageManager.packageManager')=='jsdelivr'){
+            $this->npmPlatform = 'https://cdn.jsdelivr.net/npm/';
+        } else {
+            $this->npmPlatform = 'https://unpkg.com/';
+        }
+
         $packages = [];
 
         if($this->argument('package')){
@@ -94,9 +111,10 @@ class Install extends Command
         // Now grab the script
         $this->line('Installing to '.$response->name.'@'.$targetVersion.' '.config('app.name').'...');
 
+        
+
         // Grab the script using unpkg
-        $repo = 'https://unpkg.com/';
-        $script = Http::get('https://cdn.jsdelivr.net/npm/'.$package.'@'.$targetVersion);
+        $script = Http::get($this->npmPlatform.$package.'@'.$targetVersion);
         if($script->failed()){
             $this->error('Failed to download package');
             return;

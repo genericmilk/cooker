@@ -53,7 +53,7 @@ return [
     'packageManager' => [
         'packagesList' => env('COOKER_PACKAGE_JSON_LOCATION', base_path('cooker.json')),
         'packagesPath' => env('COOKER_PACKAGE_PATH', base_path('cooker_packages')),
-        'packageManager' => env('COOKER_PACKAGE_MANAGER', 'npm'),
+        'packageManager' => env('COOKER_PACKAGE_MANAGER', 'jsdelivr'),
     ],
 
     
