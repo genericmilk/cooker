@@ -31,11 +31,11 @@ class Cook extends Command
 
 	public function __construct(){
         parent::__construct();
+		$this->version = json_decode(file_get_contents(__DIR__.'/../../composer.json'))->version;		
     }
     public function handle(){
-        $this->version = json_decode(file_get_contents(__DIR__.'/../../composer.json'))->version;
 		$this->dev = $this->setupEnv();
-		
+
 		// Check if we have run setup and launch it if we need to
 		if(is_null(config('cooker.silent'))){
 			if(!$this->option('skipsetup')){
@@ -89,11 +89,7 @@ class Cook extends Command
 							// Configure the toolbelt
 							$toolbelt = str_replace('__isProd__',($this->env=='prod' ? 'true' : 'false'),$toolbelt);
 							$toolbelt = str_replace('__cookerVersion__',($this->version),$toolbelt);
-	
-							if($this->env=='prod'){
-								//$toolbelt = $this->compress($toolbelt,'js');
-							}
-	
+
 							$appcode .= $toolbelt;
 						}
 					}
@@ -195,10 +191,7 @@ class Cook extends Command
 			Squashes files, but only if we're in production
 		*/
 		if($type=='css'){
-			$input = preg_replace('/\/\*((?!\*\/).)*\*\//','',$input); // negative look ahead
-			$input = preg_replace('/\s{2,}/',' ',$input);
-			$input = preg_replace('/\s*([:;{}])\s*/','$1',$input);
-			$input = preg_replace('/;}/','}',$input);			
+				
 		}elseif($type=='js'){
 			$input = preg_replace('/(?:(?:\/\*(?:[^*]|(?:\*+[^*\/]))*\*+\/)|(?:(?<!\:|\\\|\')\/\/.*))/', '', $input); // remove js comments
 

@@ -176,7 +176,7 @@ class Install extends Command
             }else{
                 return false;
             }
-        }catch(Throwable $e){
+        }catch(Exception $e){
             return false;
         }
         
