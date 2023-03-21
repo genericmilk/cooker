@@ -118,7 +118,7 @@ class Cook extends Command
 					
 
 					// Compile the output into a mega string
-					$o = $stamp . $preloads . $libraries . $appcode;
+					$o = $stamp . $packages . $preloads . $libraries . $appcode;
 					
 					// make the build directory if it doesn't exist
 					if (!file_exists(public_path('build'))) {

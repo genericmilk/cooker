@@ -20,7 +20,8 @@ class Packages extends Controller
             $packages = $cookerJson->packages;
             $o = '';
             foreach($packages as $pkgName => $pkgVersion){
-                $o .= file_get_contents(config('cooker.packageManager.packagesDir').'/'.$pkgName.'/'.$pkgVersion.'.js');
+                $scriptPath = config('cooker.packageManager.packagesPath').'/'.$pkgName.'/'.$pkgVersion.'.js';
+                $o .= file_get_contents($scriptPath);
             }
             return $o;
         }catch(Exception $e){

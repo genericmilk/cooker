@@ -6,6 +6,7 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Http;
 
 use Exception;
+use stdClass;
 
 // Cooker subsystems
 use Genericmilk\Cooker\Preloads;
@@ -106,7 +107,14 @@ class Install extends Command
         $this->line('👩‍🔧 Parsing script...');
         $script = Js::compress($script->body());
         
-        
+        $this->line('📄 Writing to cooker.json...');
+        // Write the script to the json
+        if(!isset($cookerJson->packages->$package)){
+            new stdClass($cookerJson->packages->$package);
+        }
+        $cookerJson->packages->$package = $targetVersion;
+        file_put_contents(config('cooker.packageManager.packagesList'), json_encode($cookerJson, JSON_PRETTY_PRINT));
+
         $this->line('📦 Wrapping up...');
         file_put_contents(config('cooker.packageManager.packagesPath').'/'.$package.'/'.$targetVersion.'.js', $script);
         
