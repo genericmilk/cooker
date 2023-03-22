@@ -73,7 +73,27 @@ More options are coming soon to this toolbelt to aide development.
 ### Speedy Cook
 Starting with Cooker 5, Cooker can now quickly build large libraries based on what needs to be changed. For example if you have 10 ovens but only made changes to a file in Oven 4, Oven 4 will be built whilst the others are skipped. We call this process Speedy Cooking. You can turn it off if you'd like to by heading to `config/cooker.php` and setting the `canSpeedyCook` boolean to `false`
 
-### Building your own Oven
+### Getting started with Preloads {#cookerPreloads}
+Preloads offer a great way of getting files from remote URLs or local URLs into your project. This could be useful if you had a file on a CDN you wanted to import to your project without the risk of depending on a remote URL going down and pulling your site with you. To get started head to `config/cooker.php` and consult the Oven array of your choosing.
+
+Next, check the `preload` array. This will by default have an example of how to extend the preloads for this oven. To get started you can decide to load a file for both production and development mode or to distinguish between the two. This is handy if there is a production script you'd like to run but an uncompressed developer one you'd like to use locally to aide debugging.
+
+If you'd like to distinguish between the two. Add a new array to the `preload` array specifying a `dev` and `prod` key to denote which file to load for which platform. For example:
+```
+[
+    'dev' => 'https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css',
+    'prod' => 'https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css'
+]
+```
+If you don't want to distinguish between the two platforms (ie if you are happy to run a production ready asset locally), Simply specify a string with the target:
+```
+'https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css',
+```
+It's worth noting as well, that these values can be remote url's or local files. Simply alter as nessecary
+
+
+
+### Building your own Oven {#cookerBYOO}
 Starting with Cooker 4, You can extend Cooker to process any input you give it! It could be something to meet your own needs more than the default Less or Scss compiler offers, Or if you want to do something that isn't supported out of the box, maybe something such as Styl etc you can do that by creating your own ovens. 
 
 Ovens are simply controllers that process the given input files from the job array handed to it. Simply create a controller with a `public static function` of `cook` which accepts a `$job` parameter to get started.
@@ -91,12 +111,16 @@ class Styl extends Controller
 	public $directory = 'styl';
     
 	public static function cook($job){
-	        $p = new fancyParser(); // Could be anything you want or use here!   
-        	foreach($job['input'] as $input){
-	            $p->parseFile(resource_path($this->directory.'/'.$input)); // process this specific input file
-        	}
-	        return $p->getCss(); // return the rendered content
-    	}
+      $p = new fancyParser(); // Could be anything you want or use here!   
+      foreach($job['input'] as $input){
+          $p->parseFile(resource_path($this->directory.'/'.$input)); // process this specific input file
+      }
+      return $p->getCss(); // return the rendered content
+  }
+  public static function compress($input){
+    // Compress the script if we are running in production mode
+    return $input;
+  }
 }
 ```
 
