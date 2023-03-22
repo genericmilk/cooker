@@ -39,7 +39,7 @@ Cooker works by defining ovens to process the files. Ovens can have multiple ing
 Each oven processes the output files by doing the following
 * Adds a timestamp to the head of the file for quick identification of when the last job ran. You can switch this off by setting `stamped` to `false` in the config file
 * Cooker will obtain any packages in cooker.json using the NPM network. To consult adding new packages to your project or to learn more, please consult [adding packages to cooker](#cookerNpm)
-* Cooker will download or locate and attach any *preloads* specified. Preloads are specified in the `preload` array in the configuration and can be a direct url or a full path to the resource file. Preloads can be offered either as a string to load on both production and local versions of your build or an array to specify the differences between the two. Preloads are not compressed on build, so it is reccomend you use a minified version in production environments. To learn more about Preloads, please consult [getting started with Preloads](#cookerPreloads)
+* Cooker will download or locate and attach any *preloads* specified. Preloads are specified in the `preload` array in the configuration and can be a direct url or a full path to the resource file. Preloads can be offered either as a string to load on both production and local versions of your build or an array to specify the differences between the two. Preloads are not compressed on build, so it is reccomend you use a minified version in production environments. To learn more about Preloads, please consult [getting started with Preloads](#getting-started-with-preloads)
 * Cooker will then look for any *libraries* automatically and in filename order from the `resources/<ovenDir>/libraries` folder where `<ovenDir>` is defined by the oven running. If you're using a built in oven supplied by Cooker this will be the lowercase of the oven name. If you are using your own consult [Building your own Oven](#cookerBYOO). Libraries are loaded after preloads so it's a great idea to put singular scripts in this folder to get loaded before your AppCode. Libraries are not compressed on build and as such minified versions are reccomended so that they are also production ready.
 * Cooker will finally process your AppCode. Input files are then loaded in specified order from the job `input` array. These files are parsed using the oven loaded and are minified in production automatically. For example if you were using the `Genericmilk\Cooker\Ovens\Less` oven, you could reference files like below so colours and fonts load first. The base directory for reference is that which is supplied by the oven (eg: /resources/less/*)
 ```
@@ -73,7 +73,7 @@ More options are coming soon to this toolbelt to aide development.
 ### Speedy Cook
 Starting with Cooker 5, Cooker can now quickly build large libraries based on what needs to be changed. For example if you have 10 ovens but only made changes to a file in Oven 4, Oven 4 will be built whilst the others are skipped. We call this process Speedy Cooking. You can turn it off if you'd like to by heading to `config/cooker.php` and setting the `canSpeedyCook` boolean to `false`
 
-### Getting started with Preloads {#cookerPreloads}
+### Getting started with Preloads
 Preloads offer a great way of getting files from remote URLs or local URLs into your project. This could be useful if you had a file on a CDN you wanted to import to your project without the risk of depending on a remote URL going down and pulling your site with you. To get started head to `config/cooker.php` and consult the Oven array of your choosing.
 
 Next, check the `preload` array. This will by default have an example of how to extend the preloads for this oven. To get started you can decide to load a file for both production and development mode or to distinguish between the two. This is handy if there is a production script you'd like to run but an uncompressed developer one you'd like to use locally to aide debugging.
@@ -93,7 +93,7 @@ It's worth noting as well, that these values can be remote url's or local files.
 
 
 
-### Building your own Oven {#cookerBYOO}
+### Building your own Oven
 Starting with Cooker 4, You can extend Cooker to process any input you give it! It could be something to meet your own needs more than the default Less or Scss compiler offers, Or if you want to do something that isn't supported out of the box, maybe something such as Styl etc you can do that by creating your own ovens. 
 
 Ovens are simply controllers that process the given input files from the job array handed to it. Simply create a controller with a `public static function` of `cook` which accepts a `$job` parameter to get started.
