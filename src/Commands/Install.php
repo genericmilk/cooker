@@ -74,16 +74,20 @@ class Install extends Command
         if($this->didInstall){
             if($this->confirm('Packages were installed. Do you want to run the cooker?',true)){
                 $this->call('cooker:cook');
+            }else{
+                $this->line(PHP_EOL."✨ Share the love: https://github.com/genericmilk/cooker");
             }
+        }else{
+            $this->line(PHP_EOL."✨ Share the love: https://github.com/genericmilk/cooker");
         }
 
     }
 
     private function installPackage($package,$version = 'latest'){
-        $this->line('Searching repository...');
+        $this->line('👀 Searching repository for '.e($package).'...');
         $response = Http::get('https://registry.npmjs.org/'.$package);
         if($response->failed()){
-            $this->error('Package not found. Please check and try again.');
+            $this->error('🤷‍♂️ Package not found. Please check and try again.');
             return;
         }
         $response = $response->object();
@@ -107,16 +111,22 @@ class Install extends Command
         // Is this installed in the cooker.json file?
         $cookerJson = json_decode(file_get_contents(config('cooker.packageManager.packagesList')));
         
+        if(isset($cookerJson->packages->$package) && is_dir(config('cooker.packageManager.packagesPath').'/'.$package) && file_exists(config('cooker.packageManager.packagesPath').'/'.$package.'/'.$cookerJson->packages->$package.'.js')){
+            if($cookerJson->packages->$package == $targetVersion){
+                $this->line('🟠 This package is already installed.');
+                return;
+            }
+        }
 
         // Now grab the script
-        $this->line('Installing to '.$response->name.'@'.$targetVersion.' '.config('app.name').'...');
+        $this->line('🛬 Installing '.$response->name.'@'.$targetVersion.' on '.config('app.name').'...');
 
         
 
         // Grab the script using unpkg
         $script = Http::get($this->npmPlatform.$package.'@'.$targetVersion);
         if($script->failed()){
-            $this->error('Failed to download package');
+            $this->error('🔴 Failed to download package. Could not communicate with repository');
             return;
         }
 
@@ -148,7 +158,7 @@ class Install extends Command
         file_put_contents(config('cooker.packageManager.packagesPath').'/'.$package.'/'.$targetVersion.'.js', $script);
     
         $this->didInstall = true;
-        $this->info('✅ Installed '.$package.'@'.$targetVersion.' to '.config('app.name'));
+        $this->info('🟢 Installed '.$package.'@'.$targetVersion.' to '.config('app.name'));
         
 
     }
