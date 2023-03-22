@@ -82,6 +82,7 @@ class Cook extends Command
 					if($oven->format=='js'){
 						$packages = Packages::obtain();
 					}else{
+						// Packages only exist for js
 						$packages = '';
 					}
 

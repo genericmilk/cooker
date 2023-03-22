@@ -20,7 +20,7 @@ class Preloads extends Controller
     public static function obtain($preloads,$oven,$isDev){
         $o = ''; // make an output buffer
         foreach($preloads as $preload){
-            $o .= Preloads::lastLineFormat(Preloads::validatePreload($preload,$isDev));
+            $o .= Preloads::lastLineFormat($oven,Preloads::validatePreload($preload,$isDev));
         }
         return $o;
     }
@@ -83,7 +83,10 @@ class Preloads extends Controller
         
         return $o.PHP_EOL;
     }
-    public static function lastLineFormat($input){
+    public static function lastLineFormat($oven,$input){
+        if($oven->format!='js'){
+            return $input;
+        }
         if(substr($input, -1)!=';'){
 			$input = $input.';';
 		}

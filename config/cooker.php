@@ -1,8 +1,8 @@
 <?php
 /*
- * Cooker 5
+ * Cooker 6
  *
- * (c) Peter Day (genericmilk) <peterday.main@gmail.com> 2022-2023
+ * (c) Peter Day (genericmilk) <peterday.main@gmail.com> 2023-2024
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
