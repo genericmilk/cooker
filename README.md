@@ -10,12 +10,12 @@ Resources that are cooked will be placed in the `/public/build` folder where all
 To install Cooker, run at the root of your Laravel Project the following
 ```
 composer require genericmilk/cooker
-php artisan cooker:setup
+php artisan cooker:init
 ```
 
-This will install the required supporting packages as well as cooker itself and it will also publish the artisan command `cooker:cook`.
+This will install the required supporting files as well as cooker itself. It also installs the required files to your application for package management as well as some example files to get started
 
-*Please note that installing will overwrite the `sass` and `js` folders and everything that is inside them. So make sure you save any work back first because things will get deleted!*
+*Please note that installing will overwrite the `sass` and `js` folders inside of `/resources` as well as everything that is inside them. Please make sure you save any work back first because things will get deleted!*
 
 ### So why Cooker? Why not NPM, Webpack? Laravel Mix?
 
@@ -27,21 +27,21 @@ Plus all code sent via cooker is automatically compressed and minified when runn
 
 Sounds good? Please do give it a try and offer feedback! I want to create the NPM that's lightyears more friendly for developers (Tall ask I know but hey!)
 
-Cooker is used actively on https://quuu.co as well as https://socialchief.com and https://rasdio.co.uk and we at Quuu trust it with our lives and livelyhoods (Our app is the reason we're in business!)
+Cooker is used actively on https://quuu.co as well as https://rasdio.co.uk and we at Quuu trust it with our lives and livelyhoods (Our app is the reason we're in business!)
 
 ### Configuring cooker
 When you installed cooker it added a new configuration file called `cooker.php` to your laravel application's `config` directory.
 
-It is within this gile that you can specify cooker's _ovens_ and how they should work to cook your build files.
+It is within this file that you can specify cooker's _ovens_ and how they should work to cook your build files.
 
 Cooker works by defining ovens to process the files. Ovens can have multiple ingredients but only one output. For example you may have a script for billing and a script for a dropdown menu. You would want to combine these scripts to both be available on the output. 
 
 Each oven processes the output files by doing the following
 * Adds a timestamp to the head of the file for quick identification of when the last job ran. You can switch this off by setting `stamped` to `false` in the config file
-* Cooker will then look for any global *libraries* automatically and in filename order from the `resources/<ovenDir>/libraries` folder where `<ovenDir>` is defined by the oven running. If you're using a built in oven supplied by Cooker this will be the lowercase of the oven name. If you are using your own consult *Building your own Oven* below. Libraries are loaded before anything else so it's a great idea to put frameworks in here such as jQuery or Vue etc. This is because the browser will need these loaded first and foremost before any app code is processed. Libraries are not compressed on build and as such minified versions are reccomended so that they are also production ready.
-* Cooker will then download and attach any *preloads* specified. Preloads are the same as *libraries* but do not have to exist within one location and can be either a remote or local uri. Preloads are specified in the `preload` array in the configuration and can be a direct url or a full path to the resource file. Preloads are not compressed on build and as such minified versions are reccomended so that they are also production ready.
-
-* Input files are then loaded in specified order from the job `input` array. These files are parsed using the oven loaded and are minified in production automatically. For example if you were using the `Genericmilk\Cooker\Ovens\Less` oven, you could reference files like below so colours and fonts load first. The base directory for reference is that which is supplied by the oven (eg: /resources/less/*)
+* Cooker will obtain any packages in cooker.json using the NPM network. To consult adding new packages to your project or to learn more, please consult [adding packages to cooker](#cookerNpm)
+* Cooker will download or locate and attach any *preloads* specified. Preloads are specified in the `preload` array in the configuration and can be a direct url or a full path to the resource file. Preloads can be offered either as a string to load on both production and local versions of your build or an array to specify the differences between the two. Preloads are not compressed on build, so it is reccomend you use a minified version in production environments. To learn more about Preloads, please consult [getting started with Preloads](#cookerPreloads)
+* Cooker will then look for any *libraries* automatically and in filename order from the `resources/<ovenDir>/libraries` folder where `<ovenDir>` is defined by the oven running. If you're using a built in oven supplied by Cooker this will be the lowercase of the oven name. If you are using your own consult [Building your own Oven](#cookerBYOO). Libraries are loaded after preloads so it's a great idea to put singular scripts in this folder to get loaded before your AppCode. Libraries are not compressed on build and as such minified versions are reccomended so that they are also production ready.
+* Cooker will finally process your AppCode. Input files are then loaded in specified order from the job `input` array. These files are parsed using the oven loaded and are minified in production automatically. For example if you were using the `Genericmilk\Cooker\Ovens\Less` oven, you could reference files like below so colours and fonts load first. The base directory for reference is that which is supplied by the oven (eg: /resources/less/*)
 ```
   'input' => [
       'colors.less',
