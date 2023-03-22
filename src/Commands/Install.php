@@ -90,11 +90,7 @@ class Install extends Command
         }
 
         if($this->didInstall){
-            if($this->confirm('Packages were installed. Do you want to run the cooker?',true)){
-                $this->call('cooker:cook');
-            }else{
-                $this->line(PHP_EOL."✨ Share the love: https://github.com/genericmilk/cooker");
-            }
+            $this->call('cooker:cook');
         }else{
             $this->line(PHP_EOL."✨ Share the love: https://github.com/genericmilk/cooker");
         }
