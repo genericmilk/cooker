@@ -34,6 +34,15 @@ class Install extends Command
         $this->version = json_decode(file_get_contents(__DIR__.'/../../composer.json'))->version;
 		$this->dev = $this->setupEnv();
 		
+		// Check if we have run setup and launch it if we need to
+		if(is_null(config('cooker.silent'))){
+			if(!$this->option('skipsetup')){
+				$this->call('cooker:init');
+				return;
+			}
+		}
+
+
 		!config('cooker.silent') ? $this->info('👨‍🍳 Cooker '.$this->version.' ('.ucfirst($this->env).')'.PHP_EOL) : '';
         
         if(is_null(config('cooker.packageManager.packageManager'))){
@@ -58,6 +67,10 @@ class Install extends Command
             $packages[] = $this->argument('package');
         } else {
             // Get all packages from the cooker.json file
+            if(!file_exists(config('cooker.packageManager.packagesList'))){
+                $this->error('The cooker.json file does not exist. Please check and try again.');
+                return;
+            }
             $cookerJson = json_decode(file_get_contents(config('cooker.packageManager.packagesList')));
             if(isset($cookerJson->packages)){
                 foreach($cookerJson->packages as $package => $version){
@@ -66,6 +79,11 @@ class Install extends Command
             }
         }
 
+
+        if(count($packages)==0){
+            $this->error('No packages were listed in cooker.json and no new packages were specified for install. Please check and try again.');
+            return;
+        }
 
         foreach($packages as $package){
             $this->installPackage($package);

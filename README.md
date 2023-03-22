@@ -40,7 +40,7 @@ Each oven processes the output files by doing the following
 * Adds a timestamp to the head of the file for quick identification of when the last job ran. You can switch this off by setting `stamped` to `false` in the config file
 * Cooker will obtain any packages in cooker.json using the NPM network. To consult adding new packages to your project or to learn more, please consult [adding packages to cooker](#cookerNpm)
 * Cooker will download or locate and attach any *preloads* specified. Preloads are specified in the `preload` array in the configuration and can be a direct url or a full path to the resource file. Preloads can be offered either as a string to load on both production and local versions of your build or an array to specify the differences between the two. Preloads are not compressed on build, so it is reccomend you use a minified version in production environments. To learn more about Preloads, please consult [getting started with Preloads](#getting-started-with-preloads)
-* Cooker will then look for any *libraries* automatically and in filename order from the `resources/<ovenDir>/libraries` folder where `<ovenDir>` is defined by the oven running. If you're using a built in oven supplied by Cooker this will be the lowercase of the oven name. If you are using your own consult [Building your own Oven](#cookerBYOO). Libraries are loaded after preloads so it's a great idea to put singular scripts in this folder to get loaded before your AppCode. Libraries are not compressed on build and as such minified versions are reccomended so that they are also production ready.
+* Cooker will then look for any *libraries* automatically and in filename order from the `resources/<ovenDir>/libraries` folder where `<ovenDir>` is defined by the oven running. If you're using a built in oven supplied by Cooker this will be the lowercase of the oven name. If you are using your own consult [Building your own Oven](#building-your-own-oven). Libraries are loaded after preloads so it's a great idea to put singular scripts in this folder to get loaded before your AppCode. Libraries are not compressed on build and as such minified versions are reccomended so that they are also production ready.
 * Cooker will finally process your AppCode. Input files are then loaded in specified order from the job `input` array. These files are parsed using the oven loaded and are minified in production automatically. For example if you were using the `Genericmilk\Cooker\Ovens\Less` oven, you could reference files like below so colours and fonts load first. The base directory for reference is that which is supplied by the oven (eg: /resources/less/*)
 ```
   'input' => [
@@ -91,7 +91,34 @@ If you don't want to distinguish between the two platforms (ie if you are happy 
 ```
 It's worth noting as well, that these values can be remote url's or local files. Simply alter as nessecary
 
+### Adding packages to Cooker
 
+Starting with Cooker 6, You can now use a NPM repository such as `unpkg` or `jsdelivr` to really quickly get files into your project. Right now we only support downloading the most up-to-date version of this environment with the default file being referenced. And whilst we will compress it for you on production, this may not be a specific production build. This will be updated in a 6.x update soon.
+
+If you are upgrading from an older version of Cooker, You need to ensure you have a `cooker.json` file in the root of your project file as follows:
+```
+{
+    "packages": {
+    }
+}
+```
+You will also need to add the following to your `.gitignore` file:
+```
+cooker_packages
+```
+The cooker_packages directory will fill up with your scripts as you specify them. Next, ensure the new configuration options are available in your `config/cooker.php` file near the top (Before the ovens):
+```
+'packageManager' => [
+    'packagesList' => env('COOKER_PACKAGE_JSON_LOCATION', base_path('cooker.json')),
+    'packagesPath' => env('COOKER_PACKAGE_PATH', base_path('cooker_packages')),
+    'packageManager' => env('COOKER_PACKAGE_MANAGER', 'jsdelivr'),
+],
+```
+To get started with an install of jQuery, run the following command on an installed version of cooker:
+```
+php artisan cooker:install jquery
+```
+Please substitute `jquery` as needed for different packages. Cooker will then download jQuery from NPM and deploy it in the `cooker_packages` folder. You will be then asked to run a cook job to mix jQuery into your application. 
 
 ### Building your own Oven
 Starting with Cooker 4, You can extend Cooker to process any input you give it! It could be something to meet your own needs more than the default Less or Scss compiler offers, Or if you want to do something that isn't supported out of the box, maybe something such as Styl etc you can do that by creating your own ovens. 
