@@ -4,6 +4,8 @@ namespace Genericmilk\Cooker\Ovens;
 
 use App\Http\Controllers\Controller;
 
+use JShrink\Minifier;
+
 class Js extends Controller
 {
     public $format = 'js';
@@ -21,5 +23,11 @@ class Js extends Controller
 			$input = $input.';';
 		}
 		return $input;
+    }
+    public static function compress($input){
+        $min = Minifier::minify($input,['flaggedComments' => false]);
+        $min = trim(preg_replace('/\s+/', ' ', $min));
+        $min = Js::lastLineFormat($min);
+        return $min;
     }
 }

@@ -13,10 +13,11 @@
             $this->setupConfig(); // Load config
             if ($this->app->runningInConsole()) {
                 $this->commands([
-                    Commands\Build::class,
-                    Commands\Setup::class,
+                    Commands\Cook::class,
+                    Commands\Init::class,
                     Commands\Watch::class,
-                    Commands\Shortcut::class
+                    Commands\Shortcut::class,
+                    Commands\Install::class
                 ]);
             }
         }

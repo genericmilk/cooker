@@ -17,5 +17,11 @@ class Less extends Controller
         }
         return $p->getCss();
     }
-
+    public static function compress($input){
+        $input = preg_replace('/\/\*((?!\*\/).)*\*\//','',$input); // negative look ahead
+        $input = preg_replace('/\s{2,}/',' ',$input);
+        $input = preg_replace('/\s*([:;{}])\s*/','$1',$input);
+        $input = preg_replace('/;}/','}',$input);		
+        return $input;
+    }
 }

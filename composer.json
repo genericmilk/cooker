@@ -2,7 +2,7 @@
     "name": "genericmilk/cooker",
     "description": "Plugin to the Cooker Engine! Easy site building by Genericmilk",
     "keywords": ["laravel", "cooker", "resources", "less", "javascript"],
-    "version": "5.0.0",
+    "version": "6.0.0",
     "license": "MIT",
     "authors": [
         {
@@ -11,9 +11,11 @@
         }
     ],
     "require": {
-        "php": ">=8.0",
+        "php": ">=8.2",
         "wikimedia/less.php": "^3.1.0",
         "scssphp/scssphp": "^1.2",
+        "guzzlehttp/guzzle": "^7.5.0",
+        "tedivm/jshrink": "^1.6",
         "nunomaduro/laravel-desktop-notifier": "^2.5"
     },
     "autoload": {
@@ -37,7 +39,6 @@
         }
     },
     "require-dev": {
-        "laravel/framework": "^8.0.0",
-        "genericmilk/telephone": "^1.5.0"
+        "laravel/framework": "^9.0.0"
     }
 }
