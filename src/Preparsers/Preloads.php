@@ -20,12 +20,12 @@ class Preloads extends Controller
     public static function obtain($preloads,$oven,$isDev){
         $o = ''; // make an output buffer
         foreach($preloads as $preload){
-            $o .= Preloads::lastLineFormat($oven,Preloads::validatePreload($preload,$isDev));
+            $o .= Preloads::lastLineFormat($oven,Preloads::validatePreload($preload,$isDev,$oven));
         }
         return $o;
     }
 
-    public static function validatePreload($p,$isDev){
+    public static function validatePreload($p,$isDev,$oven){
         
         // First check if this is a string or an array. If array we need to pick the right version
         if(is_array($p)){
@@ -61,7 +61,7 @@ class Preloads extends Controller
 
         }else{
             // Local file
-	        $p = resource_path($ext.'/'.$p);
+	        $p = resource_path($oven->format.'/'.$p);
             if(!file_exists($p)){
                 throw new Exception('Cooker: Local preload file could not be found: '.$p);
             }
