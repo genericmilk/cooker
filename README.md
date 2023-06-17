@@ -5,17 +5,23 @@ Cooker is a lightweight composer package aimed at sitting tightly within Laravel
 
 Resources that are cooked will be placed in the `/public/build` folder where all resources will be rendered. If the app is running in production mode the resources will be compressed and minified too! As if by magic.
 
+### Activating Cooker in a fresh clone of an existing project
+If you are working on a Laravel application that uses the Cooker framework, After installing all nessecary packages, simply run the following command to spin up your sites resources:
+```
+php artisan cooker:install
+```
+This command will download and install any NPM packages that are outstanding, create the relevant directoris in the app and build the first copy of the resources. After this has been done, simply reload the page to experience the changes.
+
 ### Installing Cooker in a new project
 
-To install Cooker, run at the root of your Laravel Project the following
+If you're getting started with a new project and want to install Cooker, run at the root of your Laravel Project the following commands
 ```
 composer require genericmilk/cooker
 php artisan cooker:init
 ```
-
 This will install the required supporting files as well as cooker itself. It also installs the required files to your application for package management as well as some example files to get started
 
-*Please note that installing will overwrite the `sass` and `js` folders inside of `/resources` as well as everything that is inside them. Please make sure you save any work back first because things will get deleted!*
+*Please note that installing will overwrite the default `sass` and `js` folders inside of `/resources` as well as everything that is inside them. Please make sure you save any work back first because things will get deleted!*
 
 ### So why Cooker? Why not NPM, Webpack? Laravel Mix?
 
@@ -34,7 +40,11 @@ When you installed cooker it added a new configuration file called `cooker.php` 
 
 It is within this file that you can specify cooker's _ovens_ and how they should work to cook your build files.
 
-Cooker works by defining ovens to process the files. Ovens can have multiple ingredients but only one output. For example you may have a script for billing and a script for a dropdown menu. You would want to combine these scripts to both be available on the output. 
+Ovens are the backbone of how Cooker builds front-end resource files. Different ovens denote different types of files be it Javascript, LESS, SASS, Styl etc.
+
+Ovens work by defining multiple ingredients that go into the oven, for the Oven to then process a single output (not too disimilar to the concept of a cake with eggs, milk, flower, sugar etc and the output product being a cake).
+
+As an example you may have a Javascript file for billing and another script for a dropdown menu. You would want to combine these scripts to both be available on the output so that both the billing and dropdown scripts are loaded together by the browser. We call this process "cooking"
 
 Each oven processes the output files by doing the following
 * Adds a timestamp to the head of the file for quick identification of when the last job ran. You can switch this off by setting `stamped` to `false` in the config file
@@ -196,5 +206,5 @@ If your Laravel application is running in `config.debug=true` mode, any cooked f
 
 ### Requirements for using Cooker
 Cooker is happiest on:
-* Laravel 9
+* Laravel 10
 * PHP >=8.2.0
