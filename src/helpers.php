@@ -1,6 +1,6 @@
 <?php
 
-function cooker_resource($file){
+function cooker_resource($file,$isModule = false){
     if (!file_exists(public_path('build'))){
         return null;
     }
@@ -16,7 +16,7 @@ function cooker_resource($file){
     if($ext=='css'){
         return '<link href="'.$url.'" rel="stylesheet">';
     }elseif($ext=='js'){
-        return '<script src="'.$url.'"></script>';
+        return '<script src="'.$url.'" type="'.($isModule ? 'module' : 'text/javascript' ).'"></script>';
     }
 
 }
