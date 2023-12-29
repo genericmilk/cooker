@@ -1,6 +1,9 @@
 <?php
 
 function cooker_resource($file,$isModule = false){
+    $ext = pathinfo($file, PATHINFO_EXTENSION);
+    $missingEmbed = '<meta name="missing" content="'.$file.'">';
+
     if (!file_exists(public_path('build'))){
         return null;
     }
@@ -14,9 +17,10 @@ function cooker_resource($file,$isModule = false){
     $ext = pathinfo($file, PATHINFO_EXTENSION);
 
     if($ext=='css'){
-        return '<link href="'.$url.'" rel="stylesheet">';
+        $fileOutput = '<link href="'.$url.'" rel="stylesheet">';
     }elseif($ext=='js'){
-        return '<script src="'.$url.'" type="'.($isModule ? 'module' : 'text/javascript' ).'"></script>';
+        $fileOutput = '<script src="'.$url.'" type="'.($isModule ? 'module' : 'text/javascript' ).'"></script>';
     }
 
+    return $missingEmbed.PHP_EOL.$fileOutput;
 }

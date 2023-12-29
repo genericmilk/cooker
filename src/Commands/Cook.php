@@ -20,7 +20,7 @@ use Genericmilk\Cooker\Ovens\Scss;
 
 class Cook extends Command
 {
-	protected $signature = 'cooker:cook {--dev} {--prod} {--test} {--skipsetup} {--force}';
+	protected $signature = 'cook {--dev} {--prod} {--test} {--skipsetup} {--force}';
 
 	protected $dev;
 	protected $version;
@@ -29,7 +29,7 @@ class Cook extends Command
 	public $hasFailed = false;
 	public $allHasSkipped = true;
 
-    protected $description = 'Run all defined cookers';
+    protected $description = 'Run a cook immediately on all defined jobs';
 
 	public function __construct(){
         parent::__construct();

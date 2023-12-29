@@ -1,6 +1,6 @@
 var app = {
     message: 'Cooker is running!',
-    boot:function(){
-        alert(this.message);
+    boot(){
+        console.log(this.message);
     }
 };

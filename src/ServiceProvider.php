@@ -3,6 +3,7 @@
 
     require_once __DIR__.'/helpers.php';
 
+    use Illuminate\Support\Facades\Blade;
 
     class ServiceProvider extends \Illuminate\Support\ServiceProvider {
 
@@ -11,12 +12,15 @@
         public function boot()
         {
             $this->setupConfig(); // Load config
+            $this->setupBladeDirectives(); // Setup blade directives
+ 
+            
+            
             if ($this->app->runningInConsole()) {
                 $this->commands([
                     Commands\Cook::class,
                     Commands\Init::class,
                     Commands\Watch::class,
-                    Commands\Shortcut::class,
                     Commands\Install::class
                 ]);
             }
@@ -44,6 +48,33 @@
         protected function publishConfig($configPath)
         {
             $this->publishes([$configPath => config_path('cooker.php')], 'config');
+        }
+
+        protected function setupBladeDirectives(){
+            Blade::directive('cooker', function ($file,$isModule = false) {
+
+                // tidy up quotes from file
+                $file = str_replace("'", "", $file);
+
+                if (!file_exists(public_path('build'))){
+                    return 'no build folder';
+                }
+                if (!file_exists(public_path('build/'.$file))){
+                     return 'no file';
+                }
+                
+                $hash = config('app.debug') ? time() : md5(file_get_contents(public_path('build/'.$file)));
+                $url = '/build/'.$file.'?build=' . $hash;
+            
+                $ext = pathinfo($file, PATHINFO_EXTENSION);
+            
+                if($ext=='css'){
+                    return '<link href="'.$url.'" rel="stylesheet">';
+                }elseif($ext=='js'){
+                    return '<script src="'.$url.'" type="'.($isModule ? 'module' : 'text/javascript' ).'"></script>';
+                }else{
+                }
+            });
         }
 
 
