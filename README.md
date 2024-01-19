@@ -104,14 +104,14 @@ Cooker is infinitely customisable and really easy to deploy and use. It is also 
 
 ***
 
-### Activating Cooker in a fresh clone of an existing project
+### Installing Cooker in a Fresh project
 If you are working on a Laravel application that uses the Cooker framework, After installing all nessecary packages, simply run the following command to spin up your sites resources:
 ```
 php artisan cooker:install
 ```
 This command will download and install any NPM packages that are outstanding, create the relevant directoris in the app and build the first copy of the resources. After this has been done, simply reload the page to experience the changes.
 
-### Installing Cooker in a new project
+### Installing Cooker in an existing project
 
 If you're getting started with a new project and want to install Cooker, run at the root of your Laravel Project the following commands
 ```
