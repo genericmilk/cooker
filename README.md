@@ -51,9 +51,7 @@ Cooker is the easy to use frontend compiler by <a href="https://github.com/gener
       </li>
       <li>
         <a href="#">Development and Production mode</a>
-      </li>
-      
-      
+      </li>      
     </ul>
   </li>
   <li>
