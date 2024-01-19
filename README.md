@@ -13,8 +13,11 @@ Cooker is the easy to use frontend compiler by <a href="https://github.com/gener
 
 <ul>
   <li>
-    Installation
+    Getting started
     <ul>
+      <li>
+        <a href="#">What is Cooker and why should I use it?</a>
+      </li>
       <li>
         <a href="#">Installing Cooker in a Fresh project</a>
       </li>
@@ -85,13 +88,21 @@ Cooker is the easy to use frontend compiler by <a href="https://github.com/gener
       </li>      
     </ul>
   </li>
-    
 </ul>
 
+***
 
-Cooker is a lightweight composer package aimed at sitting tightly within Laravel applications that allows you to quickly build resources for the frontend of your application from languages that need to be parsed to whether you want to build your application using a bunch of smaller files. We call this parsing and combination effort "Cooking". 
+## What is Cooker and why should I use it?
 
-Resources that are cooked will be placed in the `/public/build` folder where all resources will be rendered. If the app is running in production mode the resources will be compressed and minified too! As if by magic.
+Cooker is a composer package that really quickly and easily takes smaller files, such as `.less`, `.scss`, `.js` etc and compiles them into bigger files. 
+
+Files such as LESS and SCSS need compiling to CSS in order for the browser to understand them, but by including all of what makes a frontend into one compiler, makes for a rapidly better development experience.
+
+Cooker aims to replace bigger services such as NPM, Webpack and Laravel mix by dramatically lowering the bar for entry and providing a frontend resource system that is uniquely Laravel, without the baggage of a Node based compiler.
+
+Cooker is infinitely customisable and really easy to deploy and use. It is also super lightweight with heavy file compression and caching techniques speeding up your application.
+
+***
 
 ### Activating Cooker in a fresh clone of an existing project
 If you are working on a Laravel application that uses the Cooker framework, After installing all nessecary packages, simply run the following command to spin up your sites resources:
@@ -262,7 +273,7 @@ Your base object should contain at least one `boot()` function. This will be cal
 ```
 var app = {
   hey: 'Hello world',
-  boot: function(){
+  boot(){
     alert(this.hey);
   }
 };
@@ -274,7 +285,7 @@ You can extend the `app` object in other scripts referenced in the cooker's job 
 To extend your script simply create a sub-object to the top level namespaced object by specifying it as such:
 ```
 app.anotherObject = {
-  boot: function(){
+  boot(){
     alert('Hello from other file');
   }
 };
@@ -282,7 +293,7 @@ app.anotherObject = {
 You can then call this script from the main object at the start of your cook as such;
 ```
 var app = {
-  boot: function(){
+  boot(){
     app.anotherObject.boot();
   }
 };
