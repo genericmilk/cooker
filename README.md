@@ -4,6 +4,37 @@
 <h1 align="center">
 	Cooker v7.0.0
 </h1>
+<p>
+Cooker is the easy to use frontend compiler by <a href="https://github.com/genericmilk">genericmilk</a> that is designed to sit tightly within Laravel and offer a robust, fast and beginner friendly starting block for building your web applications
+</p>
+
+<ul>
+  <li>
+    Installation
+    <ul>
+      <li>
+        <a href="#">Installing Cooker in a Fresh project</a>
+      </li>
+      <li>
+        <a href="#">Installing Cooker in an existing project</a>
+      </li>
+    </ul>
+  </li>
+  <li>
+    Configuration
+    <ul>
+      <li>
+        <a href="#">Setting up Ovens</a>
+      </li>
+      <li>
+        <a href="#">Installing packages</a>
+      </li>
+      <li>
+        <a href="#">Activating resources</a>
+      </li>
+    </ul>
+</ul>
+
 
 Cooker is a lightweight composer package aimed at sitting tightly within Laravel applications that allows you to quickly build resources for the frontend of your application from languages that need to be parsed to whether you want to build your application using a bunch of smaller files. We call this parsing and combination effort "Cooking". 
 
