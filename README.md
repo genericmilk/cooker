@@ -2,13 +2,8 @@
 	<img src="cooker-full.png" width="200" />	
 </p>
 <h1 align="center">
-	Cooker
+	Cooker v7.0.0
 </h1>
-<h2 align="center">
-	v7.0.0
-</h2>
-# 👨‍🍳 Cooker 6
-## By Genericmilk
 
 Cooker is a lightweight composer package aimed at sitting tightly within Laravel applications that allows you to quickly build resources for the frontend of your application from languages that need to be parsed to whether you want to build your application using a bunch of smaller files. We call this parsing and combination effort "Cooking". 
 
