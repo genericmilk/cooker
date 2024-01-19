@@ -1,5 +1,5 @@
 <p align="center">
-	<img src="cooker-full.png" width="100" />
+	<img src="cooker-full.png" width="200" />
 </p>
 # 👨‍🍳 Cooker 6
 ## By Genericmilk
