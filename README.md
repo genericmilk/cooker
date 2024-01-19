@@ -1,3 +1,6 @@
+<p align="center">
+	<img src="cooker-full.png" />
+</p>
 # 👨‍🍳 Cooker 6
 ## By Genericmilk
 
