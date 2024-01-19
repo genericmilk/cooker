@@ -16,7 +16,7 @@ Cooker is the easy to use frontend compiler by <a href="https://github.com/gener
     Getting started
     <ul>
       <li>
-        <a href="#">What is Cooker and why should I use it?</a>
+        <a href="#what-is-cooker-and-why-should-i-use-it">What is Cooker and why should I use it?</a>
       </li>
       <li>
         <a href="#">Installing Cooker in a Fresh project</a>
@@ -94,7 +94,7 @@ Cooker is the easy to use frontend compiler by <a href="https://github.com/gener
 
 ## What is Cooker and why should I use it?
 
-Cooker is a composer package that really quickly and easily takes smaller files, such as `.less`, `.scss`, `.js` etc and compiles them into bigger files. 
+Cooker is a composer package that really quickly and easily takes smaller files, such as `.less`, `.scss`, `.js` etc and compiles them into bigger files such as `app.css` and `app.js`, full to the brim of all your apps' code and with intelligent loading depending on the page you are on.
 
 Files such as LESS and SCSS need compiling to CSS in order for the browser to understand them, but by including all of what makes a frontend into one compiler, makes for a rapidly better development experience.
 
