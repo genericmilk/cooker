@@ -47,6 +47,9 @@ Cooker is the easy to use frontend compiler by <a href="https://github.com/gener
         <a href="#">Cooker Toolbelt</a>
       </li>
       <li>
+        <a href="#">The Cooker Google Chrome Extension</a>
+      </li>
+      <li>
         <a href="#">SpeedyCook</a>
       </li>
       <li>
@@ -65,7 +68,24 @@ Cooker is the easy to use frontend compiler by <a href="https://github.com/gener
       </li>
     </ul>
   </li>
-  
+  <li>
+    Upgrading Cooker
+    <ul>
+      <li>
+        <a href="#">Upgrading from Cooker 6 - 7</a>
+      </li>
+      <li>
+        <a href="#">Upgrading from Cooker 5 - 6</a>
+      </li>
+      <li>
+        <a href="#">Upgrading from Cooker 4 - 5</a>
+      </li>
+      <li>
+        <a href="#">Upgrading from Cooker 1.x / 2.x / 3.x - 4</a>
+      </li>      
+    </ul>
+  </li>
+    
 </ul>
 
 
