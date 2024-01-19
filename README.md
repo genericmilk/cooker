@@ -33,21 +33,37 @@ Cooker is the easy to use frontend compiler by <a href="https://github.com/gener
         <a href="#">Installing packages</a>
       </li>
       <li>
-        <a href="#">Activating resources</a>
+        <a href="#">Compiling resources</a>
       </li>
     </ul>
   </li>
   <li>
-    Custom Ovens
+    Features and helpers
     <ul>
       <li>
-        <a href="#">Setting up Ovens</a>
+        <a href="#">The @cooker helper</a>
       </li>
       <li>
-        <a href="#">Installing packages</a>
+        <a href="#">Cooker Toolbelt</a>
       </li>
       <li>
-        <a href="#">Activating resources</a>
+        <a href="#">SpeedyCook</a>
+      </li>
+      <li>
+        <a href="#">Development and Production mode</a>
+      </li>
+      
+      
+    </ul>
+  </li>
+  <li>
+    Extending Cooker
+    <ul>
+      <li>
+        <a href="#">Writing Cooker Object-oriented javascript</a>
+      </li>
+      <li>
+        <a href="#">Custom Ovens</a>
       </li>
     </ul>
   </li>
