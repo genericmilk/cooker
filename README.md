@@ -7,6 +7,9 @@
 <p>
 Cooker is the easy to use frontend compiler by <a href="https://github.com/genericmilk">genericmilk</a> that is designed to sit tightly within Laravel and offer a robust, fast and beginner friendly starting block for building your web applications
 </p>
+<p>
+  Cooker aims to be a great middleground for those who don't want to get bogged-down with all of the baggade of node and NPM but offers similar functionality.
+</p>
 
 <ul>
   <li>
@@ -33,6 +36,22 @@ Cooker is the easy to use frontend compiler by <a href="https://github.com/gener
         <a href="#">Activating resources</a>
       </li>
     </ul>
+  </li>
+  <li>
+    Custom Ovens
+    <ul>
+      <li>
+        <a href="#">Setting up Ovens</a>
+      </li>
+      <li>
+        <a href="#">Installing packages</a>
+      </li>
+      <li>
+        <a href="#">Activating resources</a>
+      </li>
+    </ul>
+  </li>
+  
 </ul>
 
 
