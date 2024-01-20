@@ -103,6 +103,7 @@ class Cook extends Command
 		
 							// Configure the toolbelt
 							$toolbelt = str_replace('__isProd__',($this->env=='prod' ? 'true' : 'false'),$toolbelt);
+							$toolbelt = str_replace('__autoRunIntelliPath__',(config('cooker.autoRunIntelliPath') ? 'true' : 'false'),$toolbelt);
 							$toolbelt = str_replace('__cookerVersion__',($this->version),$toolbelt);
 							$toolbelt = str_replace('__namespace__',($job['namespace']),$toolbelt);
 

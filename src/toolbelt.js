@@ -1,10 +1,12 @@
 const cookerToolbelt = {
     version: '1.0.0',
     isProd: __isProd__,
+    autoRunIntelliPath: __autoRunIntelliPath__,
     cookerVersion: "__cookerVersion__",
     namespace: "__namespace__",
     boot(){
         this.alertUpgradeGuide();
+        this.intelliPath();
     },
     alertUpgradeGuide(){
         // count the number of meta[name=missing tags]
@@ -18,22 +20,53 @@ const cookerToolbelt = {
         }
     },
     intelliPath(){
+        var parent = this;
         let rootScript = window[this.namespace];
+        
+        // filter rootScript to objects only
+        let rootScriptObjects = Object.keys(rootScript).filter(function(key) {
+            return typeof rootScript[key] === 'object';
+        });
 
-        // go round each object and see if they have a cookerPath property
-        let path = '';
-        let pathFound = false;
-        let pathFoundCount = 0;
+        // go through rootScriptObjects and check for a _cookerPaths property
+        rootScriptObjects.forEach(function(element){
+            if(rootScript[element]._cookerPaths){
+                // if it exists, add the paths to the window object
 
-        for(let key in rootScript){
-            if(rootScript.hasOwnProperty(key)){
-                if(rootScript[key].hasOwnProperty('cookerPath')){
-                    path = rootScript[key].cookerPath;
-                    pathFound = true;
-                    pathFoundCount++;
-                }
+                let paths = rootScript[element]._cookerPaths;
+                let currentPagePath = window.location.pathname;
+
+                // go round each of the paths in a loop
+                paths.forEach(function(path){
+                    
+                    // does this path have a wildcard (*) in it?
+                    if(path.includes('*')){
+                        // everything before * is a static path
+                        let staticPath = path.split('*')[0];
+                        // does the current page path start with the static path?
+                        if(currentPagePath.startsWith(staticPath)){
+                            try{
+                                window[parent.namespace][element].boot();
+                            }catch(e){
+                                console.error('Cooker: A _cookerPath was found, but the boot method could not be called. Please check your script features at least a boot method. (1)');
+                            }
+
+                        }
+                    }else{
+                        // doing a straight comparison
+                        if(currentPagePath == path){
+                            try{
+                                window[parent.namespace][element].boot();
+                            }catch(e){
+                                console.error('Cooker: A _cookerPath was found, but the boot method could not be called. Please check your script features at least a boot method. (2)');
+                            }
+                        }
+                    }
+
+                });
             }
-        }
+        });
+
         
     }
 };
