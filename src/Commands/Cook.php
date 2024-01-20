@@ -47,7 +47,7 @@ class Cook extends Command
 		}
 
 		$start = microtime(true); // Start a timer
-		!config('cooker.silent') ? $this->info('👨‍🍳 Cooker '.$this->version.' ('.ucfirst($this->env).')'.PHP_EOL) : '';
+		!config('cooker.silent') ? $this->info('👨‍🍳 Cooker '.$this->version.' ('.ucfirst($this->env).')') : '';
 
 		// Run ovens
 		$table = [];
@@ -136,17 +136,10 @@ class Cook extends Command
 					$hashTree = $this->generateHashTree($oven,$job);
 					file_put_contents(public_path('build/'.$job['output'].'.speedy'),$hashTree); // write o
 
-					$table[] = [
-						'🟢',
-						$job['name'],
-						'OK'
-					];
+					echo '✓'; // ok
+
 				}else{
-					$table[] = [
-						'🟠',
-						$job['name'],
-						'No changes'
-					];
+					echo '.'; // skipped
 				}
 								
 
@@ -160,6 +153,7 @@ class Cook extends Command
 						$job['name'],
 						$e->getMessage()
 					];
+					echo '!';
 					$this->hasFailed = true;
 				}
 				
@@ -172,7 +166,9 @@ class Cook extends Command
 
 		// Only show the table if cooker is not silent OR if cooker has failed
 		if(!config('cooker.silent') || $this->hasFailed){
-			$this->table(['','Job', 'Status'],$table);
+			if(count($table)>0){
+				$this->table(['','Job', 'Status'],$table);
+			}
 			$this->line(PHP_EOL."⏰ Took ".$time_elapsed_secs."s   ⌚️ Finished ".now()->format('H:i:s').PHP_EOL."✨ Share the love: https://github.com/genericmilk/cooker");
 
 			// Show a notification if enabled
