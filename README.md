@@ -50,9 +50,6 @@ Cooker is the easy to use frontend compiler by <a href="https://github.com/gener
         <a href="#">Cooker Toolbelt</a>
       </li>
       <li>
-        <a href="#">The Cooker Google Chrome Extension</a>
-      </li>
-      <li>
         <a href="#">SpeedyCook</a>
       </li>
       <li>
