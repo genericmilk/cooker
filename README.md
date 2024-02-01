@@ -98,8 +98,6 @@ Cooker aims to replace bigger services such as NPM, Webpack and Laravel mix by d
 
 Cooker is infinitely customisable and really easy to deploy and use. It is also super lightweight with heavy file compression and caching techniques speeding up your application.
 
-***
-
 ### Installing Cooker
 
 Before you install Cooker, please make a note of the following "gotchas" as Cooker's installer will replace some Laravel directories in order to install:
