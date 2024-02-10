@@ -70,7 +70,7 @@ class Init extends Command
 
 		system('clear');
 
-		$frontendCss = select(
+		$engine = select(
 			label: 'What CSS engine do you want to use with Cooker?',
 			options: ['LESS', 'SCSS', 'CSS'],
 			default: 'LESS',
@@ -79,8 +79,8 @@ class Init extends Command
 
 		$frontendCss = select(
 			label: 'Do you want to use a CSS framework with Cooker?',
-			options: ['Tailwind', 'Just regular old CSS'],
-			default: 'Just regular old CSS',
+			options: ['Tailwind', 'No thanks'],
+			default: 'No thanks',
 			hint: 'You can install anything you like into Cooker later! Just check out the documentation 📚'
 		);
 		
@@ -90,6 +90,7 @@ class Init extends Command
 			default: 'Vue',
 			hint: 'You can change your mind later in the Cooker config file 🤓'
 		);
+
 
 		note('✨ Great! We\'re ready to install Cooker now.');
 		
@@ -111,9 +112,10 @@ class Init extends Command
 		}
 
 		$response = spin(
-			fn () => $this->installCooker(),
+			fn () => $this->installCooker($engine,$frontendCss,$frontendJs),
 			'Installing Cooker ...'
 		);
+
 
 
 		info('🎉 Cooker has been installed!');
@@ -184,8 +186,7 @@ class Init extends Command
 	}
 
 	// steps
-	private function installCooker(){
-
+	private function installCooker($engine,$frontendCss,$frontendJs){
 		$this->call('vendor:publish', [
 			'--provider' => 'Genericmilk\Cooker\ServiceProvider'
 		]);
@@ -239,10 +240,57 @@ class Init extends Command
 		fwrite($file,file_get_contents(__DIR__.'/../example.js'));
 		fclose($file);
 
-		$this->info('🔨 Building cooker.json');
 		$file = fopen(base_path('cooker.json'),'w');
 		fwrite($file,file_get_contents(__DIR__.'/../cooker.json'));
 		fclose($file);
+
+
+		// open the config file for writing
+		$config = file_get_contents(config_path('cooker.php'));
+
+		// replace the engine
+		$newEngine = "Genericmilk\Cooker\Ovens\\".ucfirst(strtolower($engine));
+		$config = str_replace("'cooker' => 'Genericmilk\Cooker\Ovens\Less'", "'cooker' => '".$newEngine."'", $config);
+
+		$frontendCss = $frontendCss == 'No thanks' ? null : $frontendCss;
+		if($frontendCss!=null){
+			if($frontendCss=='Tailwind'){
+				// prep to add tailwind
+				$this->call('cooker:install', [
+					'package' => 'tailwindcss',
+					'--silent' => true,
+					'--skipsetup' => true
+				]);
+			}
+		}
+
+		$frontendJs = $frontendJs == 'Vanilla JS' ? null : $frontendJs;
+		if($frontendJs!=null){
+			// prep to add frontend js
+			if($frontendJs=='Vue'){
+				$this->call('cooker:install', [
+					'package' => 'vue',
+					'--silent' => true,
+					'--skipsetup' => true
+				]);
+			}else if($frontendJs=='React'){
+				$this->call('cooker:install', [
+					'package' => 'react',
+					'--silent' => true,
+					'--skipsetup' => true
+				]);
+			}else if($frontendJs=='Angular'){
+				$this->call('cooker:install',[
+					'package' => '@angular/core',
+					'--silent' => true,
+					'--skipsetup' => true
+				]);
+			}
+		}
+
+		// write the config
+		file_put_contents(config_path('cooker.php'),$config);
+
 	}
 
 	private function uninstallCooker(){

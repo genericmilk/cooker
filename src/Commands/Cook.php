@@ -57,25 +57,23 @@ class Cook extends Command
 			}
 		}
 
+		$generationTimer = microtime(true); // Start a timer		
+
 		system('clear');
-		$start = microtime(true); // Start a timer
 		!config('cooker.silent') ? note('👨‍🍳 Cooker '.$this->version.' ('.($this->env=='dev' ? 'Development' : 'Production').' mode)') : '';
 
 		// BAKE!
 		foreach(config('cooker.ovens') as $job){
-			$response = spin(
-				fn () => $this->runOven($job),
-				'Cooking '.$job['name'].'...'
-			);
-
+			spin(fn () => $this->runOven($job), 'Cooking '.$job['name'].'...');			
 		}
 
+		// reset the view
 		system('clear');
 		!config('cooker.silent') ? note('👨‍🍳 Cooker '.$this->version.' ('.($this->env=='dev' ? 'Development' : 'Production').' mode)') : '';
 
 
 		// All jobs finished! Stop the timer and print the table
-		$time_elapsed_secs = round(microtime(true) - $start,2);
+		$elapsedTime = round(microtime(true) - $generationTimer,2);
 
 		// Only show the table if cooker is not silent OR if cooker has failed
 		if(!config('cooker.silent') || $this->hasFailed){
@@ -117,16 +115,17 @@ class Cook extends Command
 
 			// Show the time taken
 
-			note(PHP_EOL."⏰ Took ".$time_elapsed_secs."s   ⌚️ Finished ".now()->format('H:i:s').PHP_EOL."✨ Share the love: https://github.com/genericmilk/cooker");
+			note(PHP_EOL."⏰ Took ".$elapsedTime."s   ⌚️ Finished ".now()->format('H:i:s').PHP_EOL."✨ Share the love: https://github.com/genericmilk/cooker");
 
 			// Show a notification if enabled
 			if(config('cooker.notifications')){
 				if(!$this->allHasSkipped){
-					$this->notify(($this->hasFailed ? '🔴 Cook Failed' : '🟢 Cooked OK') ,'Took '.$time_elapsed_secs.'s',__DIR__.'/../../cooker.png');
+					$this->notify(($this->hasFailed ? '🔴 Cook Failed' : '🟢 Cooked OK') ,'Took '.$elapsedTime.'s',__DIR__.'/../../cooker.png');
 				}
 			}
 
 		}
+
     }
 
 
@@ -175,6 +174,7 @@ class Cook extends Command
 
 				// Step 5: Add the toolbelt if JS
 				if($oven->format=='js'){
+					
 					if($job['toolbelt']){
 						// User wants toolbelt
 						$toolbelt = file_get_contents(__DIR__.'/../toolbelt.js');
@@ -187,6 +187,7 @@ class Cook extends Command
 
 						$appcode .= $toolbelt;
 					}
+					
 				}
 
 				// Step 6: Cook the appcode
@@ -197,7 +198,6 @@ class Cook extends Command
 					$appcode = $oven::compress($appcode);
 				}
 				
-
 				// Compile the output into a mega string
 				$o = $stamp . $packages . $preloads . $libraries . $appcode;
 				
@@ -214,10 +214,10 @@ class Cook extends Command
 				$hashTree = $this->generateHashTree($oven,$job);
 				file_put_contents(public_path('build/'.$job['output'].'.speedy'),$hashTree); // write o
 
-				echo '✓'; // ok
+				// ok
 
 			}else{
-				echo '.'; // skipped
+				// skipped
 			}
 							
 
@@ -231,7 +231,6 @@ class Cook extends Command
 					$job['name'],
 					$e->getMessage()
 				];
-				echo '!';
 				$this->hasFailed = true;
 			}
 			
