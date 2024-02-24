@@ -27,7 +27,7 @@ Cooker is the easy to use frontend compiler by <a href="https://github.com/gener
     Configuration
     <ul>
       <li>
-        <a href="#">Setting up Ovens</a>
+        <a href="#setting-up-ovens">Setting up Ovens</a>
       </li>
       <li>
         <a href="#">Installing packages</a>
@@ -120,9 +120,9 @@ If you are taking on a project that is written in Cooker, consult <a href="#">"C
 
 When you ran `php artisan cooker:init` for the first time, It published a `cooker.php` file to your Laravel application's `/config` directory.
 
-This file (hereafter referred to as "Cooker's configuration file") is where you can adjust how Cooker works as well as specifying "ovens" which Cooker uses to build files. 
+This file (hereafter referred to as "Cooker's configuration file") is where you can adjust how Cooker runs as well as specifying "ovens" which Cooker uses to build files. 
 
-Cooker uses "ovens" to build a resulting javascript or css file. We call this combination and parsing effort "Cooking".
+Cooker uses ovens to build a resulting javascript or css file. We call this combination and parsing effort "Cooking".
 
 Each oven listed in your configuration outputs one file. Different ovens denote different types of files be it Javascript, LESS, SASS, Styl etc.
 
@@ -153,8 +153,8 @@ Cooker comes with a great controller function you can use in blade files or in c
 
 To use the helper simply include it like so:
 ```
-{!! @cooker('app.css') !!}
-{!! @cooker('app.js') !!}
+@cooker('app.css')
+@cooker('app.js')
 ```
 You can substitute `app.css` and `app.js` for the cooked filename.
 
