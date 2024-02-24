@@ -192,10 +192,10 @@ By default, Cooker includes a small Javascript file that is loaded and locked on
 * `cookerToolbelt.cookerVersion` returns the current cooker version
 * `cookerToolbelt.namespace` returns a string of the javascript namespace as defined in the oven
 
-### Speedy Cook
+## Speedy Cook
 Cooker can quickly build large libraries based on what needs to be changed. For example if you have 10 ovens but only made changes to a file in Oven 4, Oven 4 will be built whilst the others are skipped. We call this process Speedy Cooking. You can turn it off if you'd like to by heading to `config/cooker.php` and setting the `canSpeedyCook` boolean to `false`
 
-### Getting started with Preloads
+## Getting started with Preloads
 Preloads offer a great way of getting files from remote URLs or local URLs into your project. This could be useful if you had a file on a CDN you wanted to import to your project without the risk of depending on a remote URL going down and pulling your site with you. To get started head to `config/cooker.php` and consult the Oven array of your choosing.
 
 Next, check the `preload` array. This will by default have an example of how to extend the preloads for this oven. To get started you can decide to load a file for both production and development mode or to distinguish between the two. This is handy if there is a production script you'd like to run but an uncompressed developer one you'd like to use locally to aide debugging.
@@ -213,7 +213,7 @@ If you don't want to distinguish between the two platforms (ie if you are happy 
 ```
 It's worth noting as well, that these values can be remote url's or local files. Simply alter as nessecary
 
-### Building your own Oven
+## Building your own Oven
 You can extend Cooker to process any input you give it! It could be something to meet your own needs more than the default Less or Scss compiler offers, Or if you want to do something that isn't supported out of the box, maybe something such as Styl etc you can do that by creating your own ovens. 
 
 Ovens are simply controllers that process the given input files from the job array handed to it. Simply create a controller with a `public static function` of `cook` which accepts a `$job` parameter to get started.
@@ -244,7 +244,7 @@ class Styl extends Controller
 }
 ```
 
-### Cooker object-oriented javascript
+## Cooker object-oriented javascript
 Cooker gives a really nice way to organise and build javascript files to compile into one cooked file. All the javascript files utilise an object oriented approach which makes it super easy to componentise and traverse larger files.
 
 Files are cooked using the first specified javascript file in the job as the base object. This should be a variable containing a javascript object with the name of the variable being set to what is specified in the configuration for cooker. For example a cooker application with the namespace of `app` needs to have the following structure
@@ -284,10 +284,10 @@ var app = {
 ```
 This'll fire an alert with `Hello from other file` as the function is executed inside `app.anotherObject.boot()`
 
-### Cooked file compression
+## Cooked file compression
 If your Laravel application is running in `config.debug=true` mode, any cooked files will retain their original formatting. If you are running in `config.debug=false` mode then all scripts except for javascript and css libraries will be minified to reduce load times
 
-### Requirements for using Cooker
+## Requirements for using Cooker
 Cooker is happiest on:
 * Laravel 10
 * PHP >=8.2.0
