@@ -1,6 +1,12 @@
 var app = {
+    _cookerPath: [
+        '/',
+        '/about',
+        '/about/team',
+        '/about/team/*',
+    ],
     message: 'Cooker is running!',
-    boot:function(){
-        alert(this.message);
+    boot(){
+        console.log(this.message);
     }
 };

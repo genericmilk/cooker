@@ -12,7 +12,7 @@ class Watch extends Command
 {
 
     protected $signature = 'cooker:watch';
-    protected $description = 'Watch files defined by your cooker ovens for changes and run cooker:cook on change';
+    protected $description = 'Watch files defined by your cooker ovens for changes and run cook on change';
 
 	protected $version;
 
@@ -52,13 +52,12 @@ class Watch extends Command
                     $this->hashs[$f2c] = md5(file_get_contents($f2c));
                 }
 
-
             }
         }
 
         if($this->runBuild){
             $this->runBuild = false;
-            $this->call('cooker:cook');
+            $this->call('cook');
         }
         
         sleep(1);
