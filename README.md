@@ -148,6 +148,32 @@ Each oven processes the output files by doing the following
 ```
 * The cooked file is published to the `public/build` folder under the name specified in the jobs' `output` string. (Default app.css or app.js etc)
 
+## Installing packages
+Cooker can use a NPM repository such as `unpkg` or `jsdelivr` to really quickly get files into your project. Right now we only support downloading the most up-to-date version of this environment with the default file being referenced. And whilst we will compress it for you on production, this may not be a specific production build.
+
+You will also need to add the following to your `.gitignore` file:
+```
+cooker_packages
+```
+The cooker_packages directory will fill up with your scripts as you specify them. Next, ensure the new configuration options are available in your `config/cooker.php` file near the top (Before the ovens):
+```
+'packageManager' => [
+    'packagesList' => env('COOKER_PACKAGE_JSON_LOCATION', base_path('cooker.json')),
+    'packagesPath' => env('COOKER_PACKAGE_PATH', base_path('cooker_packages')),
+    'packageManager' => env('COOKER_PACKAGE_MANAGER', 'jsdelivr'),
+],
+```
+To get started with an install of jQuery, run the following command on an installed version of cooker:
+```
+php artisan cooker:install jquery
+```
+Please substitute `jquery` as needed for different packages. Cooker will then download jQuery from NPM and deploy it in the `cooker_packages` folder. You will be then asked to run a cook job to mix jQuery into your application. 
+
+## Compiling resources
+Cooker compiles resource when the `php artisan cook` command is run. This can be hooked into a save action such as the "Run on Save" by pucelle for Visual Studio Code or you can use the `php artisan cooker:watch` function to watch for file changes to detect when to run the function.
+
+***
+
 ### The Cooker helper
 Cooker comes with a great controller function you can use in blade files or in controllers! It will return a HTML element pointing the browser to the path of the cooked file along with a string to help the browser with the cache. When the application is running in `app.debug=false` a unix timestamp will be added to the end of the url that is requested. When the opposite is in effect a MD5 hash of the built file will be specified instead.
 
@@ -186,28 +212,6 @@ If you don't want to distinguish between the two platforms (ie if you are happy 
 'https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css',
 ```
 It's worth noting as well, that these values can be remote url's or local files. Simply alter as nessecary
-
-### Adding packages to Cooker
-
-Cooker can use a NPM repository such as `unpkg` or `jsdelivr` to really quickly get files into your project. Right now we only support downloading the most up-to-date version of this environment with the default file being referenced. And whilst we will compress it for you on production, this may not be a specific production build.
-
-You will also need to add the following to your `.gitignore` file:
-```
-cooker_packages
-```
-The cooker_packages directory will fill up with your scripts as you specify them. Next, ensure the new configuration options are available in your `config/cooker.php` file near the top (Before the ovens):
-```
-'packageManager' => [
-    'packagesList' => env('COOKER_PACKAGE_JSON_LOCATION', base_path('cooker.json')),
-    'packagesPath' => env('COOKER_PACKAGE_PATH', base_path('cooker_packages')),
-    'packageManager' => env('COOKER_PACKAGE_MANAGER', 'jsdelivr'),
-],
-```
-To get started with an install of jQuery, run the following command on an installed version of cooker:
-```
-php artisan cooker:install jquery
-```
-Please substitute `jquery` as needed for different packages. Cooker will then download jQuery from NPM and deploy it in the `cooker_packages` folder. You will be then asked to run a cook job to mix jQuery into your application. 
 
 ### Building your own Oven
 You can extend Cooker to process any input you give it! It could be something to meet your own needs more than the default Less or Scss compiler offers, Or if you want to do something that isn't supported out of the box, maybe something such as Styl etc you can do that by creating your own ovens. 
