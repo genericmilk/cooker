@@ -50,7 +50,7 @@ Cooker is the easy to use frontend compiler by <a href="https://github.com/gener
         <a href="#speedy-cook">SpeedyCook</a>
       </li>
       <li>
-        <a href="#">Development and Production mode</a>
+        <a href="#development-and-production-mode">Development and Production mode</a>
       </li>      
     </ul>
   </li>
@@ -58,10 +58,13 @@ Cooker is the easy to use frontend compiler by <a href="https://github.com/gener
     Extending Cooker
     <ul>
       <li>
-        <a href="#">Writing Cooker Object-oriented javascript</a>
+        <a href="#getting-started-with-preloads">Getting started with Preloads</a>
       </li>
       <li>
-        <a href="#">Custom Ovens</a>
+        <a href="#building-your-own-oven">Building your own oven</a>
+      </li>
+      <li>
+        <a href="#cooker-object-oriented-javascript">Cooker object-oriented javascript</a>
       </li>
     </ul>
   </li>
@@ -69,13 +72,13 @@ Cooker is the easy to use frontend compiler by <a href="https://github.com/gener
     Upgrading Cooker
     <ul>
       <li>
-        <a href="#">Upgrading from Cooker 6 - 7</a>
+        <a href="https://github.com/genericmilk/cooker/wiki/Upgrading-to-Cooker-7-from-Cooker-6">Upgrading from Cooker 6 - 7</a>
       </li>
       <li>
         <a href="#">Upgrading from Cooker 5 - 6</a>
       </li>
       <li>
-        <a href="#">Upgrading from Cooker 4 - 5</a>
+        <a href="https://github.com/genericmilk/cooker/wiki/Upgrading-to-Cooker-5-from-Cooker-4">Upgrading from Cooker 4 - 5</a>
       </li>
       <li>
         <a href="#">Upgrading from Cooker 1.x / 2.x / 3.x - 4</a>
