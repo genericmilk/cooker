@@ -129,11 +129,14 @@ Each oven listed in your configuration outputs one file. Different ovens denote 
 For example; you may have a Javascript file for billing and another script for a dropdown menu. You would want to combine these scripts to both be available on the output so that both the billing and dropdown scripts are loaded together by the browser.
 
 Each oven processes the output files by doing the following
-* Adds a timestamp to the head of the file for quick identification of when the last job ran. You can switch this off by setting `stamped` to `false` in the config file
-* Cooker will obtain any packages in cooker.json using the NPM network. To consult adding new packages to your project or to learn more, please consult [adding packages to cooker](#adding-packages-to-cooker)
-* Cooker will download or locate and attach any *preloads* specified. Preloads are specified in the `preload` array in the configuration and can be a direct url or a full path to the resource file. Preloads can be offered either as a string to load on both production and local versions of your build or an array to specify the differences between the two. Preloads are not compressed on build, so it is reccomend you use a minified version in production environments. To learn more about Preloads, please consult [getting started with Preloads](#getting-started-with-preloads)
-* Cooker will then look for any *libraries* automatically and in filename order from the `resources/<ovenDir>/libraries` folder where `<ovenDir>` is defined by the oven running. If you're using a built in oven supplied by Cooker this will be the lowercase of the oven name. If you are using your own consult [Building your own Oven](#building-your-own-oven). Libraries are loaded after preloads so it's a great idea to put singular scripts in this folder to get loaded before your AppCode. Libraries are not compressed on build and as such minified versions are reccomended so that they are also production ready.
-* Cooker will finally process your AppCode. Input files are then loaded in specified order from the job `input` array. These files are parsed using the oven loaded and are minified in production automatically. For example if you were using the `Genericmilk\Cooker\Ovens\Less` oven, you could reference files like below so colours and fonts load first. The base directory for reference is that which is supplied by the oven (eg: /resources/less/*)
+1. Adds a timestamp to the head of the file for quick identification of when the last job ran. You can switch this off by setting `stamped` to `false` in the config file
+2. Obtains frameworks if the filetype is `js`
+3. Obtain any packages in cooker.json using the NPM network. To consult adding new packages to your project or to learn more, please consult [adding packages to cooker](#adding-packages-to-cooker)
+4. Obtain any *preloads* specified for the oven. Preloads are specified in the `preload` array in the configuration and can be a direct url or a full path to the resource file. Preloads can be offered either as a string to load on both production and local versions of your build or an array to specify the differences between the two. Preloads are not compressed on build, so it is reccomend you use a minified version in production environments. To learn more about Preloads, please consult [getting started with Preloads](#getting-started-with-preloads)
+5. Obtain any *libraries* automatically and in filename order from the `resources/<ovenDir>/libraries` folder where `<ovenDir>` is defined by the oven running. If you're using a built in oven supplied by Cooker this will be the lowercase of the oven name. If you are using your own consult [Building your own Oven](#building-your-own-oven). Libraries are loaded after preloads so it's a great idea to put singular scripts in this folder to get loaded before your AppCode. Libraries are not compressed on build and as such minified versions are reccomended so that they are also production ready.
+6. Create a new output buffer ready to compile the code
+7. If configured, Cooker will add `cookerToolbelt` to the file if the filetype is `js` and the configuration for `toolbelt` is set to `true` in the oven.
+8. Cooker will finally process your Appcode. Input files are then loaded in specified order from the job `input` array. These files are parsed using the oven loaded and are minified in production automatically. For example if you were using the `Genericmilk\Cooker\Ovens\Less` oven, you could reference files like below so colours and fonts load first. The base directory for reference is that which is supplied by the oven (eg: /resources/less/*)
 ```
   'input' => [
       'colors.less',
@@ -150,20 +153,21 @@ Cooker comes with a great controller function you can use in blade files or in c
 
 To use the helper simply include it like so:
 ```
-{!! cooker_resource('app.css') !!}
-{!! cooker_resource('app.js') !!}
+{!! @cooker('app.css') !!}
+{!! @cooker('app.js') !!}
 ```
 You can substitute `app.css` and `app.js` for the cooked filename.
 
 ### The Cooker Toolbelt
-Starting with Cooker 5, Cooker by default includes a small Javascript file that is loaded and locked on page boot. The object is located at `window.cookerToolbelt` and contains the following tools at this point in time:
+By default, Cooker includes a small Javascript file that is loaded and locked on page boot. The object is located at `window.cookerToolbelt` and contains the following tools at this point in time:
 * `cookerToolbelt.version` returns the current toolbelt version
 * `cookerToolbelt.isProd` returns a boolean of if the javascript file was built using Production mode
+* `cookerToolbelt.autoRunIntelliPath` returns a boolean of if intelliPath can run
 * `cookerToolbelt.cookerVersion` returns the current cooker version
-More options are coming soon to this toolbelt to aide development.
+* `cookerToolbelt.namespace` returns a string of the javascript namespace as defined in the oven
 
 ### Speedy Cook
-Starting with Cooker 5, Cooker can now quickly build large libraries based on what needs to be changed. For example if you have 10 ovens but only made changes to a file in Oven 4, Oven 4 will be built whilst the others are skipped. We call this process Speedy Cooking. You can turn it off if you'd like to by heading to `config/cooker.php` and setting the `canSpeedyCook` boolean to `false`
+Cooker can quickly build large libraries based on what needs to be changed. For example if you have 10 ovens but only made changes to a file in Oven 4, Oven 4 will be built whilst the others are skipped. We call this process Speedy Cooking. You can turn it off if you'd like to by heading to `config/cooker.php` and setting the `canSpeedyCook` boolean to `false`
 
 ### Getting started with Preloads
 Preloads offer a great way of getting files from remote URLs or local URLs into your project. This could be useful if you had a file on a CDN you wanted to import to your project without the risk of depending on a remote URL going down and pulling your site with you. To get started head to `config/cooker.php` and consult the Oven array of your choosing.
@@ -185,15 +189,8 @@ It's worth noting as well, that these values can be remote url's or local files.
 
 ### Adding packages to Cooker
 
-Starting with Cooker 6, You can now use a NPM repository such as `unpkg` or `jsdelivr` to really quickly get files into your project. Right now we only support downloading the most up-to-date version of this environment with the default file being referenced. And whilst we will compress it for you on production, this may not be a specific production build. This will be updated in a 6.x update soon.
+Cooker can use a NPM repository such as `unpkg` or `jsdelivr` to really quickly get files into your project. Right now we only support downloading the most up-to-date version of this environment with the default file being referenced. And whilst we will compress it for you on production, this may not be a specific production build.
 
-If you are upgrading from an older version of Cooker, You need to ensure you have a `cooker.json` file in the root of your project file as follows:
-```
-{
-    "packages": {
-    }
-}
-```
 You will also need to add the following to your `.gitignore` file:
 ```
 cooker_packages
@@ -213,7 +210,7 @@ php artisan cooker:install jquery
 Please substitute `jquery` as needed for different packages. Cooker will then download jQuery from NPM and deploy it in the `cooker_packages` folder. You will be then asked to run a cook job to mix jQuery into your application. 
 
 ### Building your own Oven
-Starting with Cooker 4, You can extend Cooker to process any input you give it! It could be something to meet your own needs more than the default Less or Scss compiler offers, Or if you want to do something that isn't supported out of the box, maybe something such as Styl etc you can do that by creating your own ovens. 
+You can extend Cooker to process any input you give it! It could be something to meet your own needs more than the default Less or Scss compiler offers, Or if you want to do something that isn't supported out of the box, maybe something such as Styl etc you can do that by creating your own ovens. 
 
 Ovens are simply controllers that process the given input files from the job array handed to it. Simply create a controller with a `public static function` of `cook` which accepts a `$job` parameter to get started.
 

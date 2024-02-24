@@ -13,9 +13,7 @@
         {
             $this->setupConfig(); // Load config
             $this->setupBladeDirectives(); // Setup blade directives
- 
-            
-            
+             
             if ($this->app->runningInConsole()) {
                 $this->commands([
                     Commands\Cook::class,

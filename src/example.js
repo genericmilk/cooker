@@ -1,5 +1,6 @@
 var app = {
     _cookerPath: [
+        '/',
         '/about',
         '/about/team',
         '/about/team/*',

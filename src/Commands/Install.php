@@ -128,7 +128,6 @@ class Install extends Command
             return;
         }
         
-
         // Get the latest version
         $latestVersion = $responseArray['dist-tags']['latest'];
 

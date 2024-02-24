@@ -69,7 +69,28 @@ return [
     |
     */
     'autoRunIntelliPath' => env('COOKER_AUTO_RUN_INTELLI_PATH', true),
-    
+
+    /*
+    |--------------------------------------------------------------------------
+    | Frameworks
+    |--------------------------------------------------------------------------
+    |
+    | A list of frameworks used in all javascript files. The currently
+    | supported values are 'vue', 'react', 'angular', 'jquery', 'tailwind'
+    |
+    */
+    'frameworks' => [],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Ovens
+    |--------------------------------------------------------------------------
+    |
+    | The main settings for the ovens. Each oven is an array with the following
+    | settings: cooker, preload, input, output, name, stamped, toolbelt
+    | For more information on each setting, see the documentation
+    |
+    */
     'ovens' => [
         [
             'cooker' => 'Genericmilk\Cooker\Ovens\Less',
@@ -125,5 +146,6 @@ return [
             'stamped' => true,
             'toolbelt' => true
         ]
-    ]   
+    ]
+
 ];

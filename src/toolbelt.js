@@ -5,8 +5,11 @@ const cookerToolbelt = {
     cookerVersion: "__cookerVersion__",
     namespace: "__namespace__",
     boot(){
-        this.alertUpgradeGuide();
-        this.intelliPath();
+        var self = this;
+        self.alertUpgradeGuide();
+        if(self.autoRunIntelliPath){
+            self.intelliPath();
+        }
     },
     alertUpgradeGuide(){
         // count the number of meta[name=missing tags]
@@ -66,8 +69,6 @@ const cookerToolbelt = {
                 });
             }
         });
-
-        
     }
 };
 Object.freeze(cookerToolbelt); /*read only*/

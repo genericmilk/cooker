@@ -86,7 +86,7 @@ class Init extends Command
 		
 		$frontendJs = select(
 			label: 'What JS framework do you want to use with Cooker?',
-			options: ['Vue', 'React', 'Angular','Vanilla JS'],
+			options: ['Vue', 'React', 'Angular','jQuery','Vanilla JS'],
 			default: 'Vue',
 			hint: 'You can change your mind later in the Cooker config file 🤓'
 		);
@@ -252,15 +252,12 @@ class Init extends Command
 		$newEngine = "Genericmilk\Cooker\Ovens\\".ucfirst(strtolower($engine));
 		$config = str_replace("'cooker' => 'Genericmilk\Cooker\Ovens\Less'", "'cooker' => '".$newEngine."'", $config);
 
+		$frameworks = [];
+
 		$frontendCss = $frontendCss == 'No thanks' ? null : $frontendCss;
 		if($frontendCss!=null){
 			if($frontendCss=='Tailwind'){
-				// prep to add tailwind
-				$this->call('cooker:install', [
-					'package' => 'tailwindcss',
-					'--silent' => true,
-					'--skipsetup' => true
-				]);
+				$frameworks[] = 'tailwind';
 			}
 		}
 
@@ -268,25 +265,18 @@ class Init extends Command
 		if($frontendJs!=null){
 			// prep to add frontend js
 			if($frontendJs=='Vue'){
-				$this->call('cooker:install', [
-					'package' => 'vue',
-					'--silent' => true,
-					'--skipsetup' => true
-				]);
+				$frameworks[] = 'vue';
 			}else if($frontendJs=='React'){
-				$this->call('cooker:install', [
-					'package' => 'react',
-					'--silent' => true,
-					'--skipsetup' => true
-				]);
+				$frameworks[] = 'react';
 			}else if($frontendJs=='Angular'){
-				$this->call('cooker:install',[
-					'package' => '@angular/core',
-					'--silent' => true,
-					'--skipsetup' => true
-				]);
+				$frameworks[] = 'angular';
+			}else if($frontendJs=='jQuery'){
+				$frameworks[] = 'jquery';
 			}
 		}
+
+		// add the frameworks to $config. Include quotes
+		$config = str_replace("'frameworks' => [],","'frameworks' => ['".implode("','",$frameworks)."'],",$config);
 
 		// write the config
 		file_put_contents(config_path('cooker.php'),$config);
