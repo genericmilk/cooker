@@ -174,7 +174,7 @@ Cooker compiles resource when the `php artisan cook` command is run. This can be
 
 ***
 
-### The Cooker helper
+## The @cooker helper
 Cooker comes with a great controller function you can use in blade files or in controllers! It will return a HTML element pointing the browser to the path of the cooked file along with a string to help the browser with the cache. When the application is running in `app.debug=false` a unix timestamp will be added to the end of the url that is requested. When the opposite is in effect a MD5 hash of the built file will be specified instead.
 
 To use the helper simply include it like so:
@@ -184,7 +184,7 @@ To use the helper simply include it like so:
 ```
 You can substitute `app.css` and `app.js` for the cooked filename.
 
-### The Cooker Toolbelt
+## Cooker Toolbelt
 By default, Cooker includes a small Javascript file that is loaded and locked on page boot. The object is located at `window.cookerToolbelt` and contains the following tools at this point in time:
 * `cookerToolbelt.version` returns the current toolbelt version
 * `cookerToolbelt.isProd` returns a boolean of if the javascript file was built using Production mode
