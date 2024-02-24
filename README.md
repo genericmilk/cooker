@@ -292,9 +292,6 @@ var app = {
 ```
 This'll fire an alert with `Hello from other file` as the function is executed inside `app.anotherObject.boot()`
 
-## Cooked file compression
-If your Laravel application is running in `config.debug=true` mode, any cooked files will retain their original formatting. If you are running in `config.debug=false` mode then all scripts except for javascript and css libraries will be minified to reduce load times
-
 ## Requirements for using Cooker
 Cooker is happiest on:
 * Laravel 10
