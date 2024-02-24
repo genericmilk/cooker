@@ -30,10 +30,10 @@ Cooker is the easy to use frontend compiler by <a href="https://github.com/gener
         <a href="#setting-up-ovens">Setting up Ovens</a>
       </li>
       <li>
-        <a href="#">Installing packages</a>
+        <a href="#installing-packages">Installing packages</a>
       </li>
       <li>
-        <a href="#">Compiling resources</a>
+        <a href="#compiling-resources">Compiling resources</a>
       </li>
     </ul>
   </li>
@@ -41,7 +41,7 @@ Cooker is the easy to use frontend compiler by <a href="https://github.com/gener
     Features and helpers
     <ul>
       <li>
-        <a href="#">The @cooker helper</a>
+        <a href="#the-cooker-helper">The @cooker helper</a>
       </li>
       <li>
         <a href="#">Cooker Toolbelt</a>
