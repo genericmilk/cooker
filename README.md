@@ -44,10 +44,10 @@ Cooker is the easy to use frontend compiler by <a href="https://github.com/gener
         <a href="#the-cooker-helper">The @cooker helper</a>
       </li>
       <li>
-        <a href="#">Cooker Toolbelt</a>
+        <a href="#cooker-toolbelt">Cooker Toolbelt</a>
       </li>
       <li>
-        <a href="#">SpeedyCook</a>
+        <a href="#speedy-cook">SpeedyCook</a>
       </li>
       <li>
         <a href="#">Development and Production mode</a>
@@ -194,6 +194,11 @@ By default, Cooker includes a small Javascript file that is loaded and locked on
 
 ## Speedy Cook
 Cooker can quickly build large libraries based on what needs to be changed. For example if you have 10 ovens but only made changes to a file in Oven 4, Oven 4 will be built whilst the others are skipped. We call this process Speedy Cooking. You can turn it off if you'd like to by heading to `config/cooker.php` and setting the `canSpeedyCook` boolean to `false`
+
+## Development and Production mode
+Cooker will automatically compress both `css` and `js` depending on the value of `config('app.debug')`. You can override this setting by running `php artisan cook` with `--dev` and `--prod` switches respectively
+
+***
 
 ## Getting started with Preloads
 Preloads offer a great way of getting files from remote URLs or local URLs into your project. This could be useful if you had a file on a CDN you wanted to import to your project without the risk of depending on a remote URL going down and pulling your site with you. To get started head to `config/cooker.php` and consult the Oven array of your choosing.
