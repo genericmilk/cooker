@@ -33,41 +33,44 @@ const cookerToolbelt = {
 
         // go through rootScriptObjects and check for a _cookerPaths property
         rootScriptObjects.forEach(function(element){
-            if(rootScript[element]._cookerPaths){
-                // if it exists, add the paths to the window object
-
-                let paths = rootScript[element]._cookerPaths;
-                let currentPagePath = window.location.pathname;
-
-                // go round each of the paths in a loop
-                paths.forEach(function(path){
-                    
-                    // does this path have a wildcard (*) in it?
-                    if(path.includes('*')){
-                        // everything before * is a static path
-                        let staticPath = path.split('*')[0];
-                        // does the current page path start with the static path?
-                        if(currentPagePath.startsWith(staticPath)){
-                            try{
-                                window[parent.namespace][element].boot();
-                            }catch(e){
-                                console.error('Cooker: A _cookerPath was found, but the boot method could not be called. Please check your script features at least a boot method. (1)');
+            if(element=='_cookerPath'){
+                if(rootScript[element]._cookerPath){
+                    // if it exists, add the paths to the window object
+    
+                    let paths = rootScript[element]._cookerPaths;
+                    let currentPagePath = window.location.pathname;
+    
+                    // go round each of the paths in a loop
+                    paths.forEach(function(path){
+                        
+                        // does this path have a wildcard (*) in it?
+                        if(path.includes('*')){
+                            // everything before * is a static path
+                            let staticPath = path.split('*')[0];
+                            // does the current page path start with the static path?
+                            if(currentPagePath.startsWith(staticPath)){
+                                try{
+                                    window[parent.namespace][element].boot();
+                                }catch(e){
+                                    console.error('Cooker: A _cookerPath was found, but the boot method could not be called. Please check your script features at least a boot method. (1)');
+                                }
+    
                             }
-
-                        }
-                    }else{
-                        // doing a straight comparison
-                        if(currentPagePath == path){
-                            try{
-                                window[parent.namespace][element].boot();
-                            }catch(e){
-                                console.error('Cooker: A _cookerPath was found, but the boot method could not be called. Please check your script features at least a boot method. (2)');
+                        }else{
+                            // doing a straight comparison
+                            if(currentPagePath == path){
+                                try{
+                                    window[parent.namespace][element].boot();
+                                }catch(e){
+                                    console.error('Cooker: A _cookerPath was found, but the boot method could not be called. Please check your script features at least a boot method. (2)');
+                                }
                             }
                         }
-                    }
-
-                });
+    
+                    });
+                }
             }
+
         });
     }
 };
