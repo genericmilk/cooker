@@ -2,7 +2,7 @@
 	<img src="cooker-full.png" width="200" />	
 </p>
 <h1 align="center">
-	Cooker v7.0.1
+	Cooker v7.0.2
 </h1>
 <p>
 Cooker is the easy to use frontend compiler by <a href="https://github.com/genericmilk">genericmilk</a> that is designed to sit tightly within Laravel and offer a robust, fast and beginner friendly starting block for building your web applications
