@@ -24,7 +24,7 @@ const cookerToolbelt = {
     },
     intelliPath(){
         var parent = this;
-        let rootScript = window[this.namespace];
+        let rootScript = __namespace__;
         
         // filter rootScript to objects only
         let rootScriptObjects = Object.keys(rootScript).filter(function(key) {
