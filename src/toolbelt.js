@@ -31,18 +31,23 @@ const cookerToolbelt = {
             return typeof rootScript[key] === 'object';
         });
 
+
         // go through rootScriptObjects and check for a _cookerPaths property
-        rootScriptObjects.forEach(function(element){
-            if(element=='_cookerPath'){
-                if(rootScript[element]._cookerPath){
-                    // if it exists, add the paths to the window object
-    
-                    let paths = rootScript[element]._cookerPaths;
+        rootScriptObjects.forEach(function(rootElement){
+
+            // look for objects in this element
+            let subObjects = Object.keys(rootScript[rootElement]).filter(function(key) {
+                return typeof rootScript[rootElement][key] === 'object';
+            });
+
+            subObjects.forEach(function(element){
+                if(element=='_cookerPath'){
+
+                    let paths = rootScript[rootElement][element];
                     let currentPagePath = window.location.pathname;
     
                     // go round each of the paths in a loop
                     paths.forEach(function(path){
-                        
                         // does this path have a wildcard (*) in it?
                         if(path.includes('*')){
                             // everything before * is a static path
@@ -50,7 +55,7 @@ const cookerToolbelt = {
                             // does the current page path start with the static path?
                             if(currentPagePath.startsWith(staticPath)){
                                 try{
-                                    window[parent.namespace][element].boot();
+                                    rootScript[rootElement].boot();
                                 }catch(e){
                                     console.error('Cooker: A _cookerPath was found, but the boot method could not be called. Please check your script features at least a boot method. (1)');
                                 }
@@ -60,7 +65,7 @@ const cookerToolbelt = {
                             // doing a straight comparison
                             if(currentPagePath == path){
                                 try{
-                                    window[parent.namespace][element].boot();
+                                    rootScript[rootElement].boot();
                                 }catch(e){
                                     console.error('Cooker: A _cookerPath was found, but the boot method could not be called. Please check your script features at least a boot method. (2)');
                                 }
@@ -68,8 +73,11 @@ const cookerToolbelt = {
                         }
     
                     });
+                    
                 }
-            }
+            });
+
+            
 
         });
     }
