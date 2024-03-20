@@ -67,11 +67,28 @@
                 $ext = pathinfo($file, PATHINFO_EXTENSION);
             
                 if($ext=='css'){
-                    return '<link href="'.$url.'" rel="stylesheet">';
+
+                    return '<?php echo "<link href=\"/build/'.$file.'?build="; 
+                    echo config(\'app.debug\') ? time() : md5(file_get_contents(public_path(\'build/\'.$file))); 
+                    echo "\" rel=\"stylesheet\">"; ?>';
+
                 }elseif($ext=='js'){
-                    return '<script src="'.$url.'" type="'.($isModule ? 'module' : 'text/javascript' ).'"></script>';
-                }else{
+
+                    if($isModule){
+                        return '<?php echo "<script src=\"/build/'.$file.'?build="; 
+                        echo config(\'app.debug\') ? time() : md5(file_get_contents(public_path(\'build/\'.$file))); 
+                        echo "\" type=\"module\"></script>"; ?>';                            
+                    }else{
+                        return '<?php echo "<script src=\"/build/'.$file.'?build="; 
+                        echo config(\'app.debug\') ? time() : md5(file_get_contents(public_path(\'build/\'.$file))); 
+                        echo "\" type=\"text/javascript\"></script>"; ?>';
+                    }
+
                 }
+
+
+
+
             });
         }
 
