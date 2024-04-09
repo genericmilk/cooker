@@ -69,18 +69,18 @@
                 if($ext=='css'){
 
                     return '<?php echo "<link href=\"/build/'.$file.'?build="; 
-                    echo config(\'app.debug\') ? time() : md5(file_get_contents(public_path(\'build/\'.$file))); 
+                    echo config(\'app.debug\') ? time() : \'prod\'; 
                     echo "\" rel=\"stylesheet\">"; ?>';
 
                 }elseif($ext=='js'){
 
                     if($isModule){
                         return '<?php echo "<script src=\"/build/'.$file.'?build="; 
-                        echo config(\'app.debug\') ? time() : md5(file_get_contents(public_path(\'build/\'.$file))); 
+                        echo config(\'app.debug\') ? time() : \'prod\'; 
                         echo "\" type=\"module\"></script>"; ?>';                            
                     }else{
                         return '<?php echo "<script src=\"/build/'.$file.'?build="; 
-                        echo config(\'app.debug\') ? time() : md5(file_get_contents(public_path(\'build/\'.$file))); 
+                        echo config(\'app.debug\') ? time() : \'prod\'; 
                         echo "\" type=\"text/javascript\"></script>"; ?>';
                     }
 
