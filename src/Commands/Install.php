@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Http;
 
 use Exception;
 use stdClass;
+use Throwable;
 
 // Cooker subsystems
 use Genericmilk\Cooker\Preloads;
@@ -187,7 +188,12 @@ class Install extends Command
         if(!$this->option('silent')){
             $this->line('👩‍🔧 Parsing script...');
         }
-        $script = Js::compress($script->body());
+        try{
+            $script = Js::compress($script->body());
+        }catch(Throwable $e){
+            $script = $script->body();
+        }
+
         
         if(!$this->option('silent')){
             $this->line('📄 Writing to cooker.json...');
