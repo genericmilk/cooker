@@ -24,7 +24,12 @@
             }
         }
         public function register()
-        {            
+        {           
+            // Engine
+            $this->app->singleton('Genericmilk\Cooker\Engine', function ($app) {
+                return new Engine();
+            });
+
             // Default Cookers
             $this->app->make('Genericmilk\Cooker\Ovens\Js');
             $this->app->make('Genericmilk\Cooker\Ovens\Less');
