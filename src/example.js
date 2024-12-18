@@ -1,12 +1,9 @@
-var app = {
-    _cookerPath: [
-        '/',
-        '/about',
-        '/about/team',
-        '/about/team/*',
-    ],
-    message: 'Cooker is running!',
-    boot(){
-        console.log(this.message);
+import cooker from '@/cooker'
+
+class Application {
+    constructor() {
+        this.name = 'Cooker';
+        console.log(this.name + ' is running' );
+        console.log(cooker.version);
     }
 };

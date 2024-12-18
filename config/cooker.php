@@ -9,7 +9,6 @@
  */
 return [
 
-    
     /*
     |--------------------------------------------------------------------------
     | Ovens
@@ -44,8 +43,6 @@ return [
                 'app.less'
             ],
             'output' => 'app.css',
-            'name' => 'Example Css',
-            'stamped' => true
         ],
         [
             'cooker' => 'Genericmilk\Cooker\Ovens\Js',
@@ -69,11 +66,8 @@ return [
             'input' => [
                 'app.js'
             ],
-            'namespace' => 'app',
+            'startupClass' => 'Application', 
             'output' => 'app.js',
-            'name' => 'Example Javascript',
-            'stamped' => true,
-            'toolbelt' => true
         ]
     ]
 
