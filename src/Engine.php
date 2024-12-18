@@ -6,9 +6,9 @@ use App\Http\Controllers\Controller;
 class Engine extends Controller
 {
     
-    public function render()
+    public function render($file)
     {
-        
+        return $file;
     }
 
 }

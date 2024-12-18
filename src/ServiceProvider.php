@@ -11,12 +11,12 @@
         {
             $this->setupConfig(); // Load config
             $this->setupBladeDirectives(); // Setup blade directives
+            $this->routes(); // Load routes
              
             if ($this->app->runningInConsole()) {
                 $this->commands([
                     Commands\Cook::class,
                     Commands\Init::class,
-                    Commands\Watch::class,
                     Commands\Install::class
                 ]);
             }
@@ -24,9 +24,11 @@
         public function register()
         {           
             // Engine
+            /*
             $this->app->singleton('Genericmilk\Cooker\Engine', function ($app) {
                 return new Engine();
             });
+            */
 
             // Default Cookers
             $this->app->make('Genericmilk\Cooker\Ovens\Js');
@@ -51,12 +53,20 @@
             $this->publishes([$configPath => config_path('cooker.php')], 'config');
         }
 
+        protected function routes()
+        {
+            if ($this->app->routesAreCached()) {
+                return;
+            }
+            require __DIR__.'/../routes/web.php';
+        }
+
         protected function setupBladeDirectives(){
             Blade::directive('cooker', function ($file) {
 
                 // tidy up quotes from file
                 $file = str_replace("'", "", $file);
-                
+                $ext = pathinfo($file, PATHINFO_EXTENSION);
                 $url = '/__cooker/'.$file;
             
                 if($ext=='css'){
