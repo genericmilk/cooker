@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 
-Route::prefix('cooker-resources')->group(function () {
+Route::prefix('__cooker')->group(function () {
     Route::get('/', function () {
         return 'Hello from the Cooker package!';
     });

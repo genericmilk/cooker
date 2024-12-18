@@ -69,6 +69,12 @@ return [
             'startupClass' => 'Application', 
             'output' => 'app.js',
         ]
-    ]
+    ],
+
+    'hot_reload' => [
+        'enabled' => true,
+        'port' => 3000,
+        'host' => 'localhost'
+    ],
 
 ];
