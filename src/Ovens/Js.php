@@ -23,7 +23,7 @@ class Js extends Controller
 
     }
 
-    public function render()
+    public function render(): string
     {
         $output = ''; 
         foreach($this->parse as $input){
@@ -39,7 +39,8 @@ class Js extends Controller
         return $output;
     }
 
-    public function compress($input){
+    private function compress($input): string
+    {
         $min = Minifier::minify($input,['flaggedComments' => false]);
         $min = trim(preg_replace('/\s+/', ' ', $min));
         return $min;

@@ -15,7 +15,6 @@
              
             if ($this->app->runningInConsole()) {
                 $this->commands([
-                    Commands\Cook::class,
                     Commands\Init::class,
                     Commands\Install::class
                 ]);

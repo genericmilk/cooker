@@ -6,9 +6,37 @@ use App\Http\Controllers\Controller;
 
 class Css extends Controller
 {
-	public $format = 'css';
-    public $directory = 'css';
-    
+	
+    protected $preload;
+    protected $parse;
+    protected $startupClass;
+
+    public function __construct($oven)
+    {
+        $components = (object)$oven->components;
+
+        $this->preload = $components?->preload ?? [];
+        $this->parse = $components?->parse ?? [];
+        $this->startupClass = $components?->startupClass;
+
+    }
+
+    public function render()
+    {
+        $output = ''; 
+        foreach($this->parse as $input){
+            $output .= file_get_contents($input).PHP_EOL;
+        }
+
+        if($this->startupClass){
+            $output .= 'new '.$this->startupClass.'();';
+        }
+
+        $output = $this->compress($output);
+
+        return $output;
+    }
+
     public static function cook($job){
         $p = ''; 
         foreach($job['input'] as $input){
