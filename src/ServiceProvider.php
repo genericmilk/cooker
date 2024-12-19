@@ -31,9 +31,11 @@
             */
 
             // Default Cookers
+            /*
             $this->app->make('Genericmilk\Cooker\Ovens\Js');
             $this->app->make('Genericmilk\Cooker\Ovens\Less');
             $this->app->make('Genericmilk\Cooker\Ovens\Scss');  
+            */
         }
 
         protected function setupConfig(){

@@ -7,13 +7,19 @@ use App\Http\Controllers\Controller;
 use JShrink\Minifier;
 
 class Js extends Controller
-{
-    public $format = 'js';
-    public $directory = 'js';
-    
-    public static function render($job){
+{    
+    public function __construct($oven)
+    {
+        $components = (object)$oven->components;
+
+        $preload = $components?->preload ?? [];
+        $parse = $components?->parse ?? [];
+        $startupClass = $components?->startupClass;
+
+        dd($oven);
+
         $p = ''; 
-        foreach($job['input'] as $input){
+        foreach($parse as $input){
             $p .= Js::lastLineFormat(file_get_contents(resource_path('js/'.$input)));
         }
         return $p;

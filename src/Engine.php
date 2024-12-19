@@ -51,7 +51,13 @@ class Engine extends Controller
             return response('Oven not found', 404);
         }
 
+        // set the oven mime type
         $oven->mime = $mimes[$type];
+
+        // update the paths to be full paths
+        $oven->components['parse'] = array_map(function($file){
+            return $this->baseFolder.'/'.$file;
+        }, $oven->components['parse']);
 
         // build a fresh hash array of all the files
         $hashes = $this->hashes($oven);
@@ -83,8 +89,7 @@ class Engine extends Controller
         $hashes = [];
 
         foreach($oven->components['parse'] as $file){
-            $fileToHash = $this->baseFolder.'/'.$file;
-            $hashes[$file] = md5_file($fileToHash);
+            $hashes[$file] = md5_file($file);
         }
 
         return $hashes;
