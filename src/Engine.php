@@ -3,6 +3,8 @@
 namespace Genericmilk\Cooker;
 use App\Http\Controllers\Controller;
 
+use Illuminate\Http\Response;
+
 use Genericmilk\Cooker\Ovens\Js;
 use Genericmilk\Cooker\Ovens\Less;
 use Genericmilk\Cooker\Ovens\Scss;
@@ -14,7 +16,7 @@ class Engine extends Controller
 
     protected $baseFolder;
     
-    public function render($file)
+    public function render($file): Response
     {
         $type = pathinfo($file, PATHINFO_EXTENSION);
 
@@ -67,24 +69,28 @@ class Engine extends Controller
 
         if(json_encode($hashes) == json_encode($existingHashes) && file_exists(base_path('.cooker/cache/'.$file))){
             // outputting the cache
+            $render = file_get_contents(base_path('.cooker/cache/'.$file));
         }else{
             
-            // rebuild the cache
-            $render = new $classes[$type]($oven);
+            // setup the renderer
+            $renderer = new $classes[$type]($oven);
             
-            // output the render and the hashes
-            file_put_contents(base_path('.cooker/cache/'.$file), $render->render());
-            file_put_contents(base_path('.cooker/cache/'.$file.'.json'), json_encode($hashes));
+            $render = $renderer->render();
 
+            // output the render and the hashes
+            file_put_contents(base_path('.cooker/cache/'.$file), $render);
+            file_put_contents(base_path('.cooker/cache/'.$file.'.json'), json_encode($hashes));
+            
+            $render = (string)$render;
         }
 
-        return response($render->render(), 200, [
+        return response($render, 200, [
             'Content-Type' => $oven->mime
         ]);
 
     }
 
-    private function hashes($oven)
+    private function hashes($oven): array
     {
         $hashes = [];
 
@@ -95,7 +101,7 @@ class Engine extends Controller
         return $hashes;
     }
 
-    private function existingHashes($oven)
+    private function existingHashes($oven): array
     {
         $hashFile = base_path('.cooker/cache/'.$oven->file.'.json');
         if(file_exists($hashFile)){
