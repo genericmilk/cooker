@@ -11,7 +11,7 @@ class Js extends Controller
     public $format = 'js';
     public $directory = 'js';
     
-    public static function cook($job){
+    public static function render($job){
         $p = ''; 
         foreach($job['input'] as $input){
             $p .= Js::lastLineFormat(file_get_contents(resource_path('js/'.$input)));

@@ -18,7 +18,25 @@ class Engine extends Controller
     {
         $type = pathinfo($file, PATHINFO_EXTENSION);
 
-        $this->baseFolder = base_path('resources/'.$type);
+        $mimes = [
+            'js' => 'application/javascript',
+            'less' => 'text/css',
+            'scss' => 'text/css',
+            'css' => 'text/css'
+        ];
+
+        $classes = [
+            'js' => Js::class,
+            'less' => Less::class,
+            'scss' => Scss::class,
+            'css' => Css::class
+        ];
+
+        if(!array_key_exists($type, $mimes)){
+            return response('Invalid file type', 404);
+        }
+
+        $this->baseFolder = resource_path($type);
 
 
         if(!file_exists($this->baseFolder)){
@@ -33,21 +51,31 @@ class Engine extends Controller
             return response('Oven not found', 404);
         }
 
+        $oven->mime = $mimes[$type];
+
         // build a fresh hash array of all the files
         $hashes = $this->hashes($oven);
 
         // get the current existing hash array
         $existingHashes = $this->existingHashes($oven);
 
-        if(json_encode($hashes) == json_encode($existingHashes)){
+        if(json_encode($hashes) == json_encode($existingHashes) && file_exists(base_path('.cooker/cache/'.$file))){
             // outputting the cache
-            dd('cache');
         }else{
+            
             // rebuild the cache
-            dd('rebuild');
+            $render = new $classes[$type]($oven);
+            
+            // output the render and the hashes
+            file_put_contents(base_path('.cooker/cache/'.$file), $render->render());
+            file_put_contents(base_path('.cooker/cache/'.$file.'.json'), json_encode($hashes));
+
         }
 
-        dd($hashes);
+        return response($render->render(), 200, [
+            'Content-Type' => $oven->mime
+        ]);
+
     }
 
     private function hashes($oven)

@@ -68,11 +68,24 @@
                 $file = str_replace("'", "", $file);
                 $ext = pathinfo($file, PATHINFO_EXTENSION);
                 $url = '/__cooker/'.$file;
+
+                $mimes = [
+                    'js' => 'application/javascript',
+                    'less' => 'text/css',
+                    'scss' => 'text/css',
+                    'css' => 'text/css'
+                ];
+
+                if(!array_key_exists($ext, $mimes)){
+                    return '<invalid cooker file="'.$file.'">';
+                }
+
+                $mime = $mimes[$ext];
             
-                if($ext=='css'){
+                if($mime=='text/css'){
                     return "<link cooker href=\"".$url."\" rel=\"stylesheet\">";
 
-                }elseif($ext=='js'){
+                }elseif($mime=='application/javascript'){
                     return "<script cooker src=\"".$url."\" type=\"module\"></script>";
                 }
 
