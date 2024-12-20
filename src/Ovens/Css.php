@@ -9,7 +9,6 @@ class Css extends Controller
 	
     protected $preload;
     protected $parse;
-    protected $startupClass;
 
     public function __construct($oven)
     {
@@ -17,7 +16,6 @@ class Css extends Controller
 
         $this->preload = $components?->preload ?? [];
         $this->parse = $components?->parse ?? [];
-        $this->startupClass = $components?->startupClass;
 
     }
 

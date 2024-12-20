@@ -19,8 +19,7 @@ class Js extends Controller
 
         $this->preload = $components?->preload ?? [];
         $this->parse = $components?->parse ?? [];
-        $this->startupClass = $components?->startupClass;
-
+        $this->startupClass = isset($components?->startupClass) ? $components?->startupClass : null;
     }
 
     public function render(): string
