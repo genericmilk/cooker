@@ -4,10 +4,11 @@ namespace Genericmilk\Cooker\Ovens;
 
 use App\Http\Controllers\Controller;
 
-use JShrink\Minifier;
 use Peast\Peast;
 use Peast\Renderer;
 use Peast\Formatter\PrettyPrint;
+use Peast\Formatter\Compact;
+
 
 class Js extends Controller
 {    
@@ -32,7 +33,6 @@ class Js extends Controller
         foreach($this->parse as $input){
             $output .= file_get_contents($input).PHP_EOL;
         }
-
         
         if($this->startupClass){
             $output .= 'new '.$this->startupClass.'();';
@@ -41,23 +41,15 @@ class Js extends Controller
         $ast = Peast::latest($output, [
             'sourceType' => Peast::SOURCE_TYPE_MODULE
         ])->parse();
-        //dd($output);
 
+        
+        
         $renderer = new Renderer;
-        $renderer->setFormatter(new PrettyPrint);
+        $renderer->setFormatter(new Compact);
         $output = $renderer->render($ast);
-
-
-        //$output = $this->compress($output);
 
         return $output;
     }
 
 
-    private function compress($output): string
-    {
-        $min = Minifier::minify($output,['flaggedComments' => false]);
-        $min = trim(preg_replace('/\s+/', ' ', $min));
-        return $min;
-    }
 }
