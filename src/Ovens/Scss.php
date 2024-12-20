@@ -8,15 +8,38 @@ use ScssPhp\ScssPhp\Compiler;
 
 class Scss extends Controller
 {
-    public $format = 'css';
-    public $directory = 'scss';
-    
-    public static function cook($job){
-        $scss = new Compiler();
-        $o = '';
-        foreach($job['input'] as $input){
-            $o .= $scss->compile(file_get_contents(resource_path('scss/'.$input)));
-        }
-        return $o;
+    protected $preload;
+    protected $parse;
+
+    public function __construct($oven)
+    {
+        $components = (object)$oven->components;
+
+        $this->preload = $components?->preload ?? [];
+        $this->parse = $components?->parse ?? [];
+
     }
+
+    public function render(): string
+    {
+        $scss = new Compiler();
+        $output = '';
+        foreach($this->parse as $input){
+            $output .= $scss->compile(file_get_contents(resource_path('scss/'.$input))).PHP_EOL;
+
+        }
+
+        $output = $this->compress($output);
+
+        return $output;
+    }
+
+    private function compress($input){
+        $input = preg_replace('/\/\*((?!\*\/).)*\*\//','',$input); // negative look ahead
+        $input = preg_replace('/\s{2,}/',' ',$input);
+        $input = preg_replace('/\s*([:;{}])\s*/','$1',$input);
+        $input = preg_replace('/;}/','}',$input);		
+        return $input;
+    }
+
 }

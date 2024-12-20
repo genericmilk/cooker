@@ -25,7 +25,12 @@ class Less extends Controller
         foreach($this->parse as $input){
             $p->parseFile($input);
         }
-        return $p->getCss();
+
+        $output = $p->getCss();
+
+        $output = $this->compress($output);
+
+        return $output;
     }
 
     private function compress($input): string
