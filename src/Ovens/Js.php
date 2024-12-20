@@ -42,7 +42,13 @@ class Js extends Controller
             'sourceType' => Peast::SOURCE_TYPE_MODULE
         ])->parse();
 
-        
+        // find ImportDeclaration nodes
+        $ast->traverse(function($node) {
+            if ($node->getType() === 'ImportDeclaration') {
+                $node->getSource()->setValue('/__cooker/imports/' . $node->getSource()->getValue());
+            }
+        });
+
         
         $renderer = new Renderer;
         $renderer->setFormatter(new Compact);
