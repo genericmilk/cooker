@@ -90,6 +90,14 @@ class Engine extends Controller
 
     }
 
+    public function import($file): Response
+    {
+        $fileLoc = base_path('.cooker/imports/'.$file.'.js');
+        return response(file_get_contents($fileLoc), 200, [
+            'Content-Type' => 'application/javascript'
+        ]);
+    }
+
     private function hashes($oven): array
     {
         $hashes = [];

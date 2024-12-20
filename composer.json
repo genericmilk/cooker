@@ -16,7 +16,8 @@
         "scssphp/scssphp": "^1.2",
         "guzzlehttp/guzzle": "^7.5.0",
         "tedivm/jshrink": "^1.6",
-        "laravel/prompts": "^0.1.15"
+        "laravel/prompts": "^0.1.15",
+        "mck89/peast": "^1.16"
     },
     "autoload": {
         "psr-4": {
