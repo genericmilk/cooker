@@ -19,7 +19,8 @@ class Js extends Controller
 
         $this->preload = $components?->preload ?? [];
         $this->parse = $components?->parse ?? [];
-        $this->startupClass = isset($components?->startupClass) ? $components?->startupClass : null;
+        $this->startupClass = $components?->startupClass;
+
     }
 
     public function render(): string
@@ -29,6 +30,8 @@ class Js extends Controller
             $output .= file_get_contents($input).PHP_EOL;
         }
 
+        $output = $this->processImports($output);
+        
         if($this->startupClass){
             $output .= 'new '.$this->startupClass.'();';
         }
@@ -38,9 +41,30 @@ class Js extends Controller
         return $output;
     }
 
-    private function compress($input): string
+    private function processImports($output): string
     {
-        $min = Minifier::minify($input,['flaggedComments' => false]);
+        $pattern = '/import([ \n\t]*(?:[^ \n\t\{\}]+[ \n\t]*,?)?(?:[ \n\t]*\{(?:[ \n\t]*[^ \n\t"\'\{\}]+[ \n\t]*,?)+\})?[ \n\t]*)from[ \n\t]*([\'"])([^\'"\n]+)(?:[\'"])/';
+
+        $output = preg_replace_callback($pattern, function($matches){
+            $path = $matches[3];
+            $path = str_replace('.js', '', $path);
+            $path = str_replace('./', '', $path);
+            $path = str_replace('../', '', $path);
+            $path = str_replace('/', '.', $path);
+            $path = str_replace('\\', '.', $path);
+            $path = str_replace('@.', '', $path);
+
+            $fileLoc = base_path('.cooker/imports').'/'.$path.'.js';
+
+            return file_get_contents($fileLoc);
+        }, $output);
+
+        return $output;
+    }
+
+    private function compress($output): string
+    {
+        $min = Minifier::minify($output,['flaggedComments' => false]);
         $min = trim(preg_replace('/\s+/', ' ', $min));
         return $min;
     }
