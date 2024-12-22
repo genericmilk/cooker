@@ -34,7 +34,8 @@ class Scss extends Controller
         return $output;
     }
 
-    private function compress($input){
+    private function compress($input): string
+    {
         $input = preg_replace('/\/\*((?!\*\/).)*\*\//','',$input); // negative look ahead
         $input = preg_replace('/\s{2,}/',' ',$input);
         $input = preg_replace('/\s*([:;{}])\s*/','$1',$input);

@@ -1,9 +1,9 @@
-import cooker from '@/cooker'
+import cookerToolbelt from 'cooker-toolbelt';
 
 class Application {
     constructor() {
         this.name = 'Cooker';
         console.log(this.name + ' is running' );
-        console.log(cooker.version);
+        console.log(cookerToolbelt.name + ' is running' );
     }
-};
+}
