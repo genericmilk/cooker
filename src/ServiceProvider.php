@@ -15,8 +15,9 @@
              
             if ($this->app->runningInConsole()) {
                 $this->commands([
-                    Commands\Init::class,
-                    Commands\Install::class
+                    Commands\Install::class,
+                    Commands\Get::class,
+                    Commands\BuildCache::class,
                 ]);
             }
         }
