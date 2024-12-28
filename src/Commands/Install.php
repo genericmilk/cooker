@@ -35,7 +35,8 @@ class Install extends Command
 	public function __construct(){
         parent::__construct();
     }
-    public function handle(){
+    public function handle(): void
+	{
         $this->dev = $this->setupEnv();
         $this->version = json_decode(file_get_contents(__DIR__.'/../../composer.json'))->version;
 
@@ -43,18 +44,24 @@ class Install extends Command
 
 		note('👨‍🍳 Welcome to the Cooker Version '.$this->version . ' Installer!');
 
-		if(!is_null(config('cooker.silent'))){
-			error('Cooker is already installed. If you want to uninstall, please run php artisan cooker:install --uninstall');
-			return;
-		}
+
 
 		if($this->option('uninstall')){
-			$this->handleUninstall();
-			return;
+			if(is_null(config('cooker.ovens'))){
+				error('Cooker is not installed. If you want to install, please run php artisan cooker:install');
+				return;
+			}else{
+				$this->handleUninstall();
+				return;
+			}
+		}else{
+			if(!is_null(config('cooker.ovens'))){
+				error('Cooker is already installed. If you want to uninstall, please run php artisan cooker:install --uninstall');
+				return;
+			}
 		}
 		
 		note('We\'re so pleased you\'ve decided to use Cooker. It\'s a great way to manage your assets and keep your project tidy.');
-
 		note('Before we get started, Cooker will need to install some bits to your Laravel project. We\'ll ask you about this in a moment.');
 
 		warning('Please note that Cooker will remove your existing /resources/js and /resources/sass folders and replace them with Cooker\'s own.');
@@ -83,7 +90,8 @@ class Install extends Command
 
 
 		info('🎉 Cooker has been installed!');
-		note('You can now run php artisan cooker:watch to start watching your assets. or php artisan cook to build your assets.');
+		note('You can now use the @cooker helpers in your blade for app.js and app.less. The asset cache will be built automatically when you load the page');
+		note('You can also run php artisan cooker:cook to manually build the asset cache which is useful for production environments.');
 		note('If you want to remove Cooker, you can run php artisan cooker:install --uninstall');
 		note('Thanks for using Cooker! If you like it, please consider giving us a star on GitHub. It really helps us out!');
 		note('https://github.com/genericmilk/cooker');
@@ -91,11 +99,10 @@ class Install extends Command
 
 	}
 
-	public function handleUninstall(){
-		alert('Cooker is already installed.');
-		note('You can now run php artisan cooker:watch to start watching your assets. or php artisan cook to build your assets.');
-
-		info('If you want to remove Cooker, You can do so by choosing the uninstall option below.');
+	public function handleUninstall(): void
+	{
+		alert('Cooker is currently installed');
+		info('If you want to remove Cooker from this project, You will need to confirm the uninstallation process.');
 
 		$confirmed = confirm(
 			label: 'Do you want to uninstall Cooker?',
@@ -105,7 +112,6 @@ class Install extends Command
 		);
 
 		if(!$confirmed){
-			system('clear');
 			warning('👋 No problem. You can run this command if you ever want to uninstall Cooker (We hope not!).');
 			return;
 		}
@@ -118,9 +124,7 @@ class Install extends Command
 		info('👋 Cooker has been uninstalled.');
 
 		note('I hope you enjoyed using Cooker. If you have any feedback, please let us know on GitHub. We\'re always looking to improve!');
-
 		note('My biggest thanks for using Cooker. It really means a lot to me. If you like it, please consider giving us a star on GitHub. It really helps us out!');
-
 		note('If this is a mistake, you can run php artisan cooker:install to install Cooker again (No hard feelings!)');
 
 	}
@@ -156,6 +160,7 @@ class Install extends Command
 			'--provider' => 'Genericmilk\Cooker\ServiceProvider'
 		]);
 		
+		// first tidy up the resources folder
 		$this->removeDirectory(resource_path('js'),true);
 		$this->removeDirectory(resource_path('css'),true);	
 		$this->removeDirectory(resource_path('scss'),true);	
@@ -165,7 +170,7 @@ class Install extends Command
 		$this->makeDirectory(base_path('.cooker'));
 		$this->makeDirectory(base_path('.cooker/cache'));
 		$this->makeDirectory(base_path('.cooker/imports'));
-
+		
 		
 		if(file_exists(base_path('.gitignore'))){
 			$giF = file_get_contents(base_path('.gitignore'));
@@ -187,40 +192,37 @@ class Install extends Command
 		$this->makeDirectory(resource_path('js'));
 
 
+		// set the app.less file
 		$file = fopen(resource_path('less/app.less'),'w');
-		fwrite($file,file_get_contents(__DIR__.'/../example.less'));
-		fclose($file);
-		$file = fopen(resource_path('js/app.js'),'w');
-		fwrite($file,file_get_contents(__DIR__.'/../example.js'));
+		fwrite($file,file_get_contents(__DIR__.'/../Defaults/example.less'));
 		fclose($file);
 
-		$file = fopen(base_path('cooker.json'),'w');
-		fwrite($file,file_get_contents(__DIR__.'/../cooker.json'));
+		// set the app.js file
+		$file = fopen(resource_path('js/app.js'),'w');
+		fwrite($file,file_get_contents(__DIR__.'/../Defaults/example.js'));
 		fclose($file);
+
+		// make a cooker.json file in .cooker folder
+		$file = fopen(base_path('.cooker/cooker.json'),'w');
+		fwrite($file,file_get_contents(__DIR__.'/../Defaults/cooker.json'));
+		
+
 
 	}
 
 	private function uninstallCooker(){
+
 		try{
 			unlink(config_path('cooker.php'));
 		}catch(Exception $e){
 			//
 		}
-
-		try{
-			unlink(base_path('cooker.json'));
-		}catch(Exception $e){
-			//
-		}
-
+	
 		$this->removeDirectory(resource_path('js'),false,true);
 		$this->removeDirectory(resource_path('scss'),false,true);
 		$this->removeDirectory(resource_path('sass'),false,true);
-		$this->removeDirectory(storage_path('app/cooker_frameworks_cache'),false,true);
-		$this->removeDirectory(resource_path('css'),false,true);	
-		$this->removeDirectory(resource_path('less'),false,true);	
-		$this->removeDirectory(public_path('build'),false,true);
-		$this->removeDirectory(base_path('cooker_packages'),false,true);
+		$this->removeDirectory(base_path('.cooker'),false,true);
+
 		
 	}
 
