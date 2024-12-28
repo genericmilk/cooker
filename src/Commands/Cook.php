@@ -19,7 +19,7 @@ use function Laravel\Prompts\alert;
 
 use Genericmilk\Cooker\Engine;
 
-class BuildCache extends Command
+class Cook extends Command
 {
 
     protected $signature = 'cooker:cook';

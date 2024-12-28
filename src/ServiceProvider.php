@@ -17,7 +17,7 @@
                 $this->commands([
                     Commands\Install::class,
                     Commands\Get::class,
-                    Commands\BuildCache::class,
+                    Commands\Cook::class,
                 ]);
             }
         }

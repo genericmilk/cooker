@@ -18,36 +18,32 @@ use Genericmilk\Cooker\Ovens\Less;
 use Genericmilk\Cooker\Ovens\Scss;
 
 use function Laravel\Prompts\spin;
+use function Laravel\Prompts\note;
+use function Laravel\Prompts\info;
+use function Laravel\Prompts\warning;
+use function Laravel\Prompts\error;
+use function Laravel\Prompts\alert;
 
 
 class Get extends Command
 {
-	protected $signature = 'cooker:get {package?} {version?}';	
-    protected $description = 'Installs a Javascript package into your project';
+	protected $signature = 'cooker:get {package?}';	
+    protected $description = 'Installs a Javascript package from NPM into your Cooker project';
 
     protected $version;
     protected $npmPlatform;
 
     protected $didInstall = false;
 
-	public function __construct(){
-
-        // check that the cooker.json file exists
-
-        parent::__construct();
-    }
     public function handle(){
 		// Check if we have run setup and launch it if we need to
 		if(is_null(config('cooker.ovens'))){
-            $this->call('cooker:init');
-            return;     
+            error('Cooker is not installed. If you want to install, please run php artisan cooker:install');
+            return;
 		}
 
-
-
-        $this->dev = $this->setupEnv();
         $this->version = json_decode(file_get_contents(__DIR__.'/../../composer.json'))->version;
-        $this->info('👨‍🍳 Cooker '.$this->version.' ('.ucfirst($this->env).')'.PHP_EOL);
+        info('👨‍🍳 Cooker '.$this->version.' ('.ucfirst($this->env).')'.PHP_EOL);
 
 
         $this->npmPlatform = 'https://cdn.jsdelivr.net/npm/';
@@ -59,7 +55,7 @@ class Get extends Command
         } else {
             // Get all packages from the cooker.json file
             if(!file_exists(base_path('.cooker/cooker.json'))){
-                $this->error('The cooker.json file does not exist in '.base_path('.cooker').'. Please check and try again.');
+                error('The cooker.json file does not exist in '.base_path('.cooker').'. Please check and try again.');
                 return;
             }
             $cookerJson = json_decode(file_get_contents(base_path('.cooker/cooker.json')));
@@ -71,7 +67,7 @@ class Get extends Command
         }
 
         if(count($packages)==0){
-            $this->error('No packages were listed in cooker.json and no new packages were specified for install. Please check and try again.');
+            error('No packages were listed in cooker.json and no new packages were specified for install. Please check and try again.');
             return;
         }
 
