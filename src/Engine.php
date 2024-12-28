@@ -15,8 +15,9 @@ class Engine extends Controller
 {
 
     protected $baseFolder;
+    public $output = true;
     
-    public function render($file): Response
+    public function render($file)
     {
         $type = pathinfo($file, PATHINFO_EXTENSION);
 
@@ -84,9 +85,11 @@ class Engine extends Controller
             $render = (string)$render;
         }
 
-        return response($render, 200, [
-            'Content-Type' => $oven->mime
-        ]);
+        if($this->output){
+            return response($render, 200, [
+                'Content-Type' => $oven->mime
+            ]);
+        }
 
     }
 

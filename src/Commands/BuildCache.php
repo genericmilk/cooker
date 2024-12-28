@@ -17,10 +17,7 @@ use function Laravel\Prompts\error;
 use function Laravel\Prompts\alert;
 
 
-use Less_Parser;
-use Carbon\Carbon;
-use Cache;
-use Exception;
+use Genericmilk\Cooker\Engine;
 
 class BuildCache extends Command
 {
@@ -28,23 +25,36 @@ class BuildCache extends Command
     protected $signature = 'cooker:cook';
     protected $description = 'Builds the asset cache';
 
-	protected $dev;
 	protected $version;
-	protected $env;
 
 	public function __construct(){
         parent::__construct();
     }
     public function handle(): void
 	{
-        $this->dev = $this->setupEnv();
         $this->version = json_decode(file_get_contents(__DIR__.'/../../composer.json'))->version;
 
-		system('clear');
 
-		note('👨‍🍳 Welcome to the Cooker Version '.$this->version . ' Installer!');
+		note('👨‍🍳 Cooker '.$this->version);
+
+		$response = spin(
+			fn () => $this->buildAssetCache(),
+			'Building asset cache ...'
+		);
+
+		info('Asset cache built');
 
 
+
+	}
+
+	private function buildAssetCache(): void
+	{
+		$engine = new Engine();
+		$engine->output = false;
+		foreach(config('cooker.ovens') as $oven){
+			$engine->render($oven['file']);
+		}
 	}
 
 
