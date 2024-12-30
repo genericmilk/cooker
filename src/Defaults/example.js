@@ -9,3 +9,5 @@ class Application{
         cookerToolbelt.console.log(cookerToolbelt.name + ' is running' );
     }
 };
+
+module.exports = Application;

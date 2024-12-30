@@ -1,16 +1,16 @@
 class cookerRoutes{
     constructor(){
         this.routes = [];
-
+        console.log('cookerRoutes');
+        console.log(Application);
         let classesToBoot = this.classesToBoot();
         console.log('classesToBoot');
         console.log(classesToBoot);
 
         for(let i = 0; i < classesToBoot.length; i++){
             let classToBoot = classesToBoot[i];
-            console.log('classToBoot');
-            console.log(classToBoot);
-            let classInstance = new classToBoot();
+            // run classToBoot (it is in the parent file)
+            new classToBoot();
         }
 
     };
