@@ -44,6 +44,10 @@ class Js extends Controller
             if ($node->getType() === 'ImportDeclaration') {
                 $node->getSource()->setValue('/__cooker/imports/'.$this->baseFile.'/' . $node->getSource()->getValue());
             }
+            // if node type is a class, add the startup class
+            if ($node->getType() === 'ClassDeclaration') {
+                
+            }
         });
 
         
