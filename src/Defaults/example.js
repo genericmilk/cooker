@@ -10,4 +10,4 @@ class Application{
     }
 };
 
-window.Application = Application;
+window.Application = Application; // Make the Application class available to be booted via cooker-routes
