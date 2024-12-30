@@ -100,8 +100,7 @@ class Engine extends Controller
 
         // set the oven. It's found in config('cooker.ovens') with file == $file
         $ovens = collect(config('cooker.ovens'));
-        dd($ovens);
-        $this->oven = $ovens->where('file', $file)->first();
+        dd($baseFile, $file);
 
         dd($this->oven);
 
