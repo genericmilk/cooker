@@ -10,4 +10,4 @@ class Application{
     }
 };
 
-module.exports = Application;
+window.Application = Application;

@@ -1,18 +1,12 @@
 class cookerRoutes{
     constructor(){
+        let self = this;
         this.routes = [];
         console.log('cookerRoutes');
-        console.log(Application);
-        let classesToBoot = this.classesToBoot();
-        console.log('classesToBoot');
-        console.log(classesToBoot);
-
-        for(let i = 0; i < classesToBoot.length; i++){
-            let classToBoot = classesToBoot[i];
-            // run classToBoot (it is in the parent file)
-            new classToBoot();
-        }
-
+        // wait for the DOM to load
+        document.addEventListener('DOMContentLoaded', function(){
+            self.activateStartupClasses();
+        });
     };
     classesToBoot(){
         let classesToBoot = [];
@@ -49,6 +43,14 @@ class cookerRoutes{
         return classesToBoot;
 
     };
+    activateStartupClasses(){
+        let classesToBoot = this.classesToBoot();
+        for(let i = 0; i < classesToBoot.length; i++){
+            let classToBoot = classesToBoot[i];
+            new window[classToBoot]();
+        }
+
+    }
 };
 
 new cookerRoutes();
