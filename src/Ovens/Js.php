@@ -24,6 +24,7 @@ class Js extends Controller
         $this->preload = $components?->preload ?? [];
         $this->parse = $components?->parse ?? [];
         $this->startupClass = $components?->startupClass;
+        $this->baseFile = $oven->file;
 
     }
 
@@ -45,7 +46,7 @@ class Js extends Controller
         // find ImportDeclaration nodes
         $ast->traverse(function($node) {
             if ($node->getType() === 'ImportDeclaration') {
-                $node->getSource()->setValue('/__cooker/imports/' . $node->getSource()->getValue());
+                $node->getSource()->setValue('/__cooker/imports/'.$this->baseFile.'/' . $node->getSource()->getValue());
             }
         });
 

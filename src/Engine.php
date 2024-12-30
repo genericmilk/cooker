@@ -95,7 +95,7 @@ class Engine extends Controller
 
     }
 
-    public function import($file): Response
+    public function import($baseFile, $file): Response
     {
 
         // set the oven. It's found in config('cooker.ovens') with file == $file
