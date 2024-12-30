@@ -101,7 +101,13 @@ class Engine extends Controller
             // check if the file exists in the package
 
             if(file_exists(__DIR__.'/Defaults/Exports/'.$file.'.js')){
-                return response(file_get_contents(__DIR__.'/Defaults/Exports/'.$file.'.js'), 200, [
+
+                $file = file_get_contents(__DIR__.'/Defaults/Exports/'.$file.'.js');
+
+                $file = str_replace('isDebug: null,','isDebug: '.(config('app.debug') ? 'true' : 'false').',', $file);
+                $file = str_replace('cookerVersion: null,','cookerVersion: \''.json_decode(file_get_contents(__DIR__.'/../composer.json'))->version.'\',', $file);
+
+                return response($file, 200, [
                     'Content-Type' => 'application/javascript'
                 ]);
             }else{

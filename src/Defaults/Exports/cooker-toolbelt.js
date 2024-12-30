@@ -1,8 +1,9 @@
 const cookerToolbelt = {
     name: 'Cooker Toolbelt',
     version: '1.0.0',
+    cookerVersion: null,
     description: 'The assistant for the Cooker framework',
-    isDebug: true,
+    isDebug: null,
     console: {
         log: (message) => {
             if (cookerToolbelt.isDebug) {
