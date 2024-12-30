@@ -100,9 +100,9 @@ class Engine extends Controller
 
         // set the oven. It's found in config('cooker.ovens') with file == $file
         $ovens = collect(config('cooker.ovens'));
-        dd($baseFile, $file);
+        $this->oven = (object)$ovens->where('file', $baseFile)->first();
+        $ovenComponents = (object)$this->oven->components;
 
-        dd($this->oven);
 
         $fileLoc = base_path('.cooker/imports/'.$file.'.js');
 
@@ -115,8 +115,7 @@ class Engine extends Controller
 
                 $file = str_replace('isDebug: null,','isDebug: '.(config('app.debug') ? 'true' : 'false').',', $file);
                 $file = str_replace('cookerVersion: null,','cookerVersion: \''.json_decode(file_get_contents(__DIR__.'/../composer.json'))->version.'\',', $file);
-                
-                $file = str_replace('this.routes = [];','this.routes = '.json_encode($this->oven->routes ?? []).';', $file);
+                $file = str_replace('this.routes = [];','this.routes = '.json_encode($ovenComponents->routes ?? []).';', $file);
 
                 return response($file, 200, [
                     'Content-Type' => 'application/javascript'

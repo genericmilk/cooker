@@ -23,7 +23,6 @@ class Js extends Controller
 
         $this->preload = $components?->preload ?? [];
         $this->parse = $components?->parse ?? [];
-        $this->startupClass = $components?->startupClass;
         $this->baseFile = $oven->file;
 
     }
@@ -35,9 +34,6 @@ class Js extends Controller
             $output .= file_get_contents($input).PHP_EOL;
         }
         
-        if($this->startupClass){
-            $output .= 'new '.$this->startupClass.'();';
-        }
 
         $ast = Peast::latest($output, [
             'sourceType' => Peast::SOURCE_TYPE_MODULE
