@@ -4,21 +4,35 @@ class cookerRoutes{
 
         console.log(this.routes);
 
-        // this.routes contains key which is the route and value which is the class to be instantiated
+        // go round each of this.routes and check the key matches window.location.pathname - wildcards are allowed
+        for(let i = 0; i < this.routes.length; i++){
+            let path = this.routes[i].path;
+            let className = this.routes[i].class;
 
-        const currentPath = window.location.pathname;
+            console.log(path,className);
 
-        this.routes.forEach(route => {
-            const routePattern = new RegExp('^' + route.replace(/\*/g, '.*') + '$');
-            if (routePattern.test(currentPath)) {
-            // Instantiate the class associated with the route. The class is the value of this.routes
-            const newRoute = this.routes[route];
+            // is the path just a wildcard? if so we can just run the class
+            if(path === '*'){
+                new className;
+            }else{
+                // does the path contain a wildcard?
+                if(path.includes('*')){
+                    // remove the wildcard and partial match the path
+                    let pathParts = path.split('*');
+                    let pathStart = pathParts[0];
+                    let pathEnd = pathParts[1];
 
-            new route.class();
+                    if(window.location.pathname.startsWith(pathStart) && window.location.pathname.endsWith(pathEnd)){
+                        new className;
+                    }
+                }else{
+                    // no wildcard, just match the path
+                    if(path === window.location.pathname){
+                        new className;
+                    }
+                }
             }
-        });
-
-
+        }
 
     }
 };

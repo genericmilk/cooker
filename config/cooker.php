@@ -70,7 +70,8 @@ return [
                     'app.js'
                 ],
                 'routes' => [
-                    '*' => 'Application',
+                    'path' => '*',
+                    'class' => 'Application',
                 ]
             ],
         ]
