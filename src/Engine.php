@@ -15,7 +15,9 @@ class Engine extends Controller
 {
 
     protected $baseFolder;
+    protected $oven;
     public $output = true;
+
     
     public function render($file)
     {
@@ -95,6 +97,14 @@ class Engine extends Controller
 
     public function import($file): Response
     {
+
+        // set the oven. It's found in config('cooker.ovens') with file == $file
+        $ovens = collect(config('cooker.ovens'));
+        dd($ovens);
+        $this->oven = $ovens->where('file', $file)->first();
+
+        dd($this->oven);
+
         $fileLoc = base_path('.cooker/imports/'.$file.'.js');
 
         if(!file_exists($fileLoc)){
@@ -106,6 +116,8 @@ class Engine extends Controller
 
                 $file = str_replace('isDebug: null,','isDebug: '.(config('app.debug') ? 'true' : 'false').',', $file);
                 $file = str_replace('cookerVersion: null,','cookerVersion: \''.json_decode(file_get_contents(__DIR__.'/../composer.json'))->version.'\',', $file);
+                
+                $file = str_replace('this.routes = [];','this.routes = '.json_encode($this->oven->routes ?? []).';', $file);
 
                 return response($file, 200, [
                     'Content-Type' => 'application/javascript'

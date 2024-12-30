@@ -69,7 +69,9 @@ return [
                 'parse' => [
                     'app.js'
                 ],
-                'startupClass' => 'Application', 
+                'routes' => [
+                    '*' => 'Application',
+                ]
             ],
         ]
     ],
