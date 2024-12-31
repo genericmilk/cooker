@@ -1,5 +1,5 @@
 <?php
 
-pest()->extend(Tests\TestCase::class)
- // ->use(Illuminate\Foundation\Testing\RefreshDatabase::class)
-    ->in('Feature');
+use Genericmilk\Cooker\Tests\TestCase;
+
+uses(TestCase::class)->in(__DIR__);
