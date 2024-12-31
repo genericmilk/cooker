@@ -1,5 +1,5 @@
 <p align="center">
-	<img src="cooker-banner.png" />	
+	<img src="banner.png" />	
 </p>
 <p>
 Cooker is the easy to use frontend compiler by <a href="https://github.com/genericmilk">genericmilk</a> that is designed to sit tightly within Laravel and offer a robust, fast and beginner friendly starting block for building your web applications
