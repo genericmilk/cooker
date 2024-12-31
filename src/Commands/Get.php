@@ -27,13 +27,20 @@ use function Laravel\Prompts\alert;
 
 class Get extends Command
 {
-	protected $signature = 'cooker:get {package?}';	
+	protected $signature = 'cooker:get {package?} {--remove}';	
     protected $description = 'Installs a Javascript package from NPM into your Cooker project';
 
     protected $version;
     protected $npmPlatform;
 
     protected $didInstall = false;
+
+    public function __construct(){
+        parent::__construct();
+        $this->setupEnv();
+        $this->version = json_decode(file_get_contents(__DIR__.'/../../composer.json'))->version;
+        $this->npmPlatform = 'https://cdn.jsdelivr.net/npm/';
+    }
 
     public function handle(){
 		// Check if we have run setup and launch it if we need to
@@ -42,11 +49,11 @@ class Get extends Command
             return;
 		}
 
-        $this->version = json_decode(file_get_contents(__DIR__.'/../../composer.json'))->version;
+
         info('👨‍🍳 Cooker '.$this->version.' ('.ucfirst($this->env).')'.PHP_EOL);
 
 
-        $this->npmPlatform = 'https://cdn.jsdelivr.net/npm/';
+
 
         $packages = [];
 
