@@ -20,7 +20,11 @@
     },
     "autoload": {
         "psr-4": {
-            "Genericmilk\\Cooker\\": "src/",
+            "Genericmilk\\Cooker\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
             "Genericmilk\\Cooker\\Tests\\": "tests/"
         }
     },
@@ -40,12 +44,14 @@
         "laravel/framework": "^10.48.23",
         "pestphp/pest": "^2.36",
         "pestphp/pest-plugin-laravel": "^2.4",
-        "orchestra/testbench": "^8.31",
-        "phpunit/phpunit": "^10.5"
+        "orchestra/testbench": "^8.31"
     },
     "config": {
         "allow-plugins": {
             "pestphp/pest-plugin": false
         }
+    },
+    "scripts": {
+        "test": "pest"
     }
 }
