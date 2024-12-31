@@ -45,7 +45,8 @@
         "laravel/framework": "^10.48.23",
         "pestphp/pest": "^2.36",
         "pestphp/pest-plugin-laravel": "^2.4",
-        "orchestra/testbench": "^8.31"
+        "orchestra/testbench": "^8.31",
+        "phpunit/phpunit": "^10.5"
     },
     "config": {
         "allow-plugins": {
