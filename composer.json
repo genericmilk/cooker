@@ -20,7 +20,8 @@
     },
     "autoload": {
         "psr-4": {
-            "Genericmilk\\Cooker\\": "src/"
+            "Genericmilk\\Cooker\\": "src/",
+            "Genericmilk\\Cooker\\Tests\\": "tests"
         }
     },
     "minimum-stability": "dev",
@@ -38,7 +39,8 @@
     "require-dev": {
         "laravel/framework": "^10.48.23",
         "pestphp/pest": "^2.36",
-        "pestphp/pest-plugin-laravel": "^2.4"
+        "pestphp/pest-plugin-laravel": "^2.4",
+        "orchestra/testbench": "^8.31"
     },
     "config": {
         "allow-plugins": {
