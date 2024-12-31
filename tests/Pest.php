@@ -1,5 +1,2 @@
 <?php
-
-use Genericmilk\Cooker\Tests\TestCase;
-
-uses(TestCase::class)->in(__DIR__);
+uses(Genericmilk\Cooker\Tests\TestCase::class)->in(__DIR__.'/../vendor/genericmilk/cooker/tests');
