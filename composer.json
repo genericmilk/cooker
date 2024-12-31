@@ -15,7 +15,7 @@
         "wikimedia/less.php": "^5.1.2",
         "scssphp/scssphp": "^2.0.0",
         "guzzlehttp/guzzle": "^7.5.0",
-        "laravel/prompts": "^0.1.9",
+        "laravel/prompts": ">=0.1.9",
         "mck89/peast": "^1.16"
     },
     "autoload": {
