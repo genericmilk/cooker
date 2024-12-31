@@ -1,5 +1,6 @@
 <?php
 
-use Genericmilk\Cooker\Tests\TestCase;
+use Tests\TestCase;
+
 
 uses(TestCase::class)->in(__DIR__);
