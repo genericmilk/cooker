@@ -36,6 +36,7 @@
         }
     },
     "require-dev": {
-        "laravel/framework": "^10.0.0"
+        "laravel/framework": "^10.48.23",
+        "orchestra/testbench": "^8.5"
     }
 }
