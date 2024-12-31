@@ -24,6 +24,11 @@
             "Genericmilk\\Cooker\\Tests\\": "tests/"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "Genericmilk\\Cooker\\Tests\\": "tests/"
+        }
+    },
     "minimum-stability": "dev",
     "prefer-stable": true,
     "extra": {
