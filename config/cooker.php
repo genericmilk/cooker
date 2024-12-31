@@ -23,23 +23,6 @@ return [
         [
             'file' => 'app.less',
             'components' => [
-                'preload' => [
-                    /*
-                        Place any CDNs or local paths in the array here.
-                        These files will be injected and not parsed before the appcode
-                        These entires can be either a string for both dev and prod or an array with dev and prod keys
-                        For example
-    
-                        'https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css',
-    
-                        OR
-    
-                        [
-                            'dev' => 'https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css',
-                            'prod' => 'https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css'
-                        ]
-                    */
-                ],
                 'parse' => [
                     'app.less'
                 ],                
@@ -49,38 +32,32 @@ return [
             'file' => 'app.js',
 
             'components' => [
-                'preload' => [
-                    /*
-                        Place any CDNs or local paths in the array here.
-                        These files will be injected and not parsed before the appcode
-                        These entires can be either a string for both dev and prod or an array with dev and prod keys
-                        For example
-    
-                        'https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css',
-    
-                        OR
-    
-                        [
-                            'dev' => 'https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css',
-                            'prod' => 'https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css'
-                        ]
-                    */
-                ],
                 'parse' => [
                     'app.js'
                 ],
                 'routes' => [
-                    'path' => '*',
-                    'class' => 'Application',
+                    [
+                        'path' => '*',
+                        'class' => 'Application',
+                    ]
                 ]
             ],
         ]
     ],
 
-    'hot_reload' => [
-        'enabled' => true,
-        'port' => 3000,
-        'host' => 'localhost'
-    ],
+    /*
+    |--------------------------------------------------------------------------
+    | Options
+    |--------------------------------------------------------------------------
+    |
+    | The main settings for the cooker. Use these settings to configure the
+    | behaviour of how Cooker works. For more information on each setting, see
+    | the documentation
+    |
+    */
 
+    'options' => [
+        'disableCache' => env('COOKER_DISABLE_CACHE', false),
+        'alwaysCompress' => env('COOKER_ALWAYS_COMPRESS', false),
+    ]
 ];
