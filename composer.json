@@ -25,6 +25,9 @@
         "mck89/peast": "^1.16"
     },
     "autoload": {
+        "classmap": [
+            "src"
+        ],
         "psr-4": {
             "Genericmilk\\Cooker\\": "src/"
         }
