@@ -21,12 +21,7 @@
     "autoload": {
         "psr-4": {
             "Genericmilk\\Cooker\\": "src/",
-            "Genericmilk\\Cooker\\Tests\\": "tests"
-        }
-    },
-    "autoload-dev": {
-        "psr-4": {
-            "Genericmilk\\Cooker\\Tests\\": "tests"
+            "Genericmilk\\Cooker\\Tests\\": "tests/"
         }
     },
     "minimum-stability": "dev",
