@@ -31,10 +31,7 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Genericmilk\\Cooker\\Tests\\": "tests/",
-            "App\\": "workbench/app/",
-            "Database\\Factories\\": "workbench/database/factories/",
-            "Database\\Seeders\\": "workbench/database/seeders/"
+            "Genericmilk\\Cooker\\Tests\\": "tests/"
         }
     },
     "minimum-stability": "dev",
@@ -50,10 +47,9 @@
         }
     },
     "require-dev": {
-        "laravel/framework": "^10.48.23",
+        "orchestra/testbench": "^8.31",
         "pestphp/pest": "^2.36",
         "pestphp/pest-plugin-laravel": "^2.4",
-        "orchestra/testbench": "^8.31",
         "phpunit/phpunit": "^10.5"
     },
     "config": {
