@@ -116,7 +116,8 @@ class Get extends Command
         $this->call('cooker:cook');
     }
 
-    private function installPackage($package){
+    private function installPackage($package): void
+    {
         $response = spin(
             message: 'Fetching '.e($package).'...',
             callback: function() use ($package){
@@ -184,7 +185,8 @@ class Get extends Command
     }
 
 	// Helpers
-    private function makeDirectory($f) {
+    private function makeDirectory($f): void
+    {
 		try{
 			mkdir($f);
             if(!$this->option('silent')){
@@ -194,7 +196,8 @@ class Get extends Command
 			$this->error('✋ Could not create '.$f);
 		}
 	}
-    private function validatePackageJson(){
+    private function validatePackageJson(): bool
+    {
         try{
             $cookerJson = json_decode(file_get_contents(base_path('.cooker/cooker.json')));
             if(isset($cookerJson->packages)){
