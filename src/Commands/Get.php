@@ -39,9 +39,8 @@ class Get extends Command
     public function __construct()
     {
         parent::__construct();
-        $this->setupEnv();
         $this->version = json_decode(file_get_contents(__DIR__.'/../../composer.json'))->version;
-        $this->npmPlatform = 'https://cdn.jsdelivr.net/npm/';
+        $this->npmPlatform = 'https://unpkg.com/';
     }
 
     public function handle(): void
@@ -117,11 +116,10 @@ class Get extends Command
         $this->call('cooker:cook');
     }
 
-    private function installPackage($package,$version = 'latest'){
-        
+    private function installPackage($package){
         $response = spin(
             message: 'Fetching '.e($package).'...',
-            callback: function() use ($package,$version){
+            callback: function() use ($package){
                 
                 $response = Http::get('https://registry.npmjs.org/'.$package);
                 if($response->failed()){
@@ -134,21 +132,24 @@ class Get extends Command
                 // Convert response to an array (helps with some key names having - in them)
                 if(!$this->validatePackageJson()){
                     return 'Your package json file is invalid. Please check and try again.';
-
                 }
                                 
                 // Get the latest version
+                if(!isset($responseArray['dist-tags']['latest'])){
+                    return '🔴 Could not find latest version of package';
+                }
+
                 $latestVersion = $responseArray['dist-tags']['latest'];
 
                 $targetVersion = $latestVersion; // temp
                 
                 $cookerJson = json_decode(file_get_contents(base_path('.cooker/cooker.json')));
-                $cookerPath = base_path('.cooker/packages');
+                $cookerPath = base_path('.cooker/imports');
             
                 
                 if(isset($cookerJson->packages->$package) && is_dir($cookerPath.'/'.$package) && file_exists($cookerPath.'/'.$package.'/'.$cookerJson->packages->$package.'.js')){
                     if($cookerJson->packages->$package == $targetVersion){
-                        return '🔴 '.$package.'@'.$targetVersion.' is already installed';
+                        return '🔴 '.$package.'@'.$targetVersion.' is already installed';                   
                     }
                 }
 
@@ -159,25 +160,13 @@ class Get extends Command
                     return '🔴 Failed to download package. Could not communicate with repository';
                 }
 
-                // If the .cooker/packages folder doesn't exist, create it
-                if (!file_exists(base_path('.cooker/packages'))){
-                    $this->makeDirectory(base_path('.cooker/packages'));
-                }
-
-                // Make the package directory
-                $scriptDir = base_path('.cooker/packages/'.$package);
-
-
-                if (!file_exists($scriptDir)) {
-                    $this->makeDirectory($scriptDir);
+                // If the .cooker/imports folder doesn't exist, create it
+                if (!file_exists(base_path('.cooker/imports'))){
+                    $this->makeDirectory(base_path('.cooker/imports'));
                 }
 
                 // Try to compress the script               
-                try{
-                    $script = Js::compress($script->body());
-                }catch(Throwable $e){
-                    $script = $script->body();
-                }
+                $script = $script->body();
 
                 
                 // Write the script to the json
@@ -187,27 +176,14 @@ class Get extends Command
                 $cookerJson->packages->$package = $targetVersion;
 
                 file_put_contents(base_path('.cooker/cooker.json'), json_encode($cookerJson, JSON_PRETTY_PRINT));
-                file_put_contents(base_path('.cooker/packages/'.$package.'/'.$targetVersion.'.js'), $script);
+                file_put_contents(base_path('.cooker/imports/'.$package.'.js'), $script);
         
                 $this->didInstall = true;
-                return '🟢 Installed '.$package.'@'.$targetVersion.' to '.config('app.name');
-
-
             }
         );
-
-        $this->info($response);
-
-
-
     }
 
 	// Helpers
-    private function setupEnv(){
-		$dev = config('app.debug');		
-		$this->env = $dev ? 'dev' : 'prod';
-		return $dev;
-	}
     private function makeDirectory($f) {
 		try{
 			mkdir($f);
