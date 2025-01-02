@@ -42,7 +42,7 @@ class Install extends Command
 
 		system('clear');
 
-		note('👨‍🍳 Welcome to the Cooker Version '.$this->version . ' Installer!');
+		note('👨‍🍳 Cooker '.$this->version);
 
 
 

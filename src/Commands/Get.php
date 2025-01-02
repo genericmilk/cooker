@@ -23,11 +23,12 @@ use function Laravel\Prompts\info;
 use function Laravel\Prompts\warning;
 use function Laravel\Prompts\error;
 use function Laravel\Prompts\alert;
+use function Laravel\Prompts\confirm;
 
 
 class Get extends Command
 {
-	protected $signature = 'cooker:get {package?} {--remove}';	
+	protected $signature = 'cooker:get {package?} {--remove} {--force}';	
     protected $description = 'Installs a Javascript package from NPM into your Cooker project';
 
     protected $version;
@@ -35,54 +36,85 @@ class Get extends Command
 
     protected $didInstall = false;
 
-    public function __construct(){
+    public function __construct()
+    {
         parent::__construct();
         $this->setupEnv();
         $this->version = json_decode(file_get_contents(__DIR__.'/../../composer.json'))->version;
         $this->npmPlatform = 'https://cdn.jsdelivr.net/npm/';
     }
 
-    public function handle(){
+    public function handle(): void
+    {
 		// Check if we have run setup and launch it if we need to
 		if(is_null(config('cooker.ovens'))){
             error('Cooker is not installed. If you want to install, please run php artisan cooker:install');
             return;
 		}
 
+		note('👨‍🍳 Cooker '.$this->version);
 
-        info('👨‍🍳 Cooker '.$this->version.' ('.ucfirst($this->env).')'.PHP_EOL);
+        $installing = !$this->option('remove');
+        $handlingAll = !$this->argument('package');
+        $packagesToInstall = [];
 
+        // make a new cooker.json file if it doesn't exist
+        if(!file_exists(base_path('.cooker/cooker.json'))){
+            $cookerJson = new stdClass;
+            $cookerJson->packages = new stdClass;
+            file_put_contents(base_path('.cooker/cooker.json'), json_encode($cookerJson, JSON_PRETTY_PRINT));
+        }
 
+        $cookerPackages = json_decode(file_get_contents(base_path('.cooker/cooker.json')))->packages;
 
+        if($installing){
+            if($handlingAll){
+                // We are installing all packages
+                if(count($cookerPackages)==0){
+                    error('No packages were listed in cooker.json so there is no packages for us to install. Please check and try again.');
+                    return;
+                }
+                $packages = $cookerPackages;
 
-        $packages = [];
-
-        if($this->argument('package')){
-            $packages[] = $this->argument('package');
-        } else {
-            // Get all packages from the cooker.json file
-            if(!file_exists(base_path('.cooker/cooker.json'))){
-                error('The cooker.json file does not exist in '.base_path('.cooker').'. Please check and try again.');
+            }else{
+                // We are installing a specific package
+                $packages[] = $this->argument('package');
+            }
+        }else{
+            if($handlingAll){
+                error('You must specify a package to remove. Please check and try again.');
                 return;
             }
-            $cookerJson = json_decode(file_get_contents(base_path('.cooker/cooker.json')));
-            if(isset($cookerJson->packages)){
-                foreach($cookerJson->packages as $package => $version){
-                    $packages[] = $package;
-                }
+        }
+
+        $label = count($packages)==1 ? ('Installing 1 package') : ('Installing '.count($packages).' packages');
+
+        if(count($packages)>0){
+            $label .= ' - ('.implode(', ',$packages).')';
+        }
+
+
+        // confirm the user wants to install
+        if(!$this->option('force')){
+            $confirmed = confirm(
+                label: 'Are you sure you want to '.($installing ? 'install' : 'remove').' these packages?',
+                default: false,
+                yes: ($installing ? 'Install' : 'Remove'),
+                no: 'Cancel',
+                hint: $label
+            );
+
+            if(!$confirmed){
+                return;
             }
         }
 
-        if(count($packages)==0){
-            error('No packages were listed in cooker.json and no new packages were specified for install. Please check and try again.');
-            return;
-        }
 
         foreach($packages as $package){
             $this->installPackage($package);
         }
 
-        //$this->call('cook');
+        $this->call('cooker:cook');
     }
 
     private function installPackage($package,$version = 'latest'){

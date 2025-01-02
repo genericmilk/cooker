@@ -42,10 +42,7 @@ class Cook extends Command
 			'Building asset cache ...'
 		);
 
-		info('Asset cache built');
-
-
-
+		info('✔️ Asset cache built');
 	}
 
 	private function buildAssetCache(): void
