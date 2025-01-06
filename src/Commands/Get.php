@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Http;
 use Exception;
 use stdClass;
 use Throwable;
+use PharData;
+use ZipArchive;
 
 // Cooker subsystems
 use Genericmilk\Cooker\Preloads;
@@ -32,7 +34,6 @@ class Get extends Command
     protected $description = 'Installs a Javascript package from NPM into your Cooker project';
 
     protected $version;
-    protected $npmPlatform;
 
     protected $didInstall = false;
 
@@ -40,7 +41,7 @@ class Get extends Command
     {
         parent::__construct();
         $this->version = json_decode(file_get_contents(__DIR__.'/../../composer.json'))->version;
-        $this->npmPlatform = 'https://unpkg.com/';
+        
     }
 
     public function handle(): void
@@ -155,21 +156,26 @@ class Get extends Command
                 }
 
 
-                // Grab the script
-                $script = Http::get($this->npmPlatform.$package.'@'.$targetVersion);
-                if($script->failed()){
+                $script = Http::withOptions(['sink' => base_path('.cooker/imports/'.$package.'.tar.gz')])->get($responseArray['versions'][$latestVersion]['dist']['tarball']);
+
+                if ($script->failed()) {
                     return '🔴 Failed to download package. Could not communicate with repository';
                 }
 
-                // If the .cooker/imports folder doesn't exist, create it
-                if (!file_exists(base_path('.cooker/imports'))){
-                    $this->makeDirectory(base_path('.cooker/imports'));
-                }
 
-                // Try to compress the script               
-                $script = $script->body();
+                $p = new PharData('.cooker/imports/'.$package.'.tar.gz');
+                $p->decompress(); // creates /path/to/my.tar
 
+                // unarchive from the tar
+                $phar = new PharData('.cooker/imports/'.$package.'.tar.gz');
+                $phar->extractTo(base_path('.cooker/imports/'.$package));
+
+                // remove the tar
+                unlink(base_path('.cooker/imports/'.$package.'.tar.gz'));
+                unlink(base_path('.cooker/imports/'.$package.'.tar'));
                 
+
+
                 // Write the script to the json
                 if(!isset($cookerJson->packages->$package)){
                     $cookerJson->packages->$package = new stdClass;
@@ -177,7 +183,6 @@ class Get extends Command
                 $cookerJson->packages->$package = $targetVersion;
 
                 file_put_contents(base_path('.cooker/cooker.json'), json_encode($cookerJson, JSON_PRETTY_PRINT));
-                file_put_contents(base_path('.cooker/imports/'.$package.'.js'), $script);
         
                 $this->didInstall = true;
             }
