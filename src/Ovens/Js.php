@@ -47,7 +47,7 @@ class Js extends Controller
                 if (substr($node->getSource()->getValue(), 0, 1) === '@') {
                     // we are importing from /resources/js/imports
                     $nodeValue = $node->getSource()->getValue();
-                    $nodeValue = str_replace('@', '', $nodeValue);
+                    $nodeValue = str_replace('@/', '', $nodeValue);
                     $node->getSource()->setValue('/__cooker/local-imports/'.$this->baseFile.'/' . $nodeValue);
                 }else{
                     // we are importing from .cooker/imports

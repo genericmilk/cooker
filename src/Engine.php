@@ -132,7 +132,7 @@ class Engine extends Controller
 
     public function localImport($baseFile, $file): Response
     {
-        $fileLoc = resource_path('js/imports/'.$file.'.js');
+        $fileLoc = resource_path('js/imports/'.$file);
 
         if(!file_exists($fileLoc)){
             return response('Local Import not found', 404);
