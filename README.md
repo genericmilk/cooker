@@ -155,6 +155,58 @@ eg:
 ```
 * Cooked files are cached to `.cooker/cache` folder with the name of the file being referenced in `oven.file`. (Default app.less or app.js etc)
 
+## Cooker Routes
+
+Javascript files add an additional array to the oven components array called `routes`. In `routes` you configure which classes are loaded based on which page of the application is hit.
+
+The default routeset is as follows:
+```
+    'file' => 'app.js',
+
+    'components' => [
+        'parse' => [
+            'app.js'
+        ],
+        'routes' => [
+            [
+                'path' => '*',
+                'class' => 'Application',
+            ]
+        ]
+    ]
+```
+Here, the class `Application` is created when any page is hit. Cooker can use wildcards or absolute path matching to make this happen. You can also have multiple instances of the same route for different classes, eg:
+```
+  'routes' => [
+      [
+          'path' => '*',
+          'class' => 'Application',
+      ],
+      [
+          'path' => 'billing/show',
+          'class' => 'Billing',
+      ], 
+      [
+          'path' => '*',
+          'class' => 'Menu',
+      ],            
+      [
+          'path' => 'about-us/*',
+          'class' => 'About',
+      ],                  
+  ]
+```
+So in this example; `new Application()` is called on any page along with `new Menu()` where `new Billing()` is called on `site.com/billing/show` only and `new About()` is called on `site.com/about-us` and any sub-page.
+
+For Cooker routes to work, You need to import the `cooker-routes` package into your javascript like so:
+```
+import cookerRoutes from 'cooker-routes';
+```
+You must also make the class available to the window object by adding the following at the bottom of the file
+```
+window.Application = Application; // Substitute Application to the class in your script.
+```
+
 ## The @cooker helper
 Cooker comes with a great blade directive you can use in your views. 
 
@@ -170,82 +222,50 @@ To use the helper simply include it like so:
 You can substitute `app.less` and `app.js` for the the value specified in `oven.file` in the Cooker config
 
 ## Installing packages
-Cooker can use the JSDelivr NPM repository to really quickly get files into your project. Right now we only support downloading the most up-to-date version of this environment with the default file being referenced. And whilst we will compress it for you on production, this may not be a specific production build.
+Cooker can use the Unpkg NPM repository to really quickly get files into your project. Right now we only support downloading the most up-to-date version of this environment with the default file being referenced. And whilst we will compress it for you on production, this may not be a specific production build.
 
-You will also need to add the following to your `.gitignore` file:
-```
-cooker_packages
-```
-The cooker_packages directory will fill up with your scripts as you specify them. Next, ensure the new configuration options are available in your `config/cooker.php` file near the top (Before the ovens):
-```
-'packageManager' => [
-    'packagesList' => env('COOKER_PACKAGE_JSON_LOCATION', base_path('cooker.json')),
-    'packagesPath' => env('COOKER_PACKAGE_PATH', base_path('cooker_packages')),
-    'packageManager' => env('COOKER_PACKAGE_MANAGER', 'jsdelivr'),
-],
-```
 To get started with an install of jQuery, run the following command on an installed version of cooker:
 ```
 php artisan cooker:get jquery
 ```
-Please substitute `jquery` as needed for different packages. Cooker will then download jQuery from NPM and deploy it in the `cooker_packages` folder. You will be then asked to run a cook job to mix jQuery into your application. 
+Please substitute `jquery` as needed for different packages. Cooker will then download jQuery from NPM and deploy it in the `.cooker/imports` folder.
+
+You can then import jQuery into your scripts as follows:
+```
+import jquery from 'jquery';
+```
+
+Packages you install from Cooker are imported as `import name from 'name'` which will auto-complete on render to the local instance of the file.
+
+If you want to import your own javascript files into your application, residing in the `/resources/js/imports` folder, Use the following syntax:
+```
+import myscript from '@/myscript.js'
+```
 
 ***
 
-## Cooker Toolbelt
-By default, Cooker includes a small Javascript file that is loaded and locked on page boot. The object is located at `window.cookerToolbelt` and contains the following tools at this point in time:
-* `cookerToolbelt.version` returns the current toolbelt version
-* `cookerToolbelt.isProd` returns a boolean of if the javascript file was built using Production mode
-* `cookerToolbelt.autoRunIntelliPath` returns a boolean of if intelliPath can run
-* `cookerToolbelt.cookerVersion` returns the current cooker version
-* `cookerToolbelt.namespace` returns a string of the javascript namespace as defined in the oven
+## The cooker-toolbelt import
+By default, Cooker includes a small Javascript file that can be imported into your script.
+
+Cooker toolbelt is a read-only object with the following information and features available 
+* `cookerToolbelt.name` returns "Cooker Toolbelt"
+* `cookerToolbelt.version` returns the toolbelt version
+* `cookerToolbelt.description` returns "The assistant for the Cooker framework"
+* `cookerToolbelt.isDebug` returns a boolean of whether or not Laravel is running in debug mode
+* `cookerToolbelt.console` A console replacement that only displays messages if Laravel is in debug mode. You can use it by appending `cookerToolbelt.` to the front of your `console` statements (ie `cookerToolbelt.console.log('Hello world')`)
+
+You can import cooker-toolbelt into your application by adding the following import statement to the top of your application script
+```
+import cookerRoutes from 'cooker-routes';
+```
 
 ## Development and Production mode
-Cooker will automatically compress both `css` and `js` depending on the value of `config('app.debug')`. You can override this setting by running `php artisan cook` with `--dev` and `--prod` switches respectively
+Cooker will automatically compress both `css` and `js` files depending on the value of `config('app.debug')`. You can override this setting by changing the `options.alwaysCompress` value. The quickest way to achieve this is by setting a `COOKER_ALWAYS_COMPRESS` value to `true` in your application env file
 
-***
-
-## Cooker object-oriented javascript
-Cooker gives a really nice way to organise and build javascript files to compile into one cooked file. All the javascript files utilise an object oriented approach which makes it super easy to componentise and traverse larger files.
-
-Files are cooked using the first specified javascript file in the job as the base object. This should be a variable containing a javascript object with the name of the variable being set to what is specified in the configuration for cooker. For example a cooker application with the namespace of `app` needs to have the following structure
-```
-var app = {  
-};
-```
-Your base object should contain at least one `boot()` function. This will be called as `<namespace>.boot()` on application initialisation. This can then be used in such a way like below:
-
-```
-var app = {
-  hey: 'Hello world',
-  boot(){
-    alert(this.hey);
-  }
-};
-```
-In this example `app.boot();` is called on document ready and an alert will fire containing the string stored in `app.hey` which has been set to "Hello world". Pretty cool right?!
-
-You can extend the `app` object in other scripts referenced in the cooker's job under `input`.
-
-To extend your script simply create a sub-object to the top level namespaced object by specifying it as such:
-```
-app.anotherObject = {
-  boot(){
-    alert('Hello from other file');
-  }
-};
-```
-You can then call this script from the main object at the start of your cook as such;
-```
-var app = {
-  boot(){
-    app.anotherObject.boot();
-  }
-};
-```
-This'll fire an alert with `Hello from other file` as the function is executed inside `app.anotherObject.boot()`
+## Cache
+Cooker will automatically save resources by building a file hash tree, only generating fresh resources if they have changed. If you want to override this setting, change the `options.disableCache` value. The quickest way to achieve this is by setting a `COOKER_DISABLE_CACHE` value to `true` in your application env file
 
 ## Requirements for using Cooker
-Cooker is happiest on:
+Cooker 8 is happiest on:
 * Laravel 10
 * PHP >=8.3
