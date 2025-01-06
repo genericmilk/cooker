@@ -100,7 +100,7 @@ Cooker is infinitely customisable and really easy to deploy and use. It is also 
 
 ## Installing Cooker
 
-Before you install Cooker, please make a note of the following "gotchas" as Cooker's installer will replace some Laravel directories in order to install:
+⚠️ *Before you install Cooker, please make a note of the following "gotchas"*
 
 1. Please back up everything you have in your /resources/js and /resources/sass folders. Cooker will replace these folders as it is taking over the running of your application's frontend.
 2. Please ensure you are using at least PHP 8.3 and Laravel 10 as these are the pre-requisites for Cooker
@@ -118,7 +118,7 @@ Once Cooker is installed you can utilise the `@cooker` directive in your project
 
 ## Setting up Ovens
 
-When you ran `php artisan cooker:init` for the first time, It published a `cooker.php` file to your Laravel application's `/config` directory.
+When you ran `php artisan cooker:install`, It published a `cooker.php` file to your Laravel application's `/config` directory.
 
 This file (hereafter referred to as "Cooker's configuration file") is where you can adjust how Cooker runs as well as specifying "ovens" which Cooker uses to build files. 
 

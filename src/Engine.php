@@ -19,7 +19,7 @@ class Engine extends Controller
     public $output = true;
 
     
-    public function render($file)
+    public function render($file): Response
     {
         $type = pathinfo($file, PATHINFO_EXTENSION);
 
@@ -125,6 +125,19 @@ class Engine extends Controller
             }
 
         }
+        return response(file_get_contents($fileLoc), 200, [
+            'Content-Type' => 'application/javascript'
+        ]);
+    }
+
+    public function localImport($baseFile, $file): Response
+    {
+        $fileLoc = resource_path('js/imports/'.$file.'.js');
+
+        if(!file_exists($fileLoc)){
+            return response('Local Import not found', 404);
+        }
+
         return response(file_get_contents($fileLoc), 200, [
             'Content-Type' => 'application/javascript'
         ]);
