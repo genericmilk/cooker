@@ -19,7 +19,7 @@ class Engine extends Controller
     public $output = true;
 
     
-    public function render($file): Response
+    public function render($file)
     {
         $type = pathinfo($file, PATHINFO_EXTENSION);
 

@@ -22,7 +22,7 @@ use Genericmilk\Cooker\Engine;
 class Cook extends Command
 {
 
-    protected $signature = 'cooker:cook';
+    protected $signature = 'cooker:cook {--clear} {--force}';
     protected $description = 'Builds the asset cache';
 
 	protected $version;
@@ -36,6 +36,20 @@ class Cook extends Command
 
 
 		note('👨‍🍳 Cooker '.$this->version);
+
+		if($this->option('clear') || $this->option('force')){
+			// delete every file in the cache folder
+			$response = spin(
+				fn () => $this->clearAssetCache(),
+				'Clearing asset cache ...'
+			);
+	
+			info('✔️ Asset cache cleared');
+
+			if($this->option('clear')){
+				return;
+			}
+		}
 
 		$response = spin(
 			fn () => $this->buildAssetCache(),
@@ -51,6 +65,16 @@ class Cook extends Command
 		$engine->output = false;
 		foreach(config('cooker.ovens') as $oven){
 			$engine->render($oven['file']);
+		}
+	}
+
+	private function clearAssetCache(): void
+	{
+		$files = glob(base_path('.cooker/cache/*'));
+		foreach($files as $file){
+			if(is_file($file)){
+				unlink($file);
+			}
 		}
 	}
 
