@@ -1,8 +1,14 @@
 {
     "name": "genericmilk/cooker",
-    "description": "Plugin to the Cooker Engine! Easy site building by Genericmilk",
-    "keywords": ["laravel", "cooker", "resources", "less", "javascript"],
-    "version": "7.0.5",
+    "description": "Easy frontend resource building for Laravel",
+    "keywords": [
+        "laravel",
+        "cooker",
+        "resources",
+        "less",
+        "javascript"
+    ],
+    "version": "8.0.0-dev",
     "license": "MIT",
     "authors": [
         {
@@ -11,22 +17,25 @@
         }
     ],
     "require": {
-        "php": ">=8.2",
-        "wikimedia/less.php": "^4.1.1",
-        "scssphp/scssphp": "^1.2",
+        "php": ">=8.3",
+        "wikimedia/less.php": "^5.1.2",
+        "scssphp/scssphp": "^2.0.0",
         "guzzlehttp/guzzle": "^7.5.0",
-        "tedivm/jshrink": "^1.6",
-
-        "laravel/prompts": "^0.1.15",
-        "nunomaduro/laravel-desktop-notifier": "^2.7"
+        "laravel/prompts": ">=0.1.9",
+        "mck89/peast": "^1.16"
     },
     "autoload": {
+        "classmap": [
+            "src"
+        ],
         "psr-4": {
             "Genericmilk\\Cooker\\": "src/"
-        },
-        "files": [
-			"src/helpers.php"
-		]
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Genericmilk\\Cooker\\Tests\\": "tests/"
+        }
     },
     "minimum-stability": "dev",
     "prefer-stable": true,
@@ -41,6 +50,29 @@
         }
     },
     "require-dev": {
-        "laravel/framework": "^9.0.0"
+        "orchestra/testbench": "^8.31",
+        "pestphp/pest": "^2.36",
+        "pestphp/pest-plugin-laravel": "^2.4",
+        "phpunit/phpunit": "^10.5"
+    },
+    "config": {
+        "allow-plugins": {
+            "pestphp/pest-plugin": false
+        }
+    },
+    "scripts": {
+        "test": "pest",
+        "post-autoload-dump": [
+            "@clear",
+            "@prepare"
+        ],
+        "clear": "@php vendor/bin/testbench package:purge-skeleton --ansi",
+        "prepare": "@php vendor/bin/testbench package:discover --ansi",
+        "build": "@php vendor/bin/testbench workbench:build --ansi",
+        "serve": [
+            "Composer\\Config::disableProcessTimeout",
+            "@build",
+            "@php vendor/bin/testbench serve --ansi"
+        ]
     }
 }

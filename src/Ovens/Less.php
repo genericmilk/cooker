@@ -7,17 +7,34 @@ use Less_Parser;
 
 class Less extends Controller
 {
-	public $format = 'css';
-    public $directory = 'less';
-    
-    public static function cook($job){
-        $p = new Less_Parser();   
-        foreach($job['input'] as $input){
-            $p->parseFile(resource_path('less/'.$input));
-        }
-        return $p->getCss();
+    protected $preload;
+    protected $parse;
+
+    public function __construct($oven)
+    {
+        $components = (object)$oven->components;
+
+        $this->preload = $components?->preload ?? [];
+        $this->parse = $components?->parse ?? [];
+
     }
-    public static function compress($input){
+
+    public function render(): string
+    {
+        $p = new Less_Parser();   
+        foreach($this->parse as $input){
+            $p->parseFile($input);
+        }
+
+        $output = $p->getCss();
+
+        $output = $this->compress($output);
+
+        return $output;
+    }
+
+    private function compress($input): string
+    {
         $input = preg_replace('/\/\*((?!\*\/).)*\*\//','',$input); // negative look ahead
         $input = preg_replace('/\s{2,}/',' ',$input);
         $input = preg_replace('/\s*([:;{}])\s*/','$1',$input);
