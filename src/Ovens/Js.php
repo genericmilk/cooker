@@ -60,7 +60,12 @@ class Js extends Controller
 
         
         $renderer = new Renderer;
-        $renderer->setFormatter(new Compact);
+        if (config('app.debug')) {
+            $renderer->setFormatter(new PrettyPrint);
+        }else{
+            $renderer->setFormatter(new Compact);
+        }
+
         $output = $renderer->render($ast);
 
         return $output;
