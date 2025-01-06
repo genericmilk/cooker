@@ -112,7 +112,9 @@ class Engine extends Controller
         $ovenComponents = (object)$this->oven->components;
 
         $fileName = $file;
-        $fileLoc = base_path('.cooker/imports/'.$file.'.js');
+        $packageJson = json_decode(file_get_contents(base_path('.cooker/imports/'.$file.'/package/package.json')));
+        
+        $fileLoc = base_path('.cooker/imports/'.$file.'/package/'.$packageJson->main);
 
         if(!file_exists($fileLoc)){
             // check if the file exists in the package
