@@ -156,7 +156,7 @@ class Get extends Command
 
 
                 // Grab the script
-                $script = Http::get($this->npmPlatform.$package.'@'.$targetVersion);
+                $script = Http::get($this->npmPlatform.$package.'@'.$targetVersion.'?module');
                 if($script->failed()){
                     return '🔴 Failed to download package. Could not communicate with repository';
                 }
