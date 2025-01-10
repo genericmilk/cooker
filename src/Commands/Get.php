@@ -155,8 +155,23 @@ class Get extends Command
                 }
 
 
+                // Load the url and find the final redirect url
+                $urlToCheck = $this->npmPlatform.$package.'@'.$targetVersion;
+
+                // Check the meta
+                $meta = Http::get($this->npmPlatform.$package.'@'.$targetVersion.'?meta');
+
+                if($meta->failed()){
+                    return '🔴 Failed to download package. Could not communicate with repository';
+                }
+
+                $meta = $meta->object();
+
+                $finalUrl = $this->npmPlatform.$package.'@'.$targetVersion.$meta->path.'?module';
+                
+                
                 // Grab the script
-                $script = Http::get($this->npmPlatform.$package.'@'.$targetVersion.'?module');
+                $script = Http::get($finalUrl);
                 if($script->failed()){
                     return '🔴 Failed to download package. Could not communicate with repository';
                 }
