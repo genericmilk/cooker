@@ -5,12 +5,6 @@ use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Response;
 
-use Peast\Peast;
-use Peast\Traverser;
-use Peast\Renderer;
-use Peast\Formatter\Compact;
-use Peast\Syntax\Node\Identifier;
-use Peast\Syntax\Node\ExportDefaultDeclaration;
 
 
 use Genericmilk\Cooker\Ovens\Js;
@@ -136,20 +130,6 @@ class Engine extends Controller
 
 
         $file = file_get_contents($fileLoc);
-
-        $ast = Peast::latest($file)->parse();
-        $hasExportDefault = false;
-
-        foreach ($ast->getBody() as $node) {
-            if ($node instanceof ExportDefaultDeclaration) {
-                $hasExportDefault = true;
-                break;
-            }
-        }
-
-        if (!$hasExportDefault) {
-
-        }
 
 
         return response($file, 200, [
