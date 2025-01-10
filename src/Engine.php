@@ -112,9 +112,11 @@ class Engine extends Controller
         $ovenComponents = (object)$this->oven->components;
 
         $fileName = $file;
+        $packageJson = json_decode(file_get_contents(base_path('.cooker/imports/'.$file.'/package/package.json')));
         
-        // does the file start with cooker-?
-        if(substr($file, 0, 7) == 'cooker-'){
+        $fileLoc = base_path('.cooker/imports/'.$file.'/package/'.$packageJson->main);
+
+        if(!file_exists($fileLoc)){
             // check if the file exists in the package
 
             if(file_exists(__DIR__.'/Defaults/Exports/'.$file.'.js')){
@@ -131,14 +133,7 @@ class Engine extends Controller
             }else{
                 return response('Import not found', 404);
             }
-        }
-    
-        $packageJson = json_decode(file_get_contents(base_path('.cooker/imports/'.$file.'/package/package.json')));
-    
-        $fileLoc = base_path('.cooker/imports/'.$file.'/package/'.$packageJson->main);
 
-        if(!file_exists($fileLoc)){          
-            return response('Import not found', 404);
         }
 
 
