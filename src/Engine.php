@@ -105,7 +105,6 @@ class Engine extends Controller
         $this->oven = (object)$ovens->where('file', $baseFile)->first();
         $ovenComponents = (object)$this->oven->components;
 
-        $fileName = $file;
         $fileLoc = base_path('.cooker/imports/'.$file.'.js');
 
         if(!file_exists($fileLoc)){
