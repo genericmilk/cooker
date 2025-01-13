@@ -49,9 +49,17 @@ class Js extends Controller
                     $nodeValue = $node->getSource()->getValue();
                     $nodeValue = str_replace('@/', '', $nodeValue);
                     $node->getSource()->setValue('/__cooker/local-imports/'.$this->baseFile.'/' . $nodeValue);
-                }else{
+                }else if (substr($node->getSource()->getValue(), 0, 7) === 'cooker-') {
                     // we are importing from .cooker/imports
                     $node->getSource()->setValue('/__cooker/package-imports/'.$this->baseFile.'/' . $node->getSource()->getValue());
+                }else if (substr($node->getSource()->getValue(), 0, 4) === 'http') {
+                    // we are importing from a URL
+                    // do nothing
+                }else{
+                    // Just a normal import
+                    $nodeValue = $node->getSource()->getValue();
+                    $node->getSource()->setValue('https://esm.run/'.$nodeValue);
+
                 }
 
 

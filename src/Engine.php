@@ -121,6 +121,7 @@ class Engine extends Controller
                 return response($file, 200, [
                     'Content-Type' => 'application/javascript'
                 ]);
+
             }else{
                 return response('Import not found', 404);
             }

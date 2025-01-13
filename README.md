@@ -222,15 +222,9 @@ To use the helper simply include it like so:
 You can substitute `app.less` and `app.js` for the the value specified in `oven.file` in the Cooker config
 
 ## Installing packages
-Cooker can use the Unpkg NPM repository to really quickly get files into your project. Right now we only support downloading the most up-to-date version of this environment with the default file being referenced. And whilst we will compress it for you on production, this may not be a specific production build.
+Cooker uses the ESM run NPM framework to really quickly get code into your project. Because of this framework you don't need to install anything, Just import the package from its NPM package name.
 
-To get started with an install of jQuery, run the following command on an installed version of cooker:
-```
-php artisan cooker:get jquery
-```
-Please substitute `jquery` as needed for different packages. Cooker will then download jQuery from NPM and deploy it in the `.cooker/imports` folder.
-
-You can then import jQuery into your scripts as follows:
+To install jQuery into your script, Add the import as follows:
 ```
 import jquery from 'jquery';
 ```
