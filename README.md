@@ -250,7 +250,7 @@ Cooker toolbelt is a read-only object with the following information and feature
 
 You can import cooker-toolbelt into your application by adding the following import statement to the top of your application script
 ```
-import cookerRoutes from 'cooker-routes';
+import cookerToolbelt from 'cooker-toolbelt';
 ```
 
 ## Development and Production mode
