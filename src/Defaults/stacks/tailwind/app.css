@@ -1,0 +1,6 @@
+@import "tailwindcss";
+
+/*
+ * Cooker handles Tailwind via the bundled standalone binary — no Node, no npm.
+ * Add your own styles below this line, or import additional CSS files.
+ */

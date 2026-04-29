@@ -1,97 +1,49 @@
 <?php
-    namespace Genericmilk\Cooker;
 
-    use Illuminate\Support\Facades\Blade;
+namespace Genericmilk\Cooker;
 
-    class ServiceProvider extends \Illuminate\Support\ServiceProvider {
+use Genericmilk\Cooker\Commands\AddCommand;
+use Genericmilk\Cooker\Commands\CookCommand;
+use Genericmilk\Cooker\Commands\InstallCommand;
+use Genericmilk\Cooker\Commands\RemoveCommand;
+use Genericmilk\Cooker\Commands\UninstallCommand;
+use Genericmilk\Cooker\Commands\WatchCommand;
+use Illuminate\Support\Facades\Blade;
+use Illuminate\Support\ServiceProvider as IlluminateServiceProvider;
 
+class ServiceProvider extends IlluminateServiceProvider
+{
+    public function register(): void
+    {
+        $this->mergeConfigFrom(__DIR__.'/../config/cooker.php', 'cooker');
 
-
-        public function boot()
-        {
-            $this->setupConfig(); // Load config
-            $this->setupBladeDirectives(); // Setup blade directives
-            $this->routes(); // Load routes
-             
-            if ($this->app->runningInConsole()) {
-                $this->commands([
-                    Commands\Install::class,
-                    Commands\Cook::class,
-                ]);
-            }
-        }
-        public function register()
-        {           
-            // Engine
-            /*
-            $this->app->singleton('Genericmilk\Cooker\Engine', function ($app) {
-                return new Engine();
-            });
-            */
-
-            // Default Cookers
-            /*
-            $this->app->make('Genericmilk\Cooker\Ovens\Js');
-            $this->app->make('Genericmilk\Cooker\Ovens\Less');
-            $this->app->make('Genericmilk\Cooker\Ovens\Scss');  
-            */
-        }
-
-        protected function setupConfig(){
-
-            $configPath = __DIR__ . '/../config/cooker.php';
-            $this->publishes([$configPath => $this->getConfigPath()], 'config');
-    
-        }
-
-        protected function getConfigPath()
-        {
-            return config_path('cooker.php');
-        }
-
-        protected function publishConfig($configPath)
-        {
-            $this->publishes([$configPath => config_path('cooker.php')], 'config');
-        }
-
-        protected function routes()
-        {
-            if ($this->app->routesAreCached()) {
-                return;
-            }
-            require __DIR__.'/../routes/web.php';
-        }
-
-        protected function setupBladeDirectives(){
-            Blade::directive('cooker', function ($file) {
-
-                // tidy up quotes from file
-                $file = str_replace("'", "", $file);
-                $ext = pathinfo($file, PATHINFO_EXTENSION);
-                $url = '/__cooker/'.$file;
-
-                $mimes = [
-                    'js' => 'application/javascript',
-                    'less' => 'text/css',
-                    'scss' => 'text/css',
-                    'css' => 'text/css'
-                ];
-
-                if(!array_key_exists($ext, $mimes)){
-                    return '<invalid cooker file="'.$file.'">';
-                }
-
-                $mime = $mimes[$ext];
-            
-                if($mime=='text/css'){
-                    return "<link cooker href=\"".$url."\" rel=\"stylesheet\">";
-
-                }elseif($mime=='application/javascript'){
-                    return "<script cooker src=\"".$url."\" type=\"module\"></script>";
-                }
-
-            });
-        }
-
-
+        $this->app->singleton(Cooker::class, fn () => Cooker::fromLaravel());
     }
+
+    public function boot(): void
+    {
+        $this->publishes([
+            __DIR__.'/../config/cooker.php' => config_path('cooker.php'),
+        ], 'cooker-config');
+
+        $this->registerBladeDirective();
+
+        if ($this->app->runningInConsole()) {
+            $this->commands([
+                InstallCommand::class,
+                UninstallCommand::class,
+                CookCommand::class,
+                WatchCommand::class,
+                AddCommand::class,
+                RemoveCommand::class,
+            ]);
+        }
+    }
+
+    protected function registerBladeDirective(): void
+    {
+        Blade::directive('cooker', function (string $expression) {
+            return "<?php echo \Genericmilk\Cooker\Blade\Tag::render($expression); ?>";
+        });
+    }
+}

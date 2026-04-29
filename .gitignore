@@ -1,3 +1,6 @@
 .DS_Store
 vendor/
 .phpunit.result.cache
+
+# Local Laravel sandbox for testing Cooker
+test-app/

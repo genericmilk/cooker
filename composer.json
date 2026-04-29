@@ -1,14 +1,17 @@
 {
     "name": "genericmilk/cooker",
-    "description": "Easy frontend resource building for Laravel",
+    "description": "The Laravel-native frontend toolkit. Tailwind, React, Vue, TS — without the Node baggage.",
     "keywords": [
         "laravel",
         "cooker",
-        "resources",
-        "less",
-        "javascript"
+        "tailwind",
+        "react",
+        "vue",
+        "esbuild",
+        "frontend",
+        "bundler"
     ],
-    "version": "8.1.0",
+    "version": "10.0.0",
     "license": "MIT",
     "authors": [
         {
@@ -18,16 +21,15 @@
     ],
     "require": {
         "php": ">=8.3",
-        "wikimedia/less.php": "^5.1.2",
-        "scssphp/scssphp": "^2.0.0",
+        "ext-json": "*",
+        "ext-zlib": "*",
+        "ext-phar": "*",
         "guzzlehttp/guzzle": "^7.5.0",
         "laravel/prompts": ">=0.1.9",
-        "mck89/peast": "^1.16"
+        "wikimedia/less.php": "^5.1.2",
+        "scssphp/scssphp": "^2.0.0"
     },
     "autoload": {
-        "classmap": [
-            "src"
-        ],
         "psr-4": {
             "Genericmilk\\Cooker\\": "src/"
         }
@@ -41,19 +43,22 @@
     "prefer-stable": true,
     "extra": {
         "branch-alias": {
-            "dev-master": "4.0-dev"
+            "dev-master": "10.0-dev"
         },
         "laravel": {
             "providers": [
                 "Genericmilk\\Cooker\\ServiceProvider"
-            ]
+            ],
+            "aliases": {
+                "Cooker": "Genericmilk\\Cooker\\Facades\\Cooker"
+            }
         }
     },
     "require-dev": {
-        "orchestra/testbench": "^8.31",
-        "pestphp/pest": "^2.36",
-        "pestphp/pest-plugin-laravel": "^2.4",
-        "phpunit/phpunit": "^10.5"
+        "orchestra/testbench": "^9.0",
+        "pestphp/pest": "^3.0",
+        "pestphp/pest-plugin-laravel": "^3.0",
+        "phpunit/phpunit": "^11.0"
     },
     "config": {
         "allow-plugins": {
@@ -61,18 +66,6 @@
         }
     },
     "scripts": {
-        "test": "pest",
-        "post-autoload-dump": [
-            "@clear",
-            "@prepare"
-        ],
-        "clear": "@php vendor/bin/testbench package:purge-skeleton --ansi",
-        "prepare": "@php vendor/bin/testbench package:discover --ansi",
-        "build": "@php vendor/bin/testbench workbench:build --ansi",
-        "serve": [
-            "Composer\\Config::disableProcessTimeout",
-            "@build",
-            "@php vendor/bin/testbench serve --ansi"
-        ]
+        "test": "pest"
     }
 }

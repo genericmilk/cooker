@@ -1,16 +1,6 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-use Genericmilk\Cooker\Engine;
-
-Route::prefix('__cooker')->group(function () {
-    Route::get('{file}', [Engine::class, 'render']);
-    Route::prefix('package-imports')->group(function () {
-        Route::get('{baseFile}/{file}', [Engine::class, 'import']);
-    });
-    Route::prefix('local-imports')->group(function () {
-        Route::get('{baseFile}/{file}', [Engine::class, 'localImport']);
-    });
-
-    
-});
+/*
+ * Cooker 10 ships built static assets directly from public/build.
+ * No runtime asset routes are registered.
+ */

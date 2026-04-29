@@ -1,4 +1,6 @@
 {
-    "packages": {
-    }
+    "name": "cooker-app",
+    "cooker": "10",
+    "packages": {},
+    "stacks": []
 }

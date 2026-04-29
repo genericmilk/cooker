@@ -1,265 +1,242 @@
 <p align="center">
-	<img src="banner.png" />	
-</p>
-<p>
-Cooker is the easy to use frontend resource compiler by <a href="https://github.com/genericmilk">genericmilk</a> that is designed to sit tightly within Laravel and offer a robust, fast and beginner friendly starting block for building your web applications from simple landing pages to full web apps.
-</p>
-<p>
-  Cooker aims to be a great middleground for those who don't want to get bogged-down with all of the baggade of node and NPM but offers similar functionality.
+    <img src="banner.png" />
 </p>
 
-<ul>
-  <li>
-    Getting started
-    <ul>
-      <li>
-        <a href="#what-is-cooker-and-why-should-i-use-it">What is Cooker and why should I use it?</a>
-      </li>
-      <li>
-        <a href="#installing-cooker">Installing Cooker</a>
-      </li>
-    </ul>
-  </li>
-  <li>
-    Configuration
-    <ul>
-      <li>
-        <a href="#setting-up-ovens">Setting up Ovens</a>
-      </li>
-      <li>
-        <a href="#installing-packages">Installing packages</a>
-      </li>
-      <li>
-        <a href="#compiling-resources">Compiling resources</a>
-      </li>
-    </ul>
-  </li>
-  <li>
-    Features and helpers
-    <ul>
-      <li>
-        <a href="#the-cooker-helper">The @cooker helper</a>
-      </li>
-      <li>
-        <a href="#cooker-toolbelt">Cooker Toolbelt</a>
-      </li>
-      <li>
-        <a href="#speedy-cook">SpeedyCook</a>
-      </li>
-      <li>
-        <a href="#development-and-production-mode">Development and Production mode</a>
-      </li>      
-    </ul>
-  </li>
-  <li>
-    Extending Cooker
-    <ul>
-      <li>
-        <a href="#getting-started-with-preloads">Getting started with Preloads</a>
-      </li>
-      <li>
-        <a href="#building-your-own-oven">Building your own oven</a>
-      </li>
-      <li>
-        <a href="#cooker-object-oriented-javascript">Cooker object-oriented javascript</a>
-      </li>
-    </ul>
-  </li>
-  <li>
-    Upgrading Cooker
-    <ul>
-      <li>
-        <a href="https://github.com/genericmilk/cooker/wiki/Upgrading-to-Cooker-7-from-Cooker-6">Upgrading from Cooker 6 - 7</a>
-      </li>
-      <li>
-        <a href="#">Upgrading from Cooker 5 - 6</a>
-      </li>
-      <li>
-        <a href="https://github.com/genericmilk/cooker/wiki/Upgrading-to-Cooker-5-from-Cooker-4">Upgrading from Cooker 4 - 5</a>
-      </li>
-      <li>
-        <a href="#">Upgrading from Cooker 1.x / 2.x / 3.x - 4</a>
-      </li>      
-    </ul>
-  </li>
-</ul>
+<p>
+Cooker is the Laravel-native frontend toolkit. It gives you Tailwind, React, Vue, TypeScript and JSX/TSX bundling — all driven from <code>php artisan</code>, with no Node, no <code>npm</code>, no <code>node_modules</code> and no <code>package-lock.json</code> in your project.
+</p>
+
+<p>
+Cooker auto-downloads the binaries it needs (<code>esbuild</code>, <code>tailwindcss</code>) into <code>.cooker/bin</code>. npm packages are fetched directly from the registry and stored flat in <code>.cooker/packages</code>. Built assets are written to <code>public/build</code> as static files with hashed names.
+</p>
 
 ***
 
-## What is Cooker and why should I use it?
+## Table of contents
 
-Cooker is a composer package that reimpliments what Node and NPM have to offer but in a much tighter integration to Laravel and a lot more beginner friendly. Cooker allows you to really quickly and easily takes smaller files, such as `.less`, `.scss`, `.js` etc and compiles them into bigger files such as `css` and `js`, full to the brim of all your apps' code and with intelligent loading depending on the page you are on.
+- [Why Cooker?](#why-cooker)
+- [Requirements](#requirements)
+- [Installation](#installation)
+- [Concepts](#concepts)
+- [Adding a stack](#adding-a-stack)
+- [Adding npm packages](#adding-npm-packages)
+- [The `@cooker` directive](#the-cooker-directive)
+- [Building & watching](#building--watching)
+- [Configuration](#configuration)
+- [Upgrading from Cooker 8](#upgrading-from-cooker-8)
 
-You might be used to other platforms that do this sort of thing such as Webpack etc.
+***
 
-Files that are non standard, such as LESS and SCSS need compiling to CSS in order for the browser to understand them, but by including all of what makes a frontend into one compiler, makes for a rapidly better development experience.
+## Why Cooker?
 
-Cooker aims to replace bigger services such as NPM, Webpack and Laravel mix by dramatically lowering the bar for entry and providing a frontend resource system that is uniquely Laravel, without the baggage of a Node based compiler.
+If you've worked with Laravel + Vite or Laravel Mix you'll be familiar with the Node-shaped hole in your project: a `package.json`, a giant `node_modules`, a lockfile, and a separate dev server. Cooker replaces all of that with one Composer package and a small workspace folder.
 
-Cooker is infinitely customisable and really easy to deploy and use. It is also super lightweight with heavy file compression and caching techniques speeding up your application.
+- **No Node required.** Cooker drives `esbuild` and `tailwindcss` as standalone binaries.
+- **No `node_modules`.** Packages live flat at `.cooker/packages/<name>/`. Cooker resolves transitive deps for you.
+- **One command to install a stack.** `php artisan cooker:add react` installs React + ReactDOM and scaffolds a working `App.jsx`.
+- **Beginner-friendly defaults.** `@cooker('app.js')` and `@cooker('app.css')` Just Work.
+- **Static assets in production.** No PHP runtime asset routes — `public/build/*.js` is served by your web server like any other static file.
 
-## Installing Cooker
+## Requirements
 
-⚠️ *Before you install Cooker, please make a note of the following "gotchas"*
+- PHP **>= 8.3**
+- Laravel 10 or newer
+- ext-zlib, ext-phar, ext-json (standard with most PHP builds)
 
-1. Please back up everything you have in your /resources/js and /resources/sass folders. Cooker will replace these folders as it is taking over the running of your application's frontend.
-2. Please ensure you are using at least PHP 8.3 and Laravel 10 as these are the pre-requisites for Cooker
+## Installation
 
-Once you have completed the above list and you're sure you are ready to proceed, copy and paste the two commands into a terminal whilst in the root of your Laravel application:
-```
+```bash
 composer require genericmilk/cooker
 php artisan cooker:install
 ```
-This will install Cooker as well as its dependencies and install Cooker's configuration files.
 
-Once Cooker is installed you can utilise the `@cooker` directive in your projects
+The installer will:
 
-***
+1. Publish `config/cooker.php`.
+2. Create `.cooker/` (bin, cache, packages) and add it to `.gitignore`.
+3. Scaffold starter recipes at `resources/js/app.js` and `resources/css/app.css`.
+4. Download `esbuild` for your platform.
+5. Optionally bootstrap a stack (`react`, `vue`, `tailwind`).
 
-## Setting up Ovens
+After install, drop into a Blade view:
 
-When you ran `php artisan cooker:install`, It published a `cooker.php` file to your Laravel application's `/config` directory.
-
-This file (hereafter referred to as "Cooker's configuration file") is where you can adjust how Cooker runs as well as specifying "ovens" which Cooker uses to build files. 
-
-Cooker uses ovens to build a resulting file. We call this combination and parsing effort "Cooking". Each oven listed in your configuration outputs one file. Different ovens denote different types of files be it Javascript, LESS, SASS, Styl etc.
-
-For example; you may have a Javascript file for billing and another script for a dropdown menu. You would want to combine these scripts to both be available on the output so that both the billing and dropdown scripts are loaded together by the browser.
-
-Each oven processes the output files when the page is loaded automatically. If the source files have not changed, a cached version will be presented instad.
-
-Cooker processes the file by following the files in the `oven.components.parse` array in the config file. 
-
-Input files are loaded in specified order from the `parse` array with each file being parsed depending on the file output MIME type referenced in `oven.file` value in the config.
-
-Once the file has been built, Cooker will detect if the application is running in production automatically and compress the output for faster loading. 
-
-Files that are referenced in the `oven.components.parse` array are local to the `/resources/[input file extension]` folder in your application, so for example if your `oven.file` was `app.less`, Cooker will start loading files from `/resources/less/`.
-
-eg:
-```
-  'file' => 'app.less',
-
-  'components' => [
-
-    'parse' => [
-        'colors.less',
-        'fonts.less',
-        'home.less',
-        'about.less',
-        ...
-    ],
-
-  ]
-
-```
-* Cooked files are cached to `.cooker/cache` folder with the name of the file being referenced in `oven.file`. (Default app.less or app.js etc)
-
-## Cooker Routes
-
-Javascript files add an additional array to the oven components array called `routes`. In `routes` you configure which classes are loaded based on which page of the application is hit.
-
-The default routeset is as follows:
-```
-    'file' => 'app.js',
-
-    'components' => [
-        'parse' => [
-            'app.js'
-        ],
-        'routes' => [
-            [
-                'path' => '*',
-                'class' => 'Application',
-            ]
-        ]
-    ]
-```
-Here, the class `Application` is created when any page is hit. Cooker can use wildcards or absolute path matching to make this happen. You can also have multiple instances of the same route for different classes, eg:
-```
-  'routes' => [
-      [
-          'path' => '*',
-          'class' => 'Application',
-      ],
-      [
-          'path' => 'billing/show',
-          'class' => 'Billing',
-      ], 
-      [
-          'path' => '*',
-          'class' => 'Menu',
-      ],            
-      [
-          'path' => 'about-us/*',
-          'class' => 'About',
-      ],                  
-  ]
-```
-So in this example; `new Application()` is called on any page along with `new Menu()` where `new Billing()` is called on `site.com/billing/show` only and `new About()` is called on `site.com/about-us` and any sub-page.
-
-For Cooker routes to work, You need to import the `cooker-routes` package into your javascript like so:
-```
-import cookerRoutes from 'cooker-routes';
-```
-You must also make the class available to the window object by adding the following at the bottom of the file
-```
-window.Application = Application; // Substitute Application to the class in your script.
+```blade
+<head>
+    @cooker('app.css')
+</head>
+<body>
+    <div id="app"></div>
+    @cooker('app.js')
+</body>
 ```
 
-## The @cooker helper
-Cooker comes with a great blade directive you can use in your views. 
+Then build:
 
-It will return a HTML element pointing the browser to a custom cooker installed route with caching information attached. 
-
-When the application is running in `app.debug=false` the output of the file will be compressed to allow for faster load times and vice-versa for `app.debug=true` to allow for easier debugging
-
-To use the helper simply include it like so:
+```bash
+php artisan cooker:cook        # production build
+php artisan cooker:watch       # dev — rebuilds on save
 ```
-@cooker('app.less')
+
+## Concepts
+
+### Recipes
+
+A **recipe** maps an output filename to a single entry file. Configured in `config/cooker.php`:
+
+```php
+'recipes' => [
+    'app.js'  => 'resources/js/app.js',
+    'app.css' => 'resources/css/app.css',
+],
+```
+
+The output filename's extension determines the loader (`.js`/`.mjs` → script, `.css` → stylesheet). The entry's extension determines parsing — Cooker handles `.js`, `.ts`, `.jsx`, `.tsx`, `.mjs`, `.css`, `.less`, and `.scss`.
+
+You import other files normally inside the entry — Cooker bundles them with esbuild.
+
+### The `.cooker/` workspace
+
+```
+.cooker/
+├── bin/              ← auto-downloaded binaries (esbuild, tailwindcss)
+├── cache/            ← intermediate compiled CSS, etc.
+├── packages/         ← flat npm package extracts
+└── cooker.json       ← installed packages + active stacks
+```
+
+`.cooker/cooker.json` is your project's manifest — it's the only file inside `.cooker/` that's checked into git.
+
+## Adding a stack
+
+Stacks are opinionated bundles — they install the right packages, scaffold a working starter, and wire everything in.
+
+```bash
+php artisan cooker:add react        # React 18 + scaffolded App.jsx
+php artisan cooker:add vue          # Vue 3 + scaffolded App.js
+php artisan cooker:add tailwind     # Tailwind 4 — adds @import "tailwindcss"
+```
+
+After `cooker:add react`:
+
+```
+resources/js/
+├── app.jsx                  ← entry; mounts <App/> to #app
+└── components/App.jsx       ← starter component
+```
+
+Update `config/cooker.php` to point the recipe at `app.jsx`:
+
+```php
+'recipes' => [
+    'app.js' => 'resources/js/app.jsx',
+],
+```
+
+## Adding npm packages
+
+```bash
+php artisan cooker:add lodash
+php artisan cooker:add @floating-ui/dom@^1
+php artisan cooker:add zod@latest
+```
+
+Cooker fetches the tarball straight from the npm registry, extracts it to `.cooker/packages/<name>/` and resolves transitive dependencies. There's no `package.json` and no lockfile — `cooker.json` records the top-level packages you asked for.
+
+In your code:
+
+```js
+import _ from 'lodash';
+import { z } from 'zod';
+```
+
+Remove with:
+
+```bash
+php artisan cooker:remove lodash
+```
+
+## The `@cooker` directive
+
+```blade
+@cooker('app.css')
 @cooker('app.js')
 ```
-You can substitute `app.less` and `app.js` for the the value specified in `oven.file` in the Cooker config
 
-## Installing packages
-Cooker uses the ESM run NPM framework to really quickly get code into your project. Because of this framework you don't need to install anything, Just import the package from its NPM package name.
+Reads `public/build/manifest.json` and emits the right tag with the hashed filename:
 
-To install jQuery into your script, Add the import as follows:
-```
-import jquery from 'jquery';
+```html
+<link rel="stylesheet" href="/build/app-3f8a91c2bd.css">
+<script type="module" src="/build/app-7c0b1bf9aa.js"></script>
 ```
 
-Packages you install from Cooker are imported as `import name from 'name'` which will auto-complete on render to the local instance of the file.
+If a build hasn't been produced for the recipe yet, Cooker emits an HTML comment telling you to run `cooker:cook`.
 
-If you want to import your own javascript files into your application, residing in the `/resources/js/imports` folder, Use the following syntax:
-```
-import myscript from '@/myscript.js'
-```
+## Building & watching
 
-***
-
-## The cooker-toolbelt import
-By default, Cooker includes a small Javascript file that can be imported into your script.
-
-Cooker toolbelt is a read-only object with the following information and features available 
-* `cookerToolbelt.name` returns "Cooker Toolbelt"
-* `cookerToolbelt.version` returns the toolbelt version
-* `cookerToolbelt.description` returns "The assistant for the Cooker framework"
-* `cookerToolbelt.isDebug` returns a boolean of whether or not Laravel is running in debug mode
-* `cookerToolbelt.console` A console replacement that only displays messages if Laravel is in debug mode. You can use it by appending `cookerToolbelt.` to the front of your `console` statements (ie `cookerToolbelt.console.log('Hello world')`)
-
-You can import cooker-toolbelt into your application by adding the following import statement to the top of your application script
-```
-import cookerToolbelt from 'cooker-toolbelt';
+```bash
+php artisan cooker:cook                    # production build, minified
+php artisan cooker:cook --no-minify        # disable minification
+php artisan cooker:cook --sourcemap        # emit sourcemaps
+php artisan cooker:cook --clean            # wipe public/build first
+php artisan cooker:watch                   # dev — incremental rebuilds on file change
+php artisan cooker:watch --no-hmr          # disable live reload
 ```
 
-## Development and Production mode
-Cooker will automatically compress both `css` and `js` files depending on the value of `config('app.debug')`. You can override this setting by changing the `options.alwaysCompress` value. The quickest way to achieve this is by setting a `COOKER_ALWAYS_COMPRESS` value to `true` in your application env file
+In `app.debug=true` environments, `cooker:cook` defaults to non-minified + sourcemaps. In production, it minifies and skips sourcemaps. Override per-environment with `COOKER_MINIFY` and `COOKER_SOURCEMAP` env vars.
 
-## Cache
-Cooker will automatically save resources by building a file hash tree, only generating fresh resources if they have changed. If you want to override this setting, change the `options.disableCache` value. The quickest way to achieve this is by setting a `COOKER_DISABLE_CACHE` value to `true` in your application env file
+## Live reload
 
-## Requirements for using Cooker
-Cooker 8 is happiest on:
-* Laravel 10
-* PHP >=8.3
+`cooker:watch` runs an embedded SSE server (default `127.0.0.1:5173`) and the `@cooker` directive injects a tiny client snippet into your pages — but **only when `APP_DEBUG=true`**.
+
+- **CSS-only changes** hot-swap the matching `<link>` tag, no full reload.
+- **JS or mixed changes** trigger `location.reload()`.
+- The client auto-reconnects if the watcher restarts.
+
+Configure host/port in `config/cooker.php` under `dev`, or via `COOKER_DEV_HOST` / `COOKER_DEV_PORT`. Disable entirely with `COOKER_DEV_ENABLED=false` or `--no-hmr`.
+
+## Configuration
+
+`config/cooker.php` is short on purpose:
+
+```php
+return [
+    'recipes' => [
+        'app.js'  => 'resources/js/app.js',
+        'app.css' => 'resources/css/app.css',
+    ],
+    'output' => [
+        'path' => 'public/build',
+        'url'  => '/build',
+    ],
+    'toolbox' => [
+        'path'     => '.cooker/bin',
+        'esbuild'  => '0.24.2',
+        'tailwind' => '4.0.0',
+    ],
+    'packages' => [
+        'path'     => '.cooker/packages',
+        'manifest' => '.cooker/cooker.json',
+        'registry' => env('COOKER_REGISTRY', 'https://registry.npmjs.org'),
+    ],
+    'build' => [
+        'minify'    => env('COOKER_MINIFY', null),
+        'sourcemap' => env('COOKER_SOURCEMAP', null),
+        'target'    => env('COOKER_TARGET', 'es2020'),
+    ],
+];
+```
+
+## Upgrading from Cooker 8
+
+Cooker 10 is a clean rewrite. The runtime PHP asset server (`__cooker/{file}`), `Ovens`, `Preparsers` and the `import name from 'name'` rewrite-to-CDN behaviour are all gone. To upgrade:
+
+1. `composer require genericmilk/cooker:^10`
+2. `php artisan cooker:uninstall` (in your old project) or delete `config/cooker.php` and `.cooker/` manually.
+3. `php artisan cooker:install`.
+4. Move your hand-written code into the new `resources/js/app.js` / `resources/css/app.css` entry files and add real `import` statements.
+5. Replace any old `cooker-toolbelt` / `cooker-routes` imports — they're not part of Cooker 10.
+6. For each npm package you used to import directly from `esm.run`, run `php artisan cooker:add <name>`.
+
+## License
+
+MIT — see [LICENSE](LICENSE).
